@@ -34,7 +34,7 @@
                                 <td><?= ($usertypedetails['id']); ?></td>
                                 <td><?= stripslashes($usertypedetails['name']); ?></td>
                                 <td><label class="label label-success" style="font-size:12px"><?php echo $status; ?></label></td>
-                                <td><a href="javascript:void(0)" class="btn btn-success"><i class="fa fa-edit"></i></a><a href="javascript:void(0)" class="btn btn-danger"><i class="fa fa-trash"></i></a></td>
+                                <td><a href="javascript:void(0)" class="btn btn-success"><i class="fa fa-edit"></i></a><a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $employeedetails['id'] ?>, 'departments')"><i class="fa fa-trash"></i></a></td>
                             </tr>
                             <?php
                         endforeach;

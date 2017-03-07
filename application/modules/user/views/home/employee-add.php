@@ -8,6 +8,8 @@
         </div>
         <div class="panel-body">
             <form name="employee_form" id="employee_form" method="post" action="<?php echo frontend_url() . 'employee/insert'; ?>" data-parsley-validate="">
+                <label for="input-7-xs" class="control-label">Extra Small Rating</label>
+                <input id="input-7-xs" class="rating rating-loading" value="1" data-min="0" data-max="5" data-step="0.5" data-size="xs"><hr/>
                 <div class="form-group">
                     <label >Name <span style="color:red">*</span></label>
                     <input type="text" name="employee_name" id="employee_name" tabindex="1" class="form-control" placeholder="Enter Name" value="<?php echo isset($_SESSION['employee_name']) ? $_SESSION['employee_name'] : ''; ?>"  data-parsley-minlength="3" maxlength="50">
