@@ -37,7 +37,7 @@
                     <a href="#"><i class="fa fa-product-hunt fa-lg"></i> Projects<span class="arrow"></span></a>
                 </li>
                 <ul class="sub-menu collapse" id="projects">
-                    <li class=""><a href="#">Add Project</a></li>
+                    <li class=""><a href="<?php echo frontend_url() . 'projects/add'; ?>">Add Project</a></li>
                     <li><a href="#">Manage Projects</a></li>
 
                 </ul>

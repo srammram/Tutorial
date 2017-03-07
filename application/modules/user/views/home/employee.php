@@ -1,6 +1,13 @@
 <?php echo $this->load->view('layout/left-menu'); ?>
 <div class="col-xs-12">
-    <h1>Manage Employees</h1>
+    <div class="col-xs-5">
+        <h1>Manage Employee</h1>
+    </div>
+    <div class="col-xs-7">
+        <div class="clear" style="clear: both;height:2em"></div>
+        <a href="<?php echo frontend_url() . 'employee/add'; ?>" class="btn btn-success " style="float: right">Add</a>
+        <div class="clear" style="clear: both;height:2em"></div>
+    </div>
     <div class="clear" style="clear: both;height:3em"></div>
     <div class="panel panel-default">
         <div class="panel-heading text-center">
@@ -26,10 +33,13 @@
                     if (!empty($records)):
                         foreach ($records as $employeedetails):
                             if ($employeedetails['status'] == 0):
+                                $lableclass = "label label-warning";
                                 $status = 'Pending';
                             elseif ($employeedetails['status'] == 1):
+                                $lableclass = "label label-success";
                                 $status = 'Active';
                             else:
+                                $lableclass = "label label-danger";
                                 $status = 'Ignored';
                             endif;
                             ?>
@@ -41,8 +51,8 @@
                                 <td><?= stripslashes($employeedetails['user_mobile']); ?></td>
                                 <td><?= stripslashes($employeedetails['usertype_name']); ?></td>
                                 <td><?= stripslashes($employeedetails['department_name']); ?></td>
-                                <td><label class="label label-success" style="font-size:12px"><?php echo $status; ?></label></td>
-                                <td><a href="javascript:void(0)" class="btn btn-success"><i class="fa fa-edit"></i></a><a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $employeedetails['id'] ?>, 'users')"><i class="fa fa-trash"></i></a></td>
+                                <td><label class="<?php echo $lableclass; ?>" style="font-size:12px"><?php echo $status; ?></label></td>
+                                <td><a href="<?php echo frontend_url() . 'employee/edit/' . encode_value($employeedetails['id']); ?>" class="btn btn-success"><i class="fa fa-edit"></i></a><a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $employeedetails['id'] ?>, 'users')"><i class="fa fa-trash"></i></a></td>
                             </tr>
                             <?php
                         endforeach;

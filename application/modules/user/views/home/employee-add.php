@@ -8,11 +8,9 @@
         </div>
         <div class="panel-body">
             <form name="employee_form" id="employee_form" method="post" action="<?php echo frontend_url() . 'employee/insert'; ?>" data-parsley-validate="">
-                <label for="input-7-xs" class="control-label">Extra Small Rating</label>
-                <input id="input-7-xs" class="rating rating-loading" value="1" data-min="0" data-max="5" data-step="0.5" data-size="xs"><hr/>
                 <div class="form-group">
                     <label >Name <span style="color:red">*</span></label>
-                    <input type="text" name="employee_name" id="employee_name" tabindex="1" class="form-control" placeholder="Enter Name" value="<?php echo isset($_SESSION['employee_name']) ? $_SESSION['employee_name'] : ''; ?>"  data-parsley-minlength="3" maxlength="50">
+                    <input type="text" name="employee_name" id="employee_name" tabindex="1" class="form-control" placeholder="Enter Name" value="<?php echo isset($_SESSION['employee_name']) ? $_SESSION['employee_name'] : ''; ?>" required="" data-parsley-minlength="3" maxlength="50">
                 </div>
                 <div class="form-group">
                     <label >Email Address <span style="color:red">*</span></label>
@@ -111,7 +109,7 @@
                             <input type="submit" name="employee-submit" id="employee-submit" tabindex="4" class="form-control btn btn-primary" value="Add">
                         </div>
                         <div class="col-sm-3 ">
-                            <input type="reset" name="employee-submit" id="employee-submit" tabindex="4" class="form-control btn btn-danger" value="Clear">
+                            <input type="reset" name="employee-reset" id="employee-reset" tabindex="4" class="form-control btn btn-danger" value="Clear">
                         </div>
                     </div>
                 </div>
@@ -122,6 +120,8 @@
 </div>
 <script type="text/javascript">
     $('#employee_dob').datepicker({
+        format: 'yyyy-mm-dd',
+        autoclose: true,
     });
 </script>
 
