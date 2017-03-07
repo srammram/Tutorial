@@ -10,7 +10,7 @@
                 </li>
 
                 <li  data-toggle="collapse" data-target="#users" class="collapsed ">
-                    <a href="#"><i class="fa fa-gift fa-lg"></i> Users <span class="arrow"></span></a>
+                    <a href="#"><i class="fa fa-users fa-lg"></i> Users <span class="arrow"></span></a>
                 </li>
                 <ul class="sub-menu collapse" id="users">
                     <li class=""><a href="<?php echo frontend_url() . 'employee/add'; ?>">Add User</a></li>
@@ -18,7 +18,7 @@
 
                 </ul>
                 <li  data-toggle="collapse" data-target="#usertype" class="collapsed">
-                    <a href="#"><i class="fa fa-gift fa-lg"></i> User Type <span class="arrow"></span></a>
+                    <a href="#"><i class="fa fa-user fa-lg"></i> User Type <span class="arrow"></span></a>
                 </li>
                 <ul class="sub-menu collapse" id="usertype">
                     <li class=""><a href="<?php echo frontend_url() . 'usertype/add' ?>">Add User Type</a></li>
@@ -26,7 +26,7 @@
 
                 </ul>
                 <li  data-toggle="collapse" data-target="#departments" class="collapsed">
-                    <a href="#"><i class="fa fa-gift fa-lg"></i> Departments<span class="arrow"></span></a>
+                    <a href="#"><i class="fa fa-desktop fa-lg"></i> Departments<span class="arrow"></span></a>
                 </li>
                 <ul class="sub-menu collapse" id="departments">
                     <li class=""><a href="<?php echo frontend_url() . 'departments/add' ?>">Add Department</a></li>
@@ -34,7 +34,7 @@
 
                 </ul>
                 <li  data-toggle="collapse" data-target="#projects" class="collapsed">
-                    <a href="#"><i class="fa fa-gift fa-lg"></i> Projects<span class="arrow"></span></a>
+                    <a href="#"><i class="fa fa-product-hunt fa-lg"></i> Projects<span class="arrow"></span></a>
                 </li>
                 <ul class="sub-menu collapse" id="projects">
                     <li class=""><a href="#">Add Project</a></li>
@@ -42,13 +42,19 @@
 
                 </ul>
                 <li  data-toggle="collapse" data-target="#tasks" class="collapsed">
-                    <a href="#"><i class="fa fa-gift fa-lg"></i> Task<span class="arrow"></span></a>
+                    <a href="#"><i class="fa fa-tasks fa-lg"></i> Task<span class="arrow"></span></a>
                 </li>
                 <ul class="sub-menu collapse" id="tasks">
                     <li class=""><a href="#">Add Task</a></li>
                     <li><a href="#">Manage Task</a></li>
 
                 </ul>
+                <li  data-toggle="collapse" >
+                    <a href="<?php echo frontend_url() . 'settings' ?>"><i class="fa fa-cog fa-lg"></i> Settings</a>
+                </li>
+                <li  data-toggle="collapse" >
+                    <a href="<?php echo frontend_url() . 'editprofile' ?>"><i class="fa fa-user fa-lg"></i> Edit Profile</a>
+                </li>
             </ul>
         </div>
     </div>
