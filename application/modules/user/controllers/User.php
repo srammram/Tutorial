@@ -222,6 +222,16 @@ class USER extends CI_Controller {
                         } else {
                             $slugvalue = $user_slug;
                         }
+                        $country_id = $this->input->post('emp_country');
+                        $state_id = $this->input->post('emp_state');
+                        $city_id = $this->input->post('emp_city');
+                        $getcountries = $this->Mydb->custom_query("select id,title from $this->countries where id=$country_id");
+                        $getstates = $this->Mydb->custom_query("select id,name,slug from $this->states_table where id=$country_id");
+                        $getcities = $this->Mydb->custom_query("select id,name,slug from $this->cities_table where id=$country_id");
+                        $jsonval['countries'] = array('id' => $getcountries[0]['id'], 'name' => $getcountries[0]['title']);
+                        $jsonval['states'] = array('id' => $getstates[0]['id'], 'name' => $getstates[0]['name'], 'slug' => $getstates[0]['slug']);
+                        $jsonval['cities'] = array('id' => $getcities[0]['id'], 'name' => $getcities[0]['name'], 'slug' => $getcities[0]['slug']);
+                        $jsonvalue = json_encode($jsonval);
                         $insert_array = array('user_type_id' => $this->input->post('user_type'),
                             'user_name' => $this->input->post('employee_name'),
                             'user_pass' => md5($this->input->post('employee_pass')),
@@ -232,9 +242,10 @@ class USER extends CI_Controller {
                             'user_address' => $this->input->post('emp_address'),
                             'user_country' => $this->input->post('emp_country'),
                             'user_dob' => $this->input->post('employee_dob'),
+                            'user_details' => $jsonvalue,
                             'created_ip' => ip2long(get_ip()),
                             'created_by' => get_session_value('user_id'),
-                            'status' => 1,
+                            'status' => 0,
                             'created_on' => current_date(),
                         );
                         $insert_id = $this->Mydb->insert($this->login_table, $insert_array);
@@ -264,8 +275,8 @@ class USER extends CI_Controller {
             endif;
         } else {
             $data = $this->load_module_info();
-            $getdepartmentdetails = $this->Mydb->custom_query("select * from $this->departments_table");
-            $data['records'] = $getdepartmentdetails;
+            $getemployeedetails = $this->Mydb->custom_query("select t1.*,t2.name as department_name,t3.type_name as usertype_name  from $this->login_table as t1 LEFT JOIN $this->departments_table t2 ON t2.id=t1.user_departments_id LEFT JOIN $this->user_type_table t3 ON t3.id=t1.user_type_id where t1.status<>3");
+            $data['records'] = $getemployeedetails;
             $this->layout->display_frontend($this->folder . 'employee', $data);
         }
     }
@@ -276,6 +287,19 @@ class USER extends CI_Controller {
         $data ['module_labels'] = $this->module_labels;
         $data ['module'] = $this->module;
         return $data;
+    }
+
+    public function delete_actions() {
+        $delete_id = $this->input->post('delete_id');
+        $delete_table = $this->input->post('delete_table');
+        $update_array = array('status' => 3);
+        $update_details = $this->Mydb->update($delete_table, array('id' => $delete_id), $update_array);
+        if ($update_details) {
+            $respose['message'] = "The data has been successfully deleted";
+        } else {
+            $respose['message'] = "The data can't deleted.Please try again";
+        }
+        echo json_encode($respose);
     }
 
     public function get_state_by_country_id() {
