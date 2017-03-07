@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>application/modules/user/views/home/usertype.php</url>
+            <bookmark id="1">
+                <name/>
+                <line>0</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/opt/lampp/htdocs/pms/lib/theme/js/datatables.min.js</file>
+            <file>file:/opt/lampp/htdocs/pms/system/core/CodeIgniter.php</file>
+            <file>file:/opt/lampp/htdocs/pms/lib/theme/js/bootstrap_min.js</file>
+            <file>file:/opt/lampp/htdocs/pms/application/libraries/Layout.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/controllers/User.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/layout/footer_old.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/home/usertype-add.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/home/homepage.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/config/routes.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/layout/left-menu.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/controllers/Frontend.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/controllers/Users.php</file>
+            <file>file:/opt/lampp/htdocs/pms/lib/theme/css/style.css</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/home/employee-add.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/home/usertype.php</file>
+            <file>file:/opt/lampp/htdocs/pms/index.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/layout/footer.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/config/config.php</file>
+            <file>file:/opt/lampp/htdocs/pms/lib/theme/css/mdb.min.css</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/layout/layout.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/home/departments.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/layout/top-menu.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/config/autoload.php</file>
+            <file>file:/opt/lampp/htdocs/pms/lib/theme/js/parsley-min.js</file>
+            <file>file:/opt/lampp/htdocs/pms/application/models/SettingsModel.php</file>
+            <file>file:/opt/lampp/htdocs/pms/lib/theme/js/login.js</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/controllers/Logins.php</file>
+            <file>file:/opt/lampp/htdocs/pms/lib/theme/js/app.js</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/user/dashboard.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/helpers/url_helper.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/helpers/common_settings_helper.php</file>
+            <file>file:/opt/lampp/htdocs/pms/lib/theme/css/custom.min.css</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/home/department-add.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/home/dashboard.php</file>
+            <file>file:/opt/lampp/htdocs/pms/application/modules/user/views/layout/header.php</file>
+        </group>
+    </open-files>
+</project-private>
