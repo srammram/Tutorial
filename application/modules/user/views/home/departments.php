@@ -7,6 +7,12 @@
             Manage Departments
         </div>
         <div class="panel-body">
+            <div class="col-xs-12">
+                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('departments', '3')">Delete</a>
+            </div>
+            <div class="col-xs-12" id="empsucc_message">
+
+            </div>
             <table id="departments_table" class="display" cellspacing="0" width="100%">
                 <thead>
                     <tr>
@@ -49,6 +55,9 @@
 
                 </tbody>
             </table>
+            <div class="col-xs-12">
+                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('departments', '3')">Delete</a>
+            </div>
         </div>
     </div>
 </div>

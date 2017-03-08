@@ -104,6 +104,17 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>Select Option <span style="color:red">*</span></label>
+                    <select name="emp_accessmenu[]" multiple="multiple" id="emp_accessmenu" class="form-control" required="">
+
+                        <?php foreach ($leftmenus as $menus): ?>
+                            <option value="<?php echo $menus['id']; ?>"><?php echo $menus['menu_name']; ?></option>
+                            <?php
+                        endforeach;
+                        ?>
+                    </select>
+                </div>
+                <div class="form-group">
                     <div class="row">
                         <div class="col-sm-3 col-sm-offset-3">
                             <input type="submit" name="employee-submit" id="employee-submit" tabindex="4" class="form-control btn btn-primary" value="Add">

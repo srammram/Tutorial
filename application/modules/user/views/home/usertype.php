@@ -7,7 +7,12 @@
             Manage User Type
         </div>
         <div class="panel-body">
+            <div class="col-xs-12">
+                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('user_type', '3')">Delete</a>
+            </div>
+            <div class="col-xs-12" id="empsucc_message">
 
+            </div>
             <table id="user_type_table" class="display" cellspacing="0" width="100%">
                 <thead>
                     <tr>
@@ -50,7 +55,7 @@
                 </tbody>
             </table>
             <div class="col-xs-12">
-                <a class="btn btn-danger" >Delete</a>
+                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('user_type', '3')">Delete</a>
             </div>
         </div>
     </div>
