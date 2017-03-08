@@ -26,6 +26,8 @@ class USER extends CI_Controller {
         $this->countries = 'countries';
         $this->states_table = 'states';
         $this->cities_table = 'cities';
+        $this->srm_holidays_table = 'srm_holidays';
+        $this->default_leftmenus_table = 'default_leftmenus';
     }
 
     /* this method used to show all dashboard all details... */
@@ -70,7 +72,8 @@ class USER extends CI_Controller {
                         $user_email = $userdetails[0]['user_email'];
                         $user_mobile = $userdetails[0]['user_mobile'];
                         $user_type_id = $userdetails[0]['user_type_id'];
-                        $session_datas = array('user_id' => $user_id, 'user_mobile' => $user_mobile, 'user_email' => $user_email, 'user_name' => $user_name, 'user_type_id' => $user_type_id);
+                        $user_departments_id = $userdetails[0]['user_departments_id'];
+                        $session_datas = array('user_id' => $user_id, 'user_mobile' => $user_mobile, 'user_email' => $user_email, 'user_name' => $user_name, 'user_type_id' => $user_type_id, 'user_departments_id' => $user_departments_id);
                         $this->session->set_userdata($session_datas);
                         $this->Mydb->insert($this->login_history_table, array('login_time' => current_date(), 'login_ip' => ip2long(get_ip()), 'user_id' => $user_id));
                         redirect(frontend_url() . 'dashboard');
@@ -251,6 +254,7 @@ class USER extends CI_Controller {
                     $data['countries'] = $this->Mydb->custom_query("select title,id from $this->countries");
                     $data['usertype'] = $this->Mydb->custom_query("select type_name,id from $this->user_type_table");
                     $data['departments'] = $this->Mydb->custom_query("select name,id from $this->departments_table");
+                    $data['leftmenus'] = $this->Mydb->custom_query("select menu_name,menu_slug,id from $this->default_leftmenus_table where status=1");
                     $this->layout->display_frontend($this->folder . 'employee-add', $data);
                 elseif ($method[0] == 'insert'):
                     $this->form_validation->set_rules('employee_name', 'Employee Name', 'required|trim');
@@ -261,6 +265,7 @@ class USER extends CI_Controller {
                     $this->form_validation->set_rules('employee_dob', 'DOB', 'required');
                     $this->form_validation->set_rules('emp_country', 'Country', 'required');
                     $this->form_validation->set_rules('emp_state', 'State', 'required');
+//                    $this->form_validation->set_rules('emp_accessmenu', 'State', 'required');
                     if ($this->form_validation->run($this) == TRUE) :
                         $email = $this->input->post('employee_email');
                         $getemail_already_exist = $this->Mydb->custom_query("select id,user_slug from $this->login_table where user_email='$email'");
@@ -273,6 +278,15 @@ class USER extends CI_Controller {
                             } else {
                                 $slugvalue = $user_slug;
                             }
+                            $menusid = $this->input->post('emp_accessmenu');
+                            for ($i = 0; $i < count($menusid); $i++) {
+                                $getmenudetails = $this->Mydb->custom_query("select id,menu_name,menu_slug from $this->default_leftmenus_table where id=$menusid[$i]");
+                                $allmenusid['name'] = $getmenudetails['menu_name'];
+                                $allmenusid['slug'] = $getmenudetails['menu_slug'];
+                                $allmenusid['id'] = $getmenudetails['id'];
+                                $menudetails[] = $allmenusid;
+                            }
+                            $jsonmenudetails = json_encode($menudetails);
                             $country_id = $this->input->post('emp_country');
                             $state_id = $this->input->post('emp_state');
                             $city_id = $this->input->post('emp_city');
@@ -296,6 +310,7 @@ class USER extends CI_Controller {
                                 'user_city' => $this->input->post('emp_city'),
                                 'user_dob' => date('Y-m-d', strtotime($this->input->post('employee_dob'))),
                                 'user_details' => $jsonvalue,
+                                'user_access_menus_id' => implode(',', $this->input->post('emp_accessmenu')),
                                 'created_ip' => ip2long(get_ip()),
                                 'created_by' => get_session_value('user_id'),
                                 'status' => 0,
@@ -402,9 +417,38 @@ class USER extends CI_Controller {
         }
     }
 
+//    public function calculatehours() {
+//       
+//    }
+
+    public function activate() {
+        $activate_id = $this->input->post('activate_id');
+        $activate_table = $this->input->post('activate_table');
+        $status = $this->input->post('status');
+        $update_array = array('status' => $status);
+        $activatedetails = $this->Mydb->update_where_in($activate_table, 'id', $activate_id, $update_array);
+        if ($activatedetails) {
+            $response['message'] = "<div class='alert alert-success'>Your request has been successfully changed</div>";
+        } else {
+            $response['message'] = "<div class='alert alert-danger'>Your request can't be changed. Please try again</div>";
+        }
+        echo json_encode($response);
+    }
+
     public function calculatehours() {
-        $start = new DateTime('2012-09-06');
-        $end = new DateTime('2012-09-11');
+        $startdate = $this->input->post('start_date');
+        $end_date = $this->input->post('end_date');
+        $getholidays = $this->Mydb->custom_query("select holiday_date from $this->srm_holidays_table where status=1");
+        $holidays = array();
+        if (!empty($getholidays)) {
+            foreach ($getholidays as $srmholiday):
+                $holidays[] = $srmholiday['holiday_date'];
+            endforeach;
+        }else {
+            $holidays[] = '';
+        }
+        $start = new DateTime($startdate);
+        $end = new DateTime($end_date);
 // otherwise the  end date is excluded (bug?)
         $end->modify('+1 day');
 
@@ -417,7 +461,7 @@ class USER extends CI_Controller {
         $period = new DatePeriod($start, new DateInterval('P1D'), $end);
 
 // best stored as array, so you can add more than one
-        $holidays = array('2012-09-07', '2012-09-06', '2012-09-10');
+
 
         foreach ($period as $dt) {
             $curr = $dt->format('D');
@@ -433,22 +477,9 @@ class USER extends CI_Controller {
             }
         }
 
-        $officehours = 8;
-        $days;
-    }
-
-    public function activate() {
-        $activate_id = $this->input->post('activate_id');
-        $activate_table = $this->input->post('activate_table');
-        $status = $this->input->post('status');
-        $update_array = array('status' => $status);
-        $activatedetails = $this->Mydb->update_where_in($activate_table, 'id', $activate_id, $update_array);
-        if ($activatedetails) {
-            $response['message'] = "<div class='alert alert-success'>Your request has been successfully changed</div>";
-        } else {
-            $response['message'] = "<div class='alert alert-danger'>Your details can't be activated.Please try again</div>";
-        }
-        echo json_encode($response);
+        $officehours = 9;
+        $total_hours['total_hours'] = $days * $officehours;
+        echo json_encode($total_hours);
     }
 
     private function load_module_info() {
