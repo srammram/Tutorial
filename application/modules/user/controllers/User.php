@@ -62,6 +62,7 @@ class USER extends CI_Controller {
             if ($this->form_validation->run($this) == TRUE) {
 
                 $userdetails = $this->Mydb->custom_query("select * from $this->login_table where user_email='$emailaddress' and user_pass='$password'");
+
                 if (!empty($userdetails)) {
                     if ($userdetails[0]['status'] == 1) {
                         $user_id = $userdetails[0]['id'];
@@ -74,16 +75,19 @@ class USER extends CI_Controller {
                         $this->Mydb->insert($this->login_history_table, array('login_time' => current_date(), 'login_ip' => ip2long(get_ip()), 'user_id' => $user_id));
                         redirect(frontend_url() . 'dashboard');
                     } else {
-                        $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Email/Password is wrong. Please try again');
+                        $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Your user details is not active. Contact your reporting person');
                         $this->session->set_userdata($session_datas);
+                        redirect(frontend_url());
                     }
                 } else {
                     $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Email/Password is not available. Please try again');
                     $this->session->set_userdata($session_datas);
+                    redirect(frontend_url());
                 }
             } else {
                 $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
                 $this->session->set_userdata($session_datas);
+                redirect(frontend_url());
             }
         } else {
             redirect(frontend_url() . 'dashboard');
@@ -370,6 +374,7 @@ class USER extends CI_Controller {
                     }
 
                 endif;
+
             else:
                 $edit_id = decode_value($method[1]);
                 $getuserdetails = $this->Mydb->custom_query("select * from $this->login_table where id=$edit_id");
@@ -430,6 +435,20 @@ class USER extends CI_Controller {
 
         $officehours = 8;
         $days;
+    }
+
+    public function activate() {
+        $activate_id = $this->input->post('activate_id');
+        $activate_table = $this->input->post('activate_table');
+        $status = $this->input->post('status');
+        $update_array = array('status' => $status);
+        $activatedetails = $this->Mydb->update_where_in($activate_table, 'id', $activate_id, $update_array);
+        if ($activatedetails) {
+            $response['message'] = "<div class='alert alert-success'>Your request has been successfully changed</div>";
+        } else {
+            $response['message'] = "<div class='alert alert-danger'>Your details can't be activated.Please try again</div>";
+        }
+        echo json_encode($response);
     }
 
     private function load_module_info() {
