@@ -17,6 +17,23 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-12">
+                            <?php
+                            if (isset($_SESSION['pms_err']) && $_SESSION['pms_err'] == 1):
+                                ?>
+                                <div class="col-xs-12 alert alert-danger text-center">
+                                    <?php echo $_SESSION['pms_err_message']; ?>
+                                </div>
+                                <?php
+                            elseif (isset($_SESSION['pms_err']) && $_SESSION['pms_err'] == 0):
+                                ?>
+                                <div class="col-xs-12 alert alert-success text-center">
+                                    <?php echo $_SESSION['pms_err_message']; ?>
+                                </div>
+                                <?php
+                            endif;
+                            unset($_SESSION['pms_err']);
+                            unset($_SESSION['pms_err_message']);
+                            ?>
                             <form id="login-form" action="<?php echo frontend_url() . 'login'; ?>" method="post" role="form" style="display: block;" data-parsley-validate="">
                                 <div class="form-group">
                                     <input type="email" name="emailaddress" id="emailaddress" tabindex="1" class="form-control" placeholder="Email Address" value="" required="" data-parsley-type="email">

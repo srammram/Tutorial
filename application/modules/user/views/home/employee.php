@@ -14,6 +14,15 @@
             Manage Employees
         </div>
         <div class="panel-body">
+            <div class="col-xs-12">
+                <a href="javascript:void(0)" class="btn btn-success" onclick="activate_users('users', '1')">Activate</a>
+                <a href="javascript:void(0)" class="btn btn-warning" onclick="activate_users('users', '0')">Deactivate</a>
+                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('users', '3')">Delete</a>
+            </div>
+            <div class="col-xs-12" id="empsucc_message">
+
+            </div>
+            <div class="clear" style="clear:both;height:1em"></div>
             <table id="user_type_table" class="display" cellspacing="0" width="100%">
                 <thead>
                     <tr>
@@ -44,7 +53,7 @@
                             endif;
                             ?>
                             <tr>
-                                <td><input type="checkbox" class="selectthis" value="<?php echo $employeedetails['id']; ?>"/></td>
+                                <td><input type="checkbox" class="selectthis" name="empcheckid" value="<?php echo $employeedetails['id']; ?>"/></td>
                                 <td><?= ($employeedetails['id']); ?></td>
                                 <td><?= stripslashes($employeedetails['user_name']); ?></td>
                                 <td><?= stripslashes($employeedetails['user_email']); ?></td>
@@ -62,6 +71,12 @@
                     ?>
                 </tbody>
             </table>
+            <div class="clear" style="clear:both;height:1em"></div>
+            <div class="col-xs-12">
+                <a href="javascript:void(0)" class="btn btn-success" onclick="activate_users('users', '1')">Activate</a>
+                <a href="javascript:void(0)" class="btn btn-warning" onclick="activate_users('users', '0')">Deactivate</a>
+                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('users', '3')">Delete</a>
+            </div>
         </div>
     </div>
 </div>

@@ -7,6 +7,7 @@
             Manage User Type
         </div>
         <div class="panel-body">
+
             <table id="user_type_table" class="display" cellspacing="0" width="100%">
                 <thead>
                     <tr>
