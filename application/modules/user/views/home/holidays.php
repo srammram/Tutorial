@@ -1,10 +1,10 @@
 <?php echo $this->load->view('layout/left-menu'); ?>
 <div class="col-xs-12">
-    <h1>Manage Departments</h1>
+    <h1>Manage Holidays</h1>
     <div class="clear" style="clear: both;height:3em"></div>
     <div class="panel panel-default">
         <div class="panel-heading text-center">
-            Manage Departments
+            Manage Holidays
         </div>
         <div class="panel-body">
             <div class="col-xs-12">
