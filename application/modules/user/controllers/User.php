@@ -332,7 +332,7 @@ class USER extends CI_Controller {
             }
         } else {
             $data = $this->load_module_info();
-            $getholidaysdetails = $this->Mydb->custom_query("select * from $this->srm_holidays_table");
+            $getholidaysdetails = $this->Mydb->custom_query("select * from $this->srm_holidays_table WHERE status!='3'");
             $data['records'] = $getholidaysdetails;
             $this->layout->display_frontend($this->folder . 'holidays', $data);
         }
@@ -628,7 +628,6 @@ class USER extends CI_Controller {
                     $this->form_validation->set_rules('employee_email', 'Email', 'required');
                     $this->form_validation->set_rules('user_type', 'User Type', 'required');
                     $this->form_validation->set_rules('emp_departments', 'Department Type', 'required');
-					$this->form_validation->set_rules('emp_mobile', 'Mobile', 'required|trim|callback_phone_exists');
                     $this->form_validation->set_rules('employee_dob', 'DOB', 'required');
                     $this->form_validation->set_rules('emp_country', 'Country', 'required');
                     $this->form_validation->set_rules('emp_state', 'State', 'required');
