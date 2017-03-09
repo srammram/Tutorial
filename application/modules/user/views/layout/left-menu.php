@@ -66,14 +66,20 @@
                     <?php
                     if (isset($_SESSION['user_access_menus_id']) && (in_array('Projects', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
                         ?>
-                        <li  data-toggle="collapse" data-target="#projects" class="collapsed">
-                            <a href="#"><i class="fa fa-product-hunt fa-lg"></i> Projects<span class="arrow"></span></a>
-                        </li>
-                        <ul class="sub-menu collapse" id="projects">
-                            <li class=""><a href="<?php echo frontend_url() . 'projects/add'; ?>">Add Project</a></li>
-                            <li><a href="<?php echo frontend_url() . 'projects/' ?>">Manage Projects</a></li>
+                        <?php if ($_SESSION['user_type_id'] != 5): ?>
+                            <li  data-toggle="collapse" data-target="#projects" class="collapsed">
+                                <a href="#"><i class="fa fa-product-hunt fa-lg"></i> Projects<span class="arrow"></span></a>
+                            </li>
+                            <ul class="sub-menu collapse" id="projects">
+                                <li class=""><a href="<?php echo frontend_url() . 'projects/add'; ?>">Add Project</a></li>
+                                <li><a href="<?php echo frontend_url() . 'projects/' ?>">Manage Projects</a></li>
 
-                        </ul>
+                            </ul>
+                        <?php else: ?>
+                            <li   class="collapsed">
+                                <a href="<?php echo frontend_url() . 'projects/assigned_teamprojects'; ?>"><i class="fa fa-product-hunt fa-lg"></i>Assigned Projects</a>
+                            </li>
+                        <?php endif; ?>
                     <?php endif; ?>
                     <?php
                     if (isset($_SESSION['user_access_menus_id']) && (in_array('Tasks', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
@@ -117,7 +123,7 @@
                         <ul class="sub-menu collapse" id="holiday">
                             <li><a href="<?php echo frontend_url() . 'holidays/add'; ?>">Add Holidays</a></li>
                             <li><a href="<?php echo frontend_url() . 'holidays'; ?>">Manage Holidays</a></li>
-                           
+
                         </ul>
                     <?php endif; ?>
                 <?php endif; ?>

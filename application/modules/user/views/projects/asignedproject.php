@@ -60,7 +60,6 @@
     <div class="modal-footer">
         <div id="assign_err_message"></div>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" id="asignprojecttoteam" onclick="assignprojects(<?php echo $records[0]['project_during_hours']; ?>)">Assign</button>
     </div>
 </form>
 <script type="text/javascript">
