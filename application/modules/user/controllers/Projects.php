@@ -156,6 +156,27 @@ class Projects extends CI_Controller {
         echo $body;
     }
 
+    public function assign_projects() {
+        $project_id = $this->input->post('project_id');
+        $getprojectdetails = $this->Mydb->custom_query("select * from $this->projects_table where id=$project_id");
+        $data['records'] = $getprojectdetails;
+        $data['project_id'] = $project_id;
+        $project_team = explode(',', $getprojectdetails[0]['project_team']);
+        foreach ($project_team as $proteam):
+            $getteamname = $this->Mydb->custom_query("select name,id,slug from $this->departments_table where id=$proteam");
+            $project_team_name[] = $getteamname[0]['name'];
+            $departemnt_id = $getteamname[0]['id'];
+            $gettldetails = $this->Mydb->custom_query("select user_name,id from $this->login_table where user_type_id=5 and user_departments_id=$departemnt_id and status=1");
+            $tl_details[] = $gettldetails;
+        endforeach;
+        $getdepartments = $this->Mydb->custom_query("select name,id,slug from $this->departments_table where status=1");
+        $data['project_team_name'] = $project_team_name;
+        $data['departments'] = $getdepartments;
+        $data['tl_details'] = $tl_details;
+        $body = $this->load->view($this->folder . 'asignproject', $data);
+        echo $body;
+    }
+
     private function load_module_info() {
         $data = array();
         $data ['module_label'] = $this->module_label;
