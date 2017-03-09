@@ -191,7 +191,166 @@ class USER extends CI_Controller {
             redirect(frontend_url());
         }
     }
-
+	
+	
+	########### Profile Edit ... ###########
+	
+	public function profile($method = null, $args = array()) {
+        $data = $this->load_module_info();
+		$id = get_session_value('user_id');
+		
+		if (!empty($method)) {
+			if ($method[0] == 'update'){
+				$this->form_validation->set_rules('user_name', 'Name', 'required|trim');
+				$this->form_validation->set_rules('user_address', 'Address', 'required');
+				$this->form_validation->set_rules('user_dob', 'DOB', 'required');
+				$this->form_validation->set_rules('user_country', 'Country', 'required');
+				$this->form_validation->set_rules('user_state', 'State', 'required');
+				$this->form_validation->set_rules('user_city', 'City', 'required');
+				
+				$user_name = $this->input->post('user_name');
+				$user_address = $this->input->post('user_address');
+				$user_dob = $this->input->post('user_dob');
+				$user_country = $this->input->post('user_country');
+				$user_state = $this->input->post('user_state');
+				$user_city = $this->input->post('user_city');
+				
+				 if ($this->form_validation->run($this) == TRUE) {
+					 $update_array = array(
+					 	'user_name' => $user_name,
+						'user_address' => $user_address,
+						'user_dob' => $user_dob,
+						'user_country' => $user_country,
+						'user_state' => $user_state,
+						'user_city' => $user_city,
+						'created_ip' => ip2long(get_ip()),
+						'created_by' => get_session_value('user_id'),
+						'updated_on' => current_date(),
+					 );
+					 $this->Mydb->update($this->login_table, array('id' => get_session_value('user_id')), $update_array);
+					 
+					 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Profile Edit is success', 'user_name' => $user_name);
+					 $this->session->set_userdata($session_datas);
+					 redirect(frontend_url() . 'profile');
+				 }else{
+					$session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
+					$this->session->set_userdata($session_datas);
+					$this->session->set_userdata('validation_errors', validation_errors());
+					$this->session->mark_as_flash('validation_errors'); // data will automatically delete themselves after redirect
+					$this->session->set_flashdata($this->input->post());
+					$this->session->flashdata($this->input->post());
+					redirect(frontend_url() . 'profile');
+				 }
+			}
+		}else{
+			$data['user'] = $this->Mydb->get_record('*', $this->login_table, array('id' => $id));
+			$data['countries'] = $this->Mydb->custom_query("select title,id from $this->countries");
+			$data['states'] = $this->Mydb->custom_query("select name,id from $this->states_table where country_id='".$data['user']['user_country']."'");
+			$data['cities'] = $this->Mydb->custom_query("select name,id from $this->cities_table where state_id='".$data['user']['user_state']."'");
+			$this->layout->display_frontend($this->folder . 'profile-edit', $data);
+		}
+    }
+	
+	########### Holidays ... ###########
+	
+	public function holidays($method = null, $args = array()) {
+		$data = $this->load_module_info();
+        if (!empty($method)) {
+            if ($method[0] == 'add') {
+                $data = $this->load_module_info();
+                $this->layout->display_frontend($this->folder . 'holidays-add', $data);
+            } elseif ($method[0] == 'insert') {
+				
+				$this->form_validation->set_rules('holiday_date', 'Holiday Date', 'required');
+				$this->form_validation->set_rules('holiday_reason', 'Reason', 'required');
+				$this->form_validation->set_rules('status', 'Status', 'required');
+				
+				$holiday_date = $this->input->post('holiday_date');
+				$holiday_reason = $this->input->post('holiday_reason');
+				$status = $this->input->post('status');
+				
+				if ($this->form_validation->run($this) == TRUE) {
+                	$check = $this->Mydb->get_record('*', $this->srm_holidays_table, array('holiday_date' => $holiday_date));
+                	if(!empty($check)){
+						$session_datas = array('pms_err' => '1', 'pms_err_message' => 'Holiday date is already exit. please change data');
+						$this->session->set_userdata($session_datas);
+						redirect(frontend_url() . 'holidays/add');
+					}else{
+						$insert_array = array(
+							'holiday_date' => $holiday_date,
+							'holiday_reason' => $holiday_reason,
+							'status' => $status,
+							'created_by' => get_session_value('user_id'),
+							'created_on' => current_date(),
+						); 
+						$holidays = $this->Mydb->insert($this->srm_holidays_table, $insert_array);
+						
+						if(!empty($holidays)){
+							$session_datas = array('pms_err' => '0', 'pms_err_message' => 'Holidays has been successfully added.. ');
+							$this->session->set_userdata($session_datas);
+							redirect(frontend_url() . 'holidays/add');
+						}else{
+							$session_datas = array('pms_err' => '1', 'pms_err_message' => 'Holidays cannot be added. Please try again');
+							$this->session->set_userdata($session_datas);
+							redirect(frontend_url() . 'departments/add');
+						}
+					}
+                } else {
+                    $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
+                    $this->session->set_userdata($session_datas);
+                    redirect(frontend_url() . 'holidays/add');
+                }
+            } else if ($method[0] == 'update') {
+				
+                $edit_id = $this->input->post('edit_id');
+                $holiday_date = $this->input->post('holiday_date');
+				$holiday_reason = $this->input->post('holiday_reason');
+                $edit_status = $this->input->post('edit_status');
+                $update_array = array('holiday_date' => $holiday_date,
+							'holiday_reason' => $holiday_reason,
+							'status' => $edit_status,
+							'created_by' => get_session_value('user_id'),
+							'created_on' => current_date());
+                
+				
+				$check = $this->Mydb->get_record('*', $this->srm_holidays_table, array('holiday_date' => $holiday_date, 'id!=' => $edit_id));
+				
+                if(!empty($check)){
+					$response['message'] = "<div class='alert alert-danger'>Your date already exit.</div>";
+				}else{
+					$updatedetails = $this->Mydb->update($this->srm_holidays_table, array('id' => $edit_id), $update_array);
+					
+					if ($updatedetails) {
+						$response['message'] = "<div class='alert alert-success'>Your details has been successfully updated.</div>";
+					} else {
+						$response['message'] = "<div class='alert alert-danger'>Your details can't be  updated. please try again</div>";
+					}
+					
+				}
+				
+                echo json_encode($response);
+            }
+        } else {
+            $data = $this->load_module_info();
+            $getholidaysdetails = $this->Mydb->custom_query("select * from $this->srm_holidays_table");
+            $data['records'] = $getholidaysdetails;
+            $this->layout->display_frontend($this->folder . 'holidays', $data);
+        }
+    }
+	
+	########### Holidays Edit ... ###########
+	
+	public function editholiday() {
+        $editid = $this->input->post('edit_id');
+        $getholidaydetails = $this->Mydb->custom_query("select holiday_date, holiday_reason,status from $this->srm_holidays_table where id=$editid");
+        $data['holiday_date'] = $getholidaydetails[0]['holiday_date'];
+		$data['holiday_reason'] = $getholidaydetails[0]['holiday_reason'];
+        $data['status'] = $getholidaydetails[0]['status'];
+        $data['edit_id'] = $editid;
+        $body = $this->load->view($this->folder . 'editholiday', $data);
+        echo $body;
+    }
+	
     public function dashboard() {
         $data = $this->load_module_info();
 
@@ -357,6 +516,7 @@ class USER extends CI_Controller {
                     $this->form_validation->set_rules('employee_pass', 'Password', 'required|trim');
                     $this->form_validation->set_rules('user_type', 'User Type', 'required');
                     $this->form_validation->set_rules('emp_departments', 'Department Type', 'required');
+					$this->form_validation->set_rules('emp_mobile', 'Mobile', 'required|trim|callback_phone_exists');
                     $this->form_validation->set_rules('employee_dob', 'DOB', 'required');
                     $this->form_validation->set_rules('emp_country', 'Country', 'required');
                     $this->form_validation->set_rules('emp_state', 'State', 'required');
@@ -539,7 +699,33 @@ class USER extends CI_Controller {
             $this->layout->display_frontend($this->folder . 'employee', $data);
         }
     }
+	
+	
+	
+	########### Phone Check ... ###########
 
+    public function phone_exists() {
+        $user_mobile = $this->input->post('emp_mobile');
+        $id = get_session_value('user_id');
+		$where = array(
+            'user_mobile' => trim($user_mobile),
+        );
+        if ($id != "") {
+            $where = array_merge($where, array(
+                "id !=" => $id
+            ));
+        }
+		
+		$result = $this->Mydb->get_record('user_mobile', $this->login_table, $where);
+		if (!empty($result)) {
+            $this->form_validation->set_message('phone_exists', 'Mobile Number Already Exit.');
+            return false;
+        } else {
+            return true;
+        }
+        
+    }
+	
 //    public function calculatehours() {
 //       
 //    }
