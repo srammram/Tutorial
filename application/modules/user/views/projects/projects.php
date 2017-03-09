@@ -54,7 +54,7 @@
                                 <td><?= stripslashes($prodet['project_description']); ?></td>
                                 <td><?= $protype; ?></td>
                                 <td><label class="<?php echo $lableclass; ?>" style="font-size:12px"><?php echo $status; ?></label></td>
-                                <td><a  class="btn btn-success" href="#EditProject" data-toggle="modal" onclick="editproject(<?php echo $prodet['id']; ?>)"><i class="fa fa-edit"></i></a><a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $prodet['id']; ?>, 'projects')"><i class="fa fa-trash"></i></a><a href="javascript:void(0)" class="btn btn-warning" title="Assign Team for this project"><i class="fa fa-tasks"></i></a></td>
+                                <td><a  class="btn btn-success" href="#EditProject" data-toggle="modal" onclick="editproject(<?php echo $prodet['id']; ?>)"><i class="fa fa-edit"></i></a><a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $prodet['id']; ?>, 'projects')"><i class="fa fa-trash"></i></a><a  class="btn btn-warning" title="Assign Team for this project" href="#AssignProject" data-toggle="modal" onclick="asign_projects(<?php echo $prodet['id']; ?>)"><i class="fa fa-tasks"></i></a></td>
                             </tr>
                             <?php
                         endforeach;
@@ -75,6 +75,13 @@
 <div id="EditProject" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content" id="projectsedit">
+
+        </div>
+    </div>
+</div>
+<div id="AssignProject" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content" id="asignproject">
 
         </div>
     </div>
