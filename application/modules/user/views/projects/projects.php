@@ -35,9 +35,12 @@
                             elseif ($prodet['status'] == 1):
                                 $lableclass = "label label-success";
                                 $status = 'Active';
-                            else:
+                            elseif ($prodet['status'] == 2):
                                 $lableclass = "label label-danger";
                                 $status = 'Ignored';
+                            elseif ($prodet['status'] == 6):
+                                $lableclass = "label label-primary";
+                                $status = 'Assigned';
                             endif;
                             if ($prodet['project_type_status'] == 1):
                                 $protype = 'Ongoing';
@@ -54,7 +57,18 @@
                                 <td><?= stripslashes($prodet['project_description']); ?></td>
                                 <td><?= $protype; ?></td>
                                 <td><label class="<?php echo $lableclass; ?>" style="font-size:12px"><?php echo $status; ?></label></td>
-                                <td><a  class="btn btn-success" href="#EditProject" data-toggle="modal" onclick="editproject(<?php echo $prodet['id']; ?>)"><i class="fa fa-edit"></i></a><a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $prodet['id']; ?>, 'projects')"><i class="fa fa-trash"></i></a><a  class="btn btn-warning" title="Assign Team for this project" href="#AssignProject" data-toggle="modal" onclick="asign_projects(<?php echo $prodet['id']; ?>)"><i class="fa fa-tasks"></i></a></td>
+                                <td>
+                                    <a  class="btn btn-success" href="#EditProject" data-toggle="modal" onclick="editproject(<?php echo $prodet['id']; ?>)"><i class="fa fa-edit"></i></a>
+                                    <a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $prodet['id']; ?>, 'projects')"><i class="fa fa-trash"></i></a>
+                                    <?php
+                                    if ($prodet['status'] != 6):
+                                        ?>
+                                        <a  class="btn btn-warning" title="Assign Team for this project" href="#AssignProject" data-toggle="modal" onclick="asign_projects(<?php echo $prodet['id']; ?>)"><i class="fa fa-tasks"></i></a>
+                                    <?php else:
+                                        ?>
+                                        <a  class="btn btn-primary" title="View Assigned Team for this project" href="#AssignProject" data-toggle="modal" onclick="asigned_projects(<?php echo $prodet['id']; ?>)"><i class="fa fa-eye"></i></a>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                             <?php
                         endforeach;

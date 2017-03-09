@@ -90,7 +90,7 @@
                     <?php
                     if (isset($_SESSION['user_access_menus_id']) && (in_array('Settings', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
                         ?>
-                        
+
                         <li  data-toggle="collapse" data-target="#setting" class="collapsed ">
                             <a href="#"><i class="fa fa-cog fa-lg"></i> Settings <span class="arrow"></span></a>
                         </li>
@@ -104,7 +104,7 @@
                     <?php
                     if (isset($_SESSION['user_access_menus_id']) && (in_array('Edit Profile', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
                         ?>
-                        <li  data-toggle="collapse" >
+                        <li  >
                             <a href="<?php echo frontend_url() . 'editprofile' ?>"><i class="fa fa-user fa-lg"></i> Edit Profile</a>
                         </li>
                     <?php endif; ?>
