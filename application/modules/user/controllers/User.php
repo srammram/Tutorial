@@ -520,7 +520,6 @@ class USER extends CI_Controller {
                     $this->form_validation->set_rules('employee_dob', 'DOB', 'required');
                     $this->form_validation->set_rules('emp_country', 'Country', 'required');
                     $this->form_validation->set_rules('emp_state', 'State', 'required');
-//                    $this->form_validation->set_rules('emp_accessmenu', 'State', 'required');
                     if ($this->form_validation->run($this) == TRUE) :
                         $email = $this->input->post('employee_email');
                         $getemail_already_exist = $this->Mydb->custom_query("select id,user_slug from $this->login_table where user_email='$email'");
@@ -608,57 +607,76 @@ class USER extends CI_Controller {
                     } else {
                         $slugvalue = $user_slug;
                     }
-                    $country_id = $this->input->post('emp_country');
-                    $state_id = $this->input->post('emp_state');
-                    $city_id = $this->input->post('emp_city');
-                    $getcountries = $this->Mydb->custom_query("select id,title from $this->countries where id=$country_id");
-                    $getstates = $this->Mydb->custom_query("select id,name,slug from $this->states_table where id=$country_id");
-                    $getcities = $this->Mydb->custom_query("select id,name,slug from $this->cities_table where id=$country_id");
-                    $jsonval['countries'] = array('id' => $getcountries[0]['id'], 'name' => $getcountries[0]['title']);
-                    $jsonval['states'] = array('id' => $getstates[0]['id'], 'name' => $getstates[0]['name'], 'slug' => $getstates[0]['slug']);
-                    $jsonval['cities'] = array('id' => $getcities[0]['id'], 'name' => $getcities[0]['name'], 'slug' => $getcities[0]['slug']);
-                    $jsonvalue = json_encode($jsonval);
-                    $menusid = $this->input->post('emp_accessmenu');
-                    $rows = array();
-                    $menudetails['menu_details'] = array();
-                    for ($i = 0; $i < count($menusid); $i++) {
-                        $getmenudetails = $this->Mydb->custom_query("select id,menu_name,menu_slug from $this->default_leftmenus_table where id=$menusid[$i]");
-                        $rows['name'] = $getmenudetails[0]['menu_name'];
-                        $rows['slug'] = $getmenudetails[0]['menu_slug'];
-                        $rows['id'] = $getmenudetails[0]['id'];
-                        array_push($menudetails['menu_details'], $rows);
-                    }
-                    $jsonmenudetails = json_encode($menudetails);
-                    $update_array = array('user_type_id' => $this->input->post('user_type'),
-                        'user_name' => $this->input->post('employee_name'),
-                        'user_email' => $this->input->post('employee_email'),
-                        'user_slug' => $slugvalue,
-                        'user_departments_id' => $this->input->post('emp_departments'),
-                        'user_mobile' => $this->input->post('emp_mobile'),
-                        'user_address' => $this->input->post('emp_address'),
-                        'user_country' => $this->input->post('emp_country'),
-                        'user_state' => $this->input->post('emp_state'),
-                        'user_city' => $this->input->post('emp_city'),
-                        'user_dob' => date('Y-m-d', strtotime($this->input->post('employee_dob'))),
-                        'user_details' => $jsonvalue,
-                        'user_access_menus_id' => implode(',', $this->input->post('emp_accessmenu')),
-                        'user_access_menus_details' => $jsonmenudetails,
-                        'created_ip' => ip2long(get_ip()),
-                        'created_by' => get_session_value('user_id'),
-                        'status' => 0,
-                        'created_on' => current_date(),
-                    );
-                    $update_id = $this->Mydb->update($this->login_table, array('id' => $employee_id), $update_array);
-                    if ($update_id) {
-                        $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Employee details has been successfully inserted');
+					$this->form_validation->set_rules('employee_name', 'Employee Name', 'required|trim');
+                    $this->form_validation->set_rules('employee_email', 'Email', 'required');
+                    $this->form_validation->set_rules('user_type', 'User Type', 'required');
+                    $this->form_validation->set_rules('emp_departments', 'Department Type', 'required');
+					$this->form_validation->set_rules('emp_mobile', 'Mobile', 'required|trim|callback_phone_exists');
+                    $this->form_validation->set_rules('employee_dob', 'DOB', 'required');
+                    $this->form_validation->set_rules('emp_country', 'Country', 'required');
+                    $this->form_validation->set_rules('emp_state', 'State', 'required');
+					
+                    if ($this->form_validation->run($this) == TRUE){
+					
+						$country_id = $this->input->post('emp_country');
+						$state_id = $this->input->post('emp_state');
+						$city_id = $this->input->post('emp_city');
+						$getcountries = $this->Mydb->custom_query("select id,title from $this->countries where id=$country_id");
+						$getstates = $this->Mydb->custom_query("select id,name,slug from $this->states_table where id=$country_id");
+						$getcities = $this->Mydb->custom_query("select id,name,slug from $this->cities_table where id=$country_id");
+						$jsonval['countries'] = array('id' => $getcountries[0]['id'], 'name' => $getcountries[0]['title']);
+						$jsonval['states'] = array('id' => $getstates[0]['id'], 'name' => $getstates[0]['name'], 'slug' => $getstates[0]['slug']);
+						$jsonval['cities'] = array('id' => $getcities[0]['id'], 'name' => $getcities[0]['name'], 'slug' => $getcities[0]['slug']);
+						$jsonvalue = json_encode($jsonval);
+						$menusid = $this->input->post('emp_accessmenu');
+						$rows = array();
+						$menudetails['menu_details'] = array();
+						for ($i = 0; $i < count($menusid); $i++) {
+							$getmenudetails = $this->Mydb->custom_query("select id,menu_name,menu_slug from $this->default_leftmenus_table where id=$menusid[$i]");
+							$rows['name'] = $getmenudetails[0]['menu_name'];
+							$rows['slug'] = $getmenudetails[0]['menu_slug'];
+							$rows['id'] = $getmenudetails[0]['id'];
+							array_push($menudetails['menu_details'], $rows);
+						}
+						$jsonmenudetails = json_encode($menudetails);
+						$update_array = array('user_type_id' => $this->input->post('user_type'),
+							'user_name' => $this->input->post('employee_name'),
+							'user_email' => $this->input->post('employee_email'),
+							'user_slug' => $slugvalue,
+							'user_departments_id' => $this->input->post('emp_departments'),
+							'user_mobile' => $this->input->post('emp_mobile'),
+							'user_address' => $this->input->post('emp_address'),
+							'user_country' => $this->input->post('emp_country'),
+							'user_state' => $this->input->post('emp_state'),
+							'user_city' => $this->input->post('emp_city'),
+							'user_dob' => date('Y-m-d', strtotime($this->input->post('employee_dob'))),
+							'user_details' => $jsonvalue,
+							'user_access_menus_id' => implode(',', $this->input->post('emp_accessmenu')),
+							'user_access_menus_details' => $jsonmenudetails,
+							'created_ip' => ip2long(get_ip()),
+							'created_by' => get_session_value('user_id'),
+							'status' => 0,
+							'created_on' => current_date(),
+						);
+						$update_id = $this->Mydb->update($this->login_table, array('id' => $employee_id), $update_array);
+						if ($update_id) {
+							$session_datas = array('pms_err' => '0', 'pms_err_message' => 'Employee details has been successfully inserted');
+							$this->session->set_userdata($session_datas);
+							redirect(frontend_url() . 'employee');
+						} else {
+							$session_datas = array('pms_err' => '1', 'pms_err_message' => 'Employee not update. Please try again');
+							$this->session->set_userdata($session_datas);
+							redirect(frontend_url() . 'employee/edit/'.encode_value($employee_id));
+						}
+					}else{
+						$session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
                         $this->session->set_userdata($session_datas);
-                        redirect(frontend_url() . 'employee');
-                    } else {
-                        $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Employee not inserted. Please try again');
-                        $this->session->set_userdata($session_datas);
-                        redirect(frontend_url() . 'employee/add');
-                    }
-
+                        $this->session->set_userdata('validation_errors', validation_errors());
+                        $this->session->mark_as_flash('validation_errors'); // data will automatically delete themselves after redirect
+                        $this->session->set_flashdata($this->input->post());
+                        $this->session->flashdata($this->input->post());
+                        redirect(frontend_url() . 'employee/edit/'.encode_value($employee_id));
+					}
                 endif;
 
             else:
@@ -706,7 +724,7 @@ class USER extends CI_Controller {
 
     public function phone_exists() {
         $user_mobile = $this->input->post('emp_mobile');
-        $id = get_session_value('user_id');
+        $id = $this->input->post('emp_id');
 		$where = array(
             'user_mobile' => trim($user_mobile),
         );
