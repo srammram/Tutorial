@@ -90,9 +90,16 @@
                     <?php
                     if (isset($_SESSION['user_access_menus_id']) && (in_array('Settings', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
                         ?>
-                        <li  data-toggle="collapse" >
-                            <a href="<?php echo frontend_url() . 'settings' ?>"><i class="fa fa-cog fa-lg"></i> Settings</a>
+                        
+                        <li  data-toggle="collapse" data-target="#setting" class="collapsed ">
+                            <a href="#"><i class="fa fa-cog fa-lg"></i> Settings <span class="arrow"></span></a>
                         </li>
+                        <ul class="sub-menu collapse" id="setting">
+                            <li><a href="<?php echo frontend_url() . 'profile'; ?>">Profile Edit</a></li>
+                            <li><a href="<?php echo frontend_url() . 'changepassword'; ?>">Change Password</a></li>
+                            <li><a href="<?php echo frontend_url() . 'emailchange'; ?>">Email Change</a></li>
+                            <li><a href="<?php echo frontend_url() . 'mobilechange'; ?>">Mobile Change</a></li>
+                        </ul>
                     <?php endif; ?>
                     <?php
                     if (isset($_SESSION['user_access_menus_id']) && (in_array('Edit Profile', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
