@@ -27,6 +27,7 @@ class Projects extends CI_Controller {
         $this->states_table = 'states';
         $this->cities_table = 'cities';
         $this->projects_table = 'projects';
+        $this->project_teams_table = 'project_teams';
         $this->load->library('common');
     }
 
@@ -175,6 +176,59 @@ class Projects extends CI_Controller {
         $data['tl_details'] = $tl_details;
         $body = $this->load->view($this->folder . 'asignproject', $data);
         echo $body;
+    }
+
+    public function assigned_projects() {
+        $project_id = $this->input->post('project_id');
+        $getprojectdetails = $this->Mydb->custom_query("select * from $this->projects_table where id=$project_id");
+        $data['records'] = $getprojectdetails;
+        $data['project_id'] = $project_id;
+        $project_team = explode(',', $getprojectdetails[0]['project_team']);
+        foreach ($project_team as $proteam):
+            $getteamname = $this->Mydb->custom_query("select name,id,slug from $this->departments_table where id=$proteam");
+            $project_team_name[] = $getteamname[0]['name'];
+            $departemnt_id = $getteamname[0]['id'];
+            $gettldetails = $this->Mydb->custom_query("select user_name,id from $this->login_table where user_type_id=5 and user_departments_id=$departemnt_id and status=1");
+            $tl_details[] = $gettldetails;
+        endforeach;
+        $getdepartments = $this->Mydb->custom_query("select name,id,slug from $this->departments_table where status=1");
+        $getassigneddetails = $this->Mydb->custom_query("select t1.*,t2.user_name from $this->project_teams_table t1 LEFT JOIN $this->login_table t2 ON t2.id=t1.team_tl_id where projects_id=$project_id and t1.status=1");
+        $data['project_team_name'] = $project_team_name;
+        $data['project_team_details'] = $getassigneddetails;
+        $data['departments'] = $getdepartments;
+        $data['tl_details'] = $tl_details;
+        $body = $this->load->view($this->folder . 'asignedproject', $data);
+        echo $body;
+    }
+
+    public function asingnteam_byproject() {
+        $project_id = $this->input->post('project_id');
+        $team_duration_hours = $this->input->post('team_duration_hours');
+        $select_team_tl = $this->input->post('select_team_tl');
+        $countteamtl = count($select_team_tl);
+
+        for ($i = 0; $i < $countteamtl; $i++) {
+            $tlid = $select_team_tl[$i];
+            $duration_hours = $team_duration_hours[$i];
+            $getdepartment = $this->Mydb->custom_query("select user_departments_id from $this->login_table where id=$tlid");
+            $insert_array = array('team_tl_id' => $tlid,
+                'team_departments_id' => $getdepartment[0]['user_departments_id'],
+                'projects_id' => $project_id,
+                'time_duration' => $duration_hours,
+                'created_by' => $_SESSION['user_id'],
+                'created_at' => current_date(),
+                'created_ip' => ip2long(get_ip()),
+                'status' => 1);
+            $insert_id = $this->Mydb->insert($this->project_teams_table, $insert_array);
+        }
+        if ($insert_id):
+            $update_array = array('status' => 6);
+            $updateproject = $this->Mydb->update($this->projects_table, array('id' => $project_id), $update_array);
+            $response = "<div class='alert alert-success'>Your details has been successfully added.</div>";
+        else:
+            $response = "<div class='alert alert-danger'>Your details hasn't added. Please try again</div>";
+        endif;
+        echo $response;
     }
 
     private function load_module_info() {
