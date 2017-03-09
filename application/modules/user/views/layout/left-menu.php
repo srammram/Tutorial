@@ -108,6 +108,18 @@
                             <a href="<?php echo frontend_url() . 'editprofile' ?>"><i class="fa fa-user fa-lg"></i> Edit Profile</a>
                         </li>
                     <?php endif; ?>
+                    <?php
+                    if (isset($_SESSION['user_access_menus_id']) && (in_array('Edit Profile', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
+                        ?>
+                        <li  data-toggle="collapse" data-target="#holiday" class="collapsed ">
+                            <a href="#"><i class="fa fa-cog fa-lg"></i> Holidays <span class="arrow"></span></a>
+                        </li>
+                        <ul class="sub-menu collapse" id="holiday">
+                            <li><a href="<?php echo frontend_url() . 'holidays/add'; ?>">Add Holidays</a></li>
+                            <li><a href="<?php echo frontend_url() . 'holidays'; ?>">Manage Holidays</a></li>
+                           
+                        </ul>
+                    <?php endif; ?>
                 <?php endif; ?>
             </ul>
         </div>
