@@ -575,6 +575,9 @@ class USER extends CI_Controller {
                             );
                             $insert_id = $this->Mydb->insert($this->login_table, $insert_array);
                             if ($insert_id) {
+								$num = $insert_id;
+								$user_emp_code = 'SRAM'.sprintf("%'.05d\n", $num);	
+								$this->Mydb->update($this->login_table, array('id' => $insert_id), array('user_emp_code' => $user_emp_code));
                                 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Employee details has been successfully inserted');
                                 $this->session->set_userdata($session_datas);
                                 redirect(frontend_url() . 'employee/add');
