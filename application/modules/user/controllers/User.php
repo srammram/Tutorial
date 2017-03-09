@@ -578,6 +578,20 @@ class USER extends CI_Controller {
 								$num = $insert_id;
 								$user_emp_code = 'SRAM'.sprintf("%'.05d\n", $num);	
 								$this->Mydb->update($this->login_table, array('id' => $insert_id), array('user_emp_code' => $user_emp_code));
+								
+								
+								$name = $this->input->post('employee_name');
+								$password = $this->input->post('employee_pass');
+								$username = $this->input->post('employee_email');
+								$to_email = $this->input->post('employee_email');
+								$response_email = $this->send_welcome_email($name, $to_email, $username, $password);	
+								
+								$sms_phone_otp = $this->input->post('employee_name').'. Login details username: '.$this->input->post('employee_email').', password: '.$this->input->post('employee_pass');
+								$sms_phone = $this->input->post('emp_mobile');
+								$sms_country_code = $this->input->post('emp_country');
+		
+								$response_sms = $this->sms_employee_add($sms_phone_otp, $sms_phone, $sms_country_code);						
+								
                                 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Employee details has been successfully inserted');
                                 $this->session->set_userdata($session_datas);
                                 redirect(frontend_url() . 'employee/add');
@@ -747,10 +761,6 @@ class USER extends CI_Controller {
         
     }
 	
-//    public function calculatehours() {
-//       
-//    }
-
     public function activate() {
         $activate_id = $this->input->post('activate_id');
         $activate_table = $this->input->post('activate_table');
@@ -916,6 +926,7 @@ class USER extends CI_Controller {
                         $activation_link = frontend_url('emailactivation/' . $email_check[0]['activation_key']);
                         $to_email = $email_check[0]['new_one'];
                         $response_email = $this->send_activation_email($name, $to_email, $activation_link);
+						
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Email Activation Link sent to mail. please check it..');
                         $this->session->set_userdata($session_datas);
                         redirect(frontend_url() . 'emailchange');
@@ -1188,6 +1199,16 @@ class USER extends CI_Controller {
         $response_sms = send_sms($sms_template_slug = "user-mobile-active", $sms_chk_arr, $sms_rep_arr, $sms_phone, $sms_country_code);
         return $response_sms;
     }
+	
+	########### SMS Employee Add ... ###########
+
+    public function sms_employee_add($sms_phone_otp, $sms_phone, $sms_country_code) {
+
+        $sms_chk_arr = array('[MOBILE_OTP]');
+        $sms_rep_arr = array($sms_phone_otp);
+        $response_sms = send_sms($sms_template_slug = "user-mobile-active", $sms_chk_arr, $sms_rep_arr, $sms_phone, $sms_country_code);
+        return $response_sms;
+    }
 
     ########### SMS Resend ... ###########
 
@@ -1207,6 +1228,16 @@ class USER extends CI_Controller {
         $rep_arr = array($name, $activation_link);
         $response_email = send_email($to_email, $template_slug = "user-account-activation", $chk_arr, $rep_arr, $attach_file = array(), $path = '', $subject = '', $cc = '', $html_template = 'electtv_email_template');
         return $response_email;
+    }
+	
+	###########  Welcome Email  ... ###########
+	
+	public function send_welcome_email($name, $to_email, $username, $password) {
+
+        $chk_arr = array('[NAME]', '[USERNAME]', '[PASSWORD]');
+        $rep_arr = array($name, $username, $password);
+        $response = send_email($to_email, $template_slug = "registration-welcome-email", $chk_arr, $rep_arr, $attach_file = array(), $path = '', $subject = '', $cc = '', $html_template = 'electtv_email_template');
+        return $response;
     }
 
     ########### Email Forgot ... ###########
