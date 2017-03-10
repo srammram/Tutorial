@@ -1,10 +1,11 @@
 <div class="col-xs-3">
+
     <div class="nav-side-menu">
         <div class="menu-list">
-
             <ul id="menu-content" class="menu-content collapse out">
+
                 <li class="active">
-                    <a href="#">
+                    <a href="<?php echo frontend_url() . 'dashboard'; ?>">
                         <i class="fa fa-dashboard fa-lg"></i> Dashboard
                     </a>
                 </li>
@@ -88,8 +89,8 @@
                             <a href="#"><i class="fa fa-tasks fa-lg"></i> Tasks<span class="arrow"></span></a>
                         </li>
                         <ul class="sub-menu collapse" id="tasks">
-                            <li class=""><a href="#">Add Task</a></li>
-                            <li><a href="#">Manage Task</a></li>
+                            <li class=""><a href="<?php echo frontend_url() . 'tasks/add'; ?>">Add Task</a></li>
+                            <li><a href="<?php echo frontend_url() . 'tasks/'; ?>">Manage Tasks</a></li>
 
                         </ul>
                     <?php endif; ?>
