@@ -118,11 +118,35 @@
                     if (isset($_SESSION['user_access_menus_id']) && (in_array('Edit Profile', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
                         ?>
                         <li  data-toggle="collapse" data-target="#holiday" class="collapsed ">
-                            <a href="#"><i class="fa fa-cog fa-lg"></i> Holidays <span class="arrow"></span></a>
+                            <a href="#"><i class="fa fa-calendar fa-lg"></i> Holidays <span class="arrow"></span></a>
                         </li>
                         <ul class="sub-menu collapse" id="holiday">
                             <li><a href="<?php echo frontend_url() . 'holidays/add'; ?>">Add Holidays</a></li>
                             <li><a href="<?php echo frontend_url() . 'holidays'; ?>">Manage Holidays</a></li>
+
+                        </ul>
+                    <?php endif; ?>
+                    <?php
+                    if (isset($_SESSION['user_access_menus_id']) && (in_array('Edit Profile', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
+                        ?>
+                        <li  data-toggle="collapse" data-target="#email" class="collapsed ">
+                            <a href="#"><i class="fa fa-envelope fa-lg"></i> Email Setting <span class="arrow"></span></a>
+                        </li>
+                        <ul class="sub-menu collapse" id="email">
+                            <li><a href="<?php echo frontend_url() . 'emailsetting/add'; ?>">Add Email Setting</a></li>
+                            <li><a href="<?php echo frontend_url() . 'emailsetting'; ?>">Manage Email Setting</a></li>
+
+                        </ul>
+                    <?php endif; ?>
+                    <?php
+                    if (isset($_SESSION['user_access_menus_id']) && (in_array('Edit Profile', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
+                        ?>
+                        <li  data-toggle="collapse" data-target="#sms" class="collapsed ">
+                            <a href="#"><i class="fa fa-mobile fa-lg"></i> SMS Setting <span class="arrow"></span></a>
+                        </li>
+                        <ul class="sub-menu collapse" id="sms">
+                            <li><a href="<?php echo frontend_url() . 'smssetting/add'; ?>">Add SMS Setting</a></li>
+                            <li><a href="<?php echo frontend_url() . 'smssetting'; ?>">Manage SMS Setting</a></li>
 
                         </ul>
                     <?php endif; ?>
