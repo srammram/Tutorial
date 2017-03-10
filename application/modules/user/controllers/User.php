@@ -191,143 +191,141 @@ class USER extends CI_Controller {
             redirect(frontend_url());
         }
     }
-	
-	
-	########### Profile Edit ... ###########
-	
-	public function profile($method = null, $args = array()) {
+
+    ########### Profile Edit ... ###########
+
+    public function profile($method = null, $args = array()) {
         $data = $this->load_module_info();
-		$id = get_session_value('user_id');
-		
-		if (!empty($method)) {
-			if ($method[0] == 'update'){
-				$this->form_validation->set_rules('user_name', 'Name', 'required|trim');
-				$this->form_validation->set_rules('user_address', 'Address', 'required');
-				$this->form_validation->set_rules('user_dob', 'DOB', 'required');
-				$this->form_validation->set_rules('user_country', 'Country', 'required');
-				$this->form_validation->set_rules('user_state', 'State', 'required');
-				$this->form_validation->set_rules('user_city', 'City', 'required');
-				
-				$user_name = $this->input->post('user_name');
-				$user_address = $this->input->post('user_address');
-				$user_dob = $this->input->post('user_dob');
-				$user_country = $this->input->post('user_country');
-				$user_state = $this->input->post('user_state');
-				$user_city = $this->input->post('user_city');
-				
-				 if ($this->form_validation->run($this) == TRUE) {
-					 $update_array = array(
-					 	'user_name' => $user_name,
-						'user_address' => $user_address,
-						'user_dob' => $user_dob,
-						'user_country' => $user_country,
-						'user_state' => $user_state,
-						'user_city' => $user_city,
-						'created_ip' => ip2long(get_ip()),
-						'created_by' => get_session_value('user_id'),
-						'updated_on' => current_date(),
-					 );
-					 $this->Mydb->update($this->login_table, array('id' => get_session_value('user_id')), $update_array);
-					 
-					 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Profile Edit is success', 'user_name' => $user_name);
-					 $this->session->set_userdata($session_datas);
-					 redirect(frontend_url() . 'profile');
-				 }else{
-					$session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
-					$this->session->set_userdata($session_datas);
-					$this->session->set_userdata('validation_errors', validation_errors());
-					$this->session->mark_as_flash('validation_errors'); // data will automatically delete themselves after redirect
-					$this->session->set_flashdata($this->input->post());
-					$this->session->flashdata($this->input->post());
-					redirect(frontend_url() . 'profile');
-				 }
-			}
-		}else{
-			$data['user'] = $this->Mydb->get_record('*', $this->login_table, array('id' => $id));
-			$data['countries'] = $this->Mydb->custom_query("select title,id from $this->countries");
-			$data['states'] = $this->Mydb->custom_query("select name,id from $this->states_table where country_id='".$data['user']['user_country']."'");
-			$data['cities'] = $this->Mydb->custom_query("select name,id from $this->cities_table where state_id='".$data['user']['user_state']."'");
-			$this->layout->display_frontend($this->folder . 'profile-edit', $data);
-		}
+        $id = get_session_value('user_id');
+
+        if (!empty($method)) {
+            if ($method[0] == 'update') {
+                $this->form_validation->set_rules('user_name', 'Name', 'required|trim');
+                $this->form_validation->set_rules('user_address', 'Address', 'required');
+                $this->form_validation->set_rules('user_dob', 'DOB', 'required');
+                $this->form_validation->set_rules('user_country', 'Country', 'required');
+                $this->form_validation->set_rules('user_state', 'State', 'required');
+                $this->form_validation->set_rules('user_city', 'City', 'required');
+
+                $user_name = $this->input->post('user_name');
+                $user_address = $this->input->post('user_address');
+                $user_dob = $this->input->post('user_dob');
+                $user_country = $this->input->post('user_country');
+                $user_state = $this->input->post('user_state');
+                $user_city = $this->input->post('user_city');
+
+                if ($this->form_validation->run($this) == TRUE) {
+                    $update_array = array(
+                        'user_name' => $user_name,
+                        'user_address' => $user_address,
+                        'user_dob' => $user_dob,
+                        'user_country' => $user_country,
+                        'user_state' => $user_state,
+                        'user_city' => $user_city,
+                        'created_ip' => ip2long(get_ip()),
+                        'created_by' => get_session_value('user_id'),
+                        'updated_on' => current_date(),
+                    );
+                    $this->Mydb->update($this->login_table, array('id' => get_session_value('user_id')), $update_array);
+
+                    $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Profile Edit is success', 'user_name' => $user_name);
+                    $this->session->set_userdata($session_datas);
+                    redirect(frontend_url() . 'profile');
+                } else {
+                    $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
+                    $this->session->set_userdata($session_datas);
+                    $this->session->set_userdata('validation_errors', validation_errors());
+                    $this->session->mark_as_flash('validation_errors'); // data will automatically delete themselves after redirect
+                    $this->session->set_flashdata($this->input->post());
+                    $this->session->flashdata($this->input->post());
+                    redirect(frontend_url() . 'profile');
+                }
+            }
+        } else {
+            $data['user'] = $this->Mydb->get_record('*', $this->login_table, array('id' => $id));
+            $data['countries'] = $this->Mydb->custom_query("select title,id from $this->countries");
+            $data['states'] = $this->Mydb->custom_query("select name,id from $this->states_table where country_id='" . $data['user']['user_country'] . "'");
+            $data['cities'] = $this->Mydb->custom_query("select name,id from $this->cities_table where state_id='" . $data['user']['user_state'] . "'");
+            $this->layout->display_frontend($this->folder . 'profile-edit', $data);
+        }
     }
-	
-	########### Holidays ... ###########
-	
-	public function holidays($method = null, $args = array()) {
-		$data = $this->load_module_info();
+
+    ########### Holidays ... ###########
+
+    public function holidays($method = null, $args = array()) {
+        $data = $this->load_module_info();
         if (!empty($method)) {
             if ($method[0] == 'add') {
                 $data = $this->load_module_info();
                 $this->layout->display_frontend($this->folder . 'holidays-add', $data);
             } elseif ($method[0] == 'insert') {
-				
-				$this->form_validation->set_rules('holiday_date', 'Holiday Date', 'required');
-				$this->form_validation->set_rules('holiday_reason', 'Reason', 'required');
-				$this->form_validation->set_rules('status', 'Status', 'required');
-				
-				$holiday_date = $this->input->post('holiday_date');
-				$holiday_reason = $this->input->post('holiday_reason');
-				$status = $this->input->post('status');
-				
-				if ($this->form_validation->run($this) == TRUE) {
-                	$check = $this->Mydb->get_record('*', $this->srm_holidays_table, array('holiday_date' => $holiday_date));
-                	if(!empty($check)){
-						$session_datas = array('pms_err' => '1', 'pms_err_message' => 'Holiday date is already exit. please change data');
-						$this->session->set_userdata($session_datas);
-						redirect(frontend_url() . 'holidays/add');
-					}else{
-						$insert_array = array(
-							'holiday_date' => $holiday_date,
-							'holiday_reason' => $holiday_reason,
-							'status' => $status,
-							'created_by' => get_session_value('user_id'),
-							'created_on' => current_date(),
-						); 
-						$holidays = $this->Mydb->insert($this->srm_holidays_table, $insert_array);
-						
-						if(!empty($holidays)){
-							$session_datas = array('pms_err' => '0', 'pms_err_message' => 'Holidays has been successfully added.. ');
-							$this->session->set_userdata($session_datas);
-							redirect(frontend_url() . 'holidays/add');
-						}else{
-							$session_datas = array('pms_err' => '1', 'pms_err_message' => 'Holidays cannot be added. Please try again');
-							$this->session->set_userdata($session_datas);
-							redirect(frontend_url() . 'departments/add');
-						}
-					}
+
+                $this->form_validation->set_rules('holiday_date', 'Holiday Date', 'required');
+                $this->form_validation->set_rules('holiday_reason', 'Reason', 'required');
+                $this->form_validation->set_rules('status', 'Status', 'required');
+
+                $holiday_date = $this->input->post('holiday_date');
+                $holiday_reason = $this->input->post('holiday_reason');
+                $status = $this->input->post('status');
+
+                if ($this->form_validation->run($this) == TRUE) {
+                    $check = $this->Mydb->get_record('*', $this->srm_holidays_table, array('holiday_date' => $holiday_date));
+                    if (!empty($check)) {
+                        $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Holiday date is already exit. please change data');
+                        $this->session->set_userdata($session_datas);
+                        redirect(frontend_url() . 'holidays/add');
+                    } else {
+                        $insert_array = array(
+                            'holiday_date' => $holiday_date,
+                            'holiday_reason' => $holiday_reason,
+                            'status' => $status,
+                            'created_by' => get_session_value('user_id'),
+                            'created_on' => current_date(),
+                        );
+                        $holidays = $this->Mydb->insert($this->srm_holidays_table, $insert_array);
+
+                        if (!empty($holidays)) {
+                            $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Holidays has been successfully added.. ');
+                            $this->session->set_userdata($session_datas);
+                            redirect(frontend_url() . 'holidays/add');
+                        } else {
+                            $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Holidays cannot be added. Please try again');
+                            $this->session->set_userdata($session_datas);
+                            redirect(frontend_url() . 'departments/add');
+                        }
+                    }
                 } else {
                     $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
                     $this->session->set_userdata($session_datas);
                     redirect(frontend_url() . 'holidays/add');
                 }
             } else if ($method[0] == 'update') {
-				
+
                 $edit_id = $this->input->post('edit_id');
                 $holiday_date = $this->input->post('holiday_date');
-				$holiday_reason = $this->input->post('holiday_reason');
+                $holiday_reason = $this->input->post('holiday_reason');
                 $edit_status = $this->input->post('edit_status');
                 $update_array = array('holiday_date' => $holiday_date,
-							'holiday_reason' => $holiday_reason,
-							'status' => $edit_status,
-							'created_by' => get_session_value('user_id'),
-							'created_on' => current_date());
-                
-				
-				$check = $this->Mydb->get_record('*', $this->srm_holidays_table, array('holiday_date' => $holiday_date, 'id!=' => $edit_id));
-				
-                if(!empty($check)){
-					$response['message'] = "<div class='alert alert-danger'>Your date already exit.</div>";
-				}else{
-					$updatedetails = $this->Mydb->update($this->srm_holidays_table, array('id' => $edit_id), $update_array);
-					
-					if ($updatedetails) {
-						$response['message'] = "<div class='alert alert-success'>Your details has been successfully updated.</div>";
-					} else {
-						$response['message'] = "<div class='alert alert-danger'>Your details can't be  updated. please try again</div>";
-					}
-					
-				}
-				
+                    'holiday_reason' => $holiday_reason,
+                    'status' => $edit_status,
+                    'created_by' => get_session_value('user_id'),
+                    'created_on' => current_date());
+
+
+                $check = $this->Mydb->get_record('*', $this->srm_holidays_table, array('holiday_date' => $holiday_date, 'id!=' => $edit_id));
+
+                if (!empty($check)) {
+                    $response['message'] = "<div class='alert alert-danger'>Your date already exit.</div>";
+                } else {
+                    $updatedetails = $this->Mydb->update($this->srm_holidays_table, array('id' => $edit_id), $update_array);
+
+                    if ($updatedetails) {
+                        $response['message'] = "<div class='alert alert-success'>Your details has been successfully updated.</div>";
+                    } else {
+                        $response['message'] = "<div class='alert alert-danger'>Your details can't be  updated. please try again</div>";
+                    }
+                }
+
                 echo json_encode($response);
             }
         } else {
@@ -337,20 +335,20 @@ class USER extends CI_Controller {
             $this->layout->display_frontend($this->folder . 'holidays', $data);
         }
     }
-	
-	########### Holidays Edit ... ###########
-	
-	public function editholiday() {
+
+    ########### Holidays Edit ... ###########
+
+    public function editholiday() {
         $editid = $this->input->post('edit_id');
         $getholidaydetails = $this->Mydb->custom_query("select holiday_date, holiday_reason,status from $this->srm_holidays_table where id=$editid");
         $data['holiday_date'] = $getholidaydetails[0]['holiday_date'];
-		$data['holiday_reason'] = $getholidaydetails[0]['holiday_reason'];
+        $data['holiday_reason'] = $getholidaydetails[0]['holiday_reason'];
         $data['status'] = $getholidaydetails[0]['status'];
         $data['edit_id'] = $editid;
         $body = $this->load->view($this->folder . 'editholiday', $data);
         echo $body;
     }
-	
+
     public function dashboard() {
         $data = $this->load_module_info();
 
@@ -516,7 +514,7 @@ class USER extends CI_Controller {
                     $this->form_validation->set_rules('employee_pass', 'Password', 'required|trim');
                     $this->form_validation->set_rules('user_type', 'User Type', 'required');
                     $this->form_validation->set_rules('emp_departments', 'Department Type', 'required');
-					$this->form_validation->set_rules('emp_mobile', 'Mobile', 'required|trim|callback_phone_exists');
+                    $this->form_validation->set_rules('emp_mobile', 'Mobile', 'required|trim|callback_phone_exists');
                     $this->form_validation->set_rules('employee_dob', 'DOB', 'required');
                     $this->form_validation->set_rules('emp_country', 'Country', 'required');
                     $this->form_validation->set_rules('emp_state', 'State', 'required');
@@ -524,7 +522,7 @@ class USER extends CI_Controller {
                         $email = $this->input->post('employee_email');
                         $getemail_already_exist = $this->Mydb->custom_query("select id,user_slug from $this->login_table where user_email='$email'");
                         if (empty($getemail_already_exist)) {
-                            $user_slug = url_title($this->input->post('employee_email'), '-', TRUE);
+                            $user_slug = url_title($this->input->post('employee_name'), '-', TRUE);
                             $userslug_already_exist = $this->Mydb->custom_query("select id from $this->login_table where user_slug='$user_slug'");
                             if (!empty($userslug_already_exist)) {
                                 $randno = rand(2222, 9999);
@@ -575,23 +573,23 @@ class USER extends CI_Controller {
                             );
                             $insert_id = $this->Mydb->insert($this->login_table, $insert_array);
                             if ($insert_id) {
-								$num = $insert_id;
-								$user_emp_code = 'SRAM'.sprintf("%'.05d\n", $num);	
-								$this->Mydb->update($this->login_table, array('id' => $insert_id), array('user_emp_code' => $user_emp_code));
-								
-								
-								$name = $this->input->post('employee_name');
-								$password = $this->input->post('employee_pass');
-								$username = $this->input->post('employee_email');
-								$to_email = $this->input->post('employee_email');
-								$response_email = $this->send_welcome_email($name, $to_email, $username, $password);	
-								
-								$sms_phone_otp = $this->input->post('employee_name').'. Login details username: '.$this->input->post('employee_email').', password: '.$this->input->post('employee_pass');
-								$sms_phone = $this->input->post('emp_mobile');
-								$sms_country_code = $this->input->post('emp_country');
-		
-								$response_sms = $this->sms_employee_add($sms_phone_otp, $sms_phone, $sms_country_code);						
-								
+                                $num = $insert_id;
+                                $user_emp_code = 'SRAM' . sprintf("%'.05d\n", $num);
+                                $this->Mydb->update($this->login_table, array('id' => $insert_id), array('user_emp_code' => $user_emp_code));
+
+
+                                $name = $this->input->post('employee_name');
+                                $password = $this->input->post('employee_pass');
+                                $username = $this->input->post('employee_email');
+                                $to_email = $this->input->post('employee_email');
+                                $response_email = $this->send_welcome_email($name, $to_email, $username, $password);
+
+                                $sms_phone_otp = $this->input->post('employee_name') . '. Login details username: ' . $this->input->post('employee_email') . ', password: ' . $this->input->post('employee_pass');
+                                $sms_phone = $this->input->post('emp_mobile');
+                                $sms_country_code = $this->input->post('emp_country');
+
+                                $response_sms = $this->sms_employee_add($sms_phone_otp, $sms_phone, $sms_country_code);
+
                                 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Employee details has been successfully inserted');
                                 $this->session->set_userdata($session_datas);
                                 redirect(frontend_url() . 'employee/add');
@@ -624,75 +622,75 @@ class USER extends CI_Controller {
                     } else {
                         $slugvalue = $user_slug;
                     }
-					$this->form_validation->set_rules('employee_name', 'Employee Name', 'required|trim');
+                    $this->form_validation->set_rules('employee_name', 'Employee Name', 'required|trim');
                     $this->form_validation->set_rules('employee_email', 'Email', 'required');
                     $this->form_validation->set_rules('user_type', 'User Type', 'required');
                     $this->form_validation->set_rules('emp_departments', 'Department Type', 'required');
                     $this->form_validation->set_rules('employee_dob', 'DOB', 'required');
                     $this->form_validation->set_rules('emp_country', 'Country', 'required');
                     $this->form_validation->set_rules('emp_state', 'State', 'required');
-					
-                    if ($this->form_validation->run($this) == TRUE){
-					
-						$country_id = $this->input->post('emp_country');
-						$state_id = $this->input->post('emp_state');
-						$city_id = $this->input->post('emp_city');
-						$getcountries = $this->Mydb->custom_query("select id,title from $this->countries where id=$country_id");
-						$getstates = $this->Mydb->custom_query("select id,name,slug from $this->states_table where id=$country_id");
-						$getcities = $this->Mydb->custom_query("select id,name,slug from $this->cities_table where id=$country_id");
-						$jsonval['countries'] = array('id' => $getcountries[0]['id'], 'name' => $getcountries[0]['title']);
-						$jsonval['states'] = array('id' => $getstates[0]['id'], 'name' => $getstates[0]['name'], 'slug' => $getstates[0]['slug']);
-						$jsonval['cities'] = array('id' => $getcities[0]['id'], 'name' => $getcities[0]['name'], 'slug' => $getcities[0]['slug']);
-						$jsonvalue = json_encode($jsonval);
-						$menusid = $this->input->post('emp_accessmenu');
-						$rows = array();
-						$menudetails['menu_details'] = array();
-						for ($i = 0; $i < count($menusid); $i++) {
-							$getmenudetails = $this->Mydb->custom_query("select id,menu_name,menu_slug from $this->default_leftmenus_table where id=$menusid[$i]");
-							$rows['name'] = $getmenudetails[0]['menu_name'];
-							$rows['slug'] = $getmenudetails[0]['menu_slug'];
-							$rows['id'] = $getmenudetails[0]['id'];
-							array_push($menudetails['menu_details'], $rows);
-						}
-						$jsonmenudetails = json_encode($menudetails);
-						$update_array = array('user_type_id' => $this->input->post('user_type'),
-							'user_name' => $this->input->post('employee_name'),
-							'user_email' => $this->input->post('employee_email'),
-							'user_slug' => $slugvalue,
-							'user_departments_id' => $this->input->post('emp_departments'),
-							'user_mobile' => $this->input->post('emp_mobile'),
-							'user_address' => $this->input->post('emp_address'),
-							'user_country' => $this->input->post('emp_country'),
-							'user_state' => $this->input->post('emp_state'),
-							'user_city' => $this->input->post('emp_city'),
-							'user_dob' => date('Y-m-d', strtotime($this->input->post('employee_dob'))),
-							'user_details' => $jsonvalue,
-							'user_access_menus_id' => implode(',', $this->input->post('emp_accessmenu')),
-							'user_access_menus_details' => $jsonmenudetails,
-							'created_ip' => ip2long(get_ip()),
-							'created_by' => get_session_value('user_id'),
-							'status' => 0,
-							'created_on' => current_date(),
-						);
-						$update_id = $this->Mydb->update($this->login_table, array('id' => $employee_id), $update_array);
-						if ($update_id) {
-							$session_datas = array('pms_err' => '0', 'pms_err_message' => 'Employee details has been successfully inserted');
-							$this->session->set_userdata($session_datas);
-							redirect(frontend_url() . 'employee');
-						} else {
-							$session_datas = array('pms_err' => '1', 'pms_err_message' => 'Employee not update. Please try again');
-							$this->session->set_userdata($session_datas);
-							redirect(frontend_url() . 'employee/edit/'.encode_value($employee_id));
-						}
-					}else{
-						$session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
+
+                    if ($this->form_validation->run($this) == TRUE) {
+
+                        $country_id = $this->input->post('emp_country');
+                        $state_id = $this->input->post('emp_state');
+                        $city_id = $this->input->post('emp_city');
+                        $getcountries = $this->Mydb->custom_query("select id,title from $this->countries where id=$country_id");
+                        $getstates = $this->Mydb->custom_query("select id,name,slug from $this->states_table where id=$country_id");
+                        $getcities = $this->Mydb->custom_query("select id,name,slug from $this->cities_table where id=$country_id");
+                        $jsonval['countries'] = array('id' => $getcountries[0]['id'], 'name' => $getcountries[0]['title']);
+                        $jsonval['states'] = array('id' => $getstates[0]['id'], 'name' => $getstates[0]['name'], 'slug' => $getstates[0]['slug']);
+                        $jsonval['cities'] = array('id' => $getcities[0]['id'], 'name' => $getcities[0]['name'], 'slug' => $getcities[0]['slug']);
+                        $jsonvalue = json_encode($jsonval);
+                        $menusid = $this->input->post('emp_accessmenu');
+                        $rows = array();
+                        $menudetails['menu_details'] = array();
+                        for ($i = 0; $i < count($menusid); $i++) {
+                            $getmenudetails = $this->Mydb->custom_query("select id,menu_name,menu_slug from $this->default_leftmenus_table where id=$menusid[$i]");
+                            $rows['name'] = $getmenudetails[0]['menu_name'];
+                            $rows['slug'] = $getmenudetails[0]['menu_slug'];
+                            $rows['id'] = $getmenudetails[0]['id'];
+                            array_push($menudetails['menu_details'], $rows);
+                        }
+                        $jsonmenudetails = json_encode($menudetails);
+                        $update_array = array('user_type_id' => $this->input->post('user_type'),
+                            'user_name' => $this->input->post('employee_name'),
+                            'user_email' => $this->input->post('employee_email'),
+                            'user_slug' => $slugvalue,
+                            'user_departments_id' => $this->input->post('emp_departments'),
+                            'user_mobile' => $this->input->post('emp_mobile'),
+                            'user_address' => $this->input->post('emp_address'),
+                            'user_country' => $this->input->post('emp_country'),
+                            'user_state' => $this->input->post('emp_state'),
+                            'user_city' => $this->input->post('emp_city'),
+                            'user_dob' => date('Y-m-d', strtotime($this->input->post('employee_dob'))),
+                            'user_details' => $jsonvalue,
+                            'user_access_menus_id' => implode(',', $this->input->post('emp_accessmenu')),
+                            'user_access_menus_details' => $jsonmenudetails,
+                            'created_ip' => ip2long(get_ip()),
+                            'created_by' => get_session_value('user_id'),
+                            'status' => 0,
+                            'created_on' => current_date(),
+                        );
+                        $update_id = $this->Mydb->update($this->login_table, array('id' => $employee_id), $update_array);
+                        if ($update_id) {
+                            $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Employee details has been successfully inserted');
+                            $this->session->set_userdata($session_datas);
+                            redirect(frontend_url() . 'employee');
+                        } else {
+                            $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Employee not update. Please try again');
+                            $this->session->set_userdata($session_datas);
+                            redirect(frontend_url() . 'employee/edit/' . encode_value($employee_id));
+                        }
+                    } else {
+                        $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
                         $this->session->set_userdata($session_datas);
                         $this->session->set_userdata('validation_errors', validation_errors());
                         $this->session->mark_as_flash('validation_errors'); // data will automatically delete themselves after redirect
                         $this->session->set_flashdata($this->input->post());
                         $this->session->flashdata($this->input->post());
-                        redirect(frontend_url() . 'employee/edit/'.encode_value($employee_id));
-					}
+                        redirect(frontend_url() . 'employee/edit/' . encode_value($employee_id));
+                    }
                 endif;
 
             else:
@@ -733,15 +731,13 @@ class USER extends CI_Controller {
             $this->layout->display_frontend($this->folder . 'employee', $data);
         }
     }
-	
-	
-	
-	########### Phone Check ... ###########
+
+    ########### Phone Check ... ###########
 
     public function phone_exists() {
         $user_mobile = $this->input->post('emp_mobile');
         $id = $this->input->post('emp_id');
-		$where = array(
+        $where = array(
             'user_mobile' => trim($user_mobile),
         );
         if ($id != "") {
@@ -749,17 +745,16 @@ class USER extends CI_Controller {
                 "id !=" => $id
             ));
         }
-		
-		$result = $this->Mydb->get_record('user_mobile', $this->login_table, $where);
-		if (!empty($result)) {
+
+        $result = $this->Mydb->get_record('user_mobile', $this->login_table, $where);
+        if (!empty($result)) {
             $this->form_validation->set_message('phone_exists', 'Mobile Number Already Exit.');
             return false;
         } else {
             return true;
         }
-        
     }
-	
+
     public function activate() {
         $activate_id = $this->input->post('activate_id');
         $activate_table = $this->input->post('activate_table');
@@ -925,7 +920,7 @@ class USER extends CI_Controller {
                         $activation_link = frontend_url('emailactivation/' . $email_check[0]['activation_key']);
                         $to_email = $email_check[0]['new_one'];
                         $response_email = $this->send_activation_email($name, $to_email, $activation_link);
-						
+
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Email Activation Link sent to mail. please check it..');
                         $this->session->set_userdata($session_datas);
                         redirect(frontend_url() . 'emailchange');
@@ -1198,8 +1193,8 @@ class USER extends CI_Controller {
         $response_sms = send_sms($sms_template_slug = "user-mobile-active", $sms_chk_arr, $sms_rep_arr, $sms_phone, $sms_country_code);
         return $response_sms;
     }
-	
-	########### SMS Employee Add ... ###########
+
+    ########### SMS Employee Add ... ###########
 
     public function sms_employee_add($sms_phone_otp, $sms_phone, $sms_country_code) {
 
@@ -1228,10 +1223,10 @@ class USER extends CI_Controller {
         $response_email = send_email($to_email, $template_slug = "user-account-activation", $chk_arr, $rep_arr, $attach_file = array(), $path = '', $subject = '', $cc = '', $html_template = 'electtv_email_template');
         return $response_email;
     }
-	
-	###########  Welcome Email  ... ###########
-	
-	public function send_welcome_email($name, $to_email, $username, $password) {
+
+    ###########  Welcome Email  ... ###########
+
+    public function send_welcome_email($name, $to_email, $username, $password) {
 
         $chk_arr = array('[NAME]', '[USERNAME]', '[PASSWORD]');
         $rep_arr = array($name, $username, $password);
@@ -1253,10 +1248,10 @@ class USER extends CI_Controller {
 
     public function smssetting($method = null, $args = array()) {
         if (!empty($method)) {
-            if ($method[0] == 'add'){
+            if ($method[0] == 'add') {
                 $data = $this->load_module_info();
                 $this->layout->display_frontend($this->folder . 'smssetting-add', $data);
-			}elseif ($method[0] == 'insert'){
+            } elseif ($method[0] == 'insert') {
                 $data = $this->load_module_info();
 
                 $this->form_validation->set_rules('sms_name', 'Sms Name', 'required|trim');
@@ -1283,58 +1278,57 @@ class USER extends CI_Controller {
                         $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Sms cannot be added. Please try again');
                         $this->session->set_userdata($session_datas);
                         redirect(frontend_url() . 'smssetting/add');
-					}
-				} else {
+                    }
+                } else {
                     $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
                     $this->session->set_userdata($session_datas);
                     redirect(frontend_url() . 'smssetting/add');
                 }
-			
-			}elseif($method[0] == 'update'){
-				$sms_id = $this->input->post('sms_id');
-				$this->form_validation->set_rules('sms_template', 'Sms Template', 'required|trim');
-				$this->form_validation->set_rules('sms_variable', 'Sms Variable', 'required|trim');
-				
-				$sms_template = $this->input->post('sms_template');
-				$sms_variable = $this->input->post('sms_variable');
-				if ($this->form_validation->run($this) == TRUE) {
-					$update_id = $this->Mydb->update($this->sms_table, array('id' => $sms_id), array('sms_content' => $sms_template, 'sms_variable' => $sms_variable));
-					if ($update_id) {
-						$session_datas = array('pms_err' => '0', 'pms_err_message' => 'Sms Setting has been successfully updated');
-						$this->session->set_userdata($session_datas);
-						redirect(frontend_url() . 'smssetting');
-					} else {
-						$session_datas = array('pms_err' => '1', 'pms_err_message' => 'Sms Setting not update. Please try again');
-						$this->session->set_userdata($session_datas);
-						redirect(frontend_url() . 'smssetting/edit/'.encode_value($sms_id));
-					}
-				}else{
-					$session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
+            } elseif ($method[0] == 'update') {
+                $sms_id = $this->input->post('sms_id');
+                $this->form_validation->set_rules('sms_template', 'Sms Template', 'required|trim');
+                $this->form_validation->set_rules('sms_variable', 'Sms Variable', 'required|trim');
+
+                $sms_template = $this->input->post('sms_template');
+                $sms_variable = $this->input->post('sms_variable');
+                if ($this->form_validation->run($this) == TRUE) {
+                    $update_id = $this->Mydb->update($this->sms_table, array('id' => $sms_id), array('sms_content' => $sms_template, 'sms_variable' => $sms_variable));
+                    if ($update_id) {
+                        $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Sms Setting has been successfully updated');
+                        $this->session->set_userdata($session_datas);
+                        redirect(frontend_url() . 'smssetting');
+                    } else {
+                        $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Sms Setting not update. Please try again');
+                        $this->session->set_userdata($session_datas);
+                        redirect(frontend_url() . 'smssetting/edit/' . encode_value($sms_id));
+                    }
+                } else {
+                    $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
                     $this->session->set_userdata($session_datas);
-                    redirect(frontend_url() . 'smssetting/edit/'.encode_value($sms_id));
-				}
-			}else{
+                    redirect(frontend_url() . 'smssetting/edit/' . encode_value($sms_id));
+                }
+            } else {
                 $edit_id = decode_value($method[1]);
                 $getsmsdetails = $this->Mydb->custom_query("select * from $this->sms_table where id=$edit_id");
                 $data['records'] = $getsmsdetails;
                 $this->layout->display_frontend($this->folder . 'smssetting-edit', $data);
-			}
-        }else {
+            }
+        } else {
             $data = $this->load_module_info();
             $getsmsdetails = $this->Mydb->custom_query("select * from $this->sms_table where status!='3'");
             $data['records'] = $getsmsdetails;
             $this->layout->display_frontend($this->folder . 'smssetting', $data);
         }
     }
-	
-	########### SMS Setting ... ###########
+
+    ########### SMS Setting ... ###########
 
     public function emailsetting($method = null, $args = array()) {
         if (!empty($method)) {
-            if ($method[0] == 'add'){
+            if ($method[0] == 'add') {
                 $data = $this->load_module_info();
                 $this->layout->display_frontend($this->folder . 'emailsetting-add', $data);
-			}elseif ($method[0] == 'insert'){
+            } elseif ($method[0] == 'insert') {
                 $data = $this->load_module_info();
 
                 $this->form_validation->set_rules('email_name', 'Email Name', 'required|trim');
@@ -1361,50 +1355,48 @@ class USER extends CI_Controller {
                         $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Email cannot be added. Please try again');
                         $this->session->set_userdata($session_datas);
                         redirect(frontend_url() . 'emailsetting/add');
-					}
-				} else {
+                    }
+                } else {
                     $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
                     $this->session->set_userdata($session_datas);
                     redirect(frontend_url() . 'emailsetting/add');
                 }
-			
-			}elseif($method[0] == 'update'){
-				$email_id = $this->input->post('email_id');
-				$this->form_validation->set_rules('email_template', 'Email Template', 'required|trim');
-				$this->form_validation->set_rules('email_variable', 'Email Variable', 'required|trim');
-				
-				$email_template = $this->input->post('email_template');
-				$email_variable = $this->input->post('email_variable');
-				if ($this->form_validation->run($this) == TRUE) {
-					$update_id = $this->Mydb->update($this->email_table, array('id' => $email_id), array('email_content' => $email_template, 'email_variables' => $email_variable));
-					if ($update_id) {
-						$session_datas = array('pms_err' => '0', 'pms_err_message' => 'Email Setting has been successfully updated');
-						$this->session->set_userdata($session_datas);
-						redirect(frontend_url() . 'emailsetting');
-					} else {
-						$session_datas = array('pms_err' => '1', 'pms_err_message' => 'Email Setting not update. Please try again');
-						$this->session->set_userdata($session_datas);
-						redirect(frontend_url() . 'emailsetting/edit/'.encode_value($email_id));
-					}
-				}else{
-					$session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
+            } elseif ($method[0] == 'update') {
+                $email_id = $this->input->post('email_id');
+                $this->form_validation->set_rules('email_template', 'Email Template', 'required|trim');
+                $this->form_validation->set_rules('email_variable', 'Email Variable', 'required|trim');
+
+                $email_template = $this->input->post('email_template');
+                $email_variable = $this->input->post('email_variable');
+                if ($this->form_validation->run($this) == TRUE) {
+                    $update_id = $this->Mydb->update($this->email_table, array('id' => $email_id), array('email_content' => $email_template, 'email_variables' => $email_variable));
+                    if ($update_id) {
+                        $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Email Setting has been successfully updated');
+                        $this->session->set_userdata($session_datas);
+                        redirect(frontend_url() . 'emailsetting');
+                    } else {
+                        $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Email Setting not update. Please try again');
+                        $this->session->set_userdata($session_datas);
+                        redirect(frontend_url() . 'emailsetting/edit/' . encode_value($email_id));
+                    }
+                } else {
+                    $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
                     $this->session->set_userdata($session_datas);
-                    redirect(frontend_url() . 'emailsetting/edit/'.encode_value($email_id));
-				}
-			}else{
+                    redirect(frontend_url() . 'emailsetting/edit/' . encode_value($email_id));
+                }
+            } else {
                 $edit_id = decode_value($method[1]);
                 $getemaildetails = $this->Mydb->custom_query("select * from $this->email_table where id=$edit_id");
                 $data['records'] = $getemaildetails;
                 $this->layout->display_frontend($this->folder . 'emailsetting-edit', $data);
-			}
-        }else {
+            }
+        } else {
             $data = $this->load_module_info();
             $getemaildetails = $this->Mydb->custom_query("select * from $this->email_table where status!='3'");
             $data['records'] = $getemaildetails;
             $this->layout->display_frontend($this->folder . 'emailsetting', $data);
         }
     }
-	
 
     private function load_module_info() {
         $data = array();
@@ -1439,7 +1431,7 @@ class USER extends CI_Controller {
         $getcities = $this->Mydb->custom_query("select name,id from $this->cities_table where is_active=1 and country_id=$country_id and state_id=$state_id");
         echo json_encode($getcities);
     }
-	
+
     public function logout() {
         $user_id = get_session_value('user_id');
         $this->Mydb->insert($this->login_history_table, array('	logout_time' => current_date(), 'login_ip' => ip2long(get_ip()), 'user_id' => $user_id));
