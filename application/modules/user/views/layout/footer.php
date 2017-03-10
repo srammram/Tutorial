@@ -10,3 +10,12 @@
     var BASE_URL = '<?php echo BASE_URL; ?>';
     var FRONTEND_URL = '<?php echo frontend_url(); ?>';
 </script>
+<script>
+$(document).ready(function () {
+  $(".notificationicon").click(function () {
+    $(this).toggleClass("open");
+    $("#notificationMenu").toggleClass("open");
+  });
+});
+
+</script>
