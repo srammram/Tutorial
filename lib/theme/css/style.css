@@ -473,3 +473,124 @@ body {
   margin: 0px;
   padding: 0px;
 }
+
+/*############ Notification Style ###########*/
+.contain {
+  width: auto;
+  margin: 0;
+  float:right;
+  position: relative;
+  padding: 0px;
+}
+.notificationicon {
+  height: 44px;
+  position: absolute;
+  top: 0px;
+  right:20px;
+  color:#fff !important;
+}
+.notificationicon span
+{
+	width:20px;
+	height:20px;
+	line-height:20px;
+	position:absolute;
+	text-align:center;
+	top:-8px;
+	border-radius:100%;
+	right:-8px;
+	background:rgba(249,2,6,1.00);
+	color:#fff !important;
+}
+ 
+.notification {
+  max-width: 300px;
+  width: 300px;
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 0px;
+  box-shadow: 0px 0px 20px #666;
+  position: absolute;
+  top: 35px;
+  transition: .2s;
+  opacity: 0;
+  left: -50px;
+}
+	.notification:before {
+    content: '';
+    height: 10px;
+    width: 10px;
+    display: block;
+    position: absolute;
+    top: -20px;
+    left: 10px;
+    border: 10px solid #fff;
+    border-color: transparent transparent #fff transparent;
+  }
+  .notification.open {
+    opacity: 1;
+    transition:.2s;
+  }
+  li {
+  padding: 5px;
+    list-style-type: none;
+  }
+
+ 
+ 
+  .notifbox {
+  max-height: 300px;
+  overflow: auto;
+  }
+  .notifbox li {
+  color: #666;
+  }
+  .notifbox li a { color: #666;}
+ 
+  .notifbox li a .notif {
+  min-height: 70px;
+  border-bottom: 1px solid #ccc;
+  position: relative;
+  }
+  .notifbox li a:last-child {
+  border-bottom: none;
+  }
+  .imageblock {
+  width: 70px;
+  position: absolute;
+  left: 5px;
+  }
+  .notifimage {
+  height: 60px;
+  }
+  .messageblock {
+  width: 200px;
+  position: relative;
+  left: 70px;
+  font-size: 12px;
+  }
+  .message {
+  
+  }
+  .messageaction {
+  min-height: 30px;
+  margin-bottom: 5px;
+  }
+  .button {
+  font-weight: normal;
+  text-transform: uppercase;
+  }
+  .button .success, .button .alert {
+  color: #fff;
+  }
+
+  .messageinfo {
+  font-size: 10px;
+  color: #999;
+  }
+  
+.badge {
+position: absolute;
+top: 30px;
+right: -20px;
+}
