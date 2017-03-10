@@ -36,7 +36,7 @@
                                 <td><?= stripslashes($smsdetails['name']); ?></td>
                                 <td><?= ($smsdetails['slug']); ?></td>
                                 <td><label class="label label-success" style="font-size:12px"><?php echo $status; ?></label></td>
-                                <td><a href="javascript:void(0)" class="btn btn-success"><i class="fa fa-edit"></i></a><a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $smsdetails['id'] ?>, 'sms')"><i class="fa fa-trash"></i></a></td>
+                                <td><a href="<?php echo frontend_url() . 'smssetting/edit/' . encode_value($smsdetails['id']); ?>" class="btn btn-success"><i class="fa fa-edit"></i></a><a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $smsdetails['id'] ?>, 'sms_setting')"><i class="fa fa-trash"></i></a></td>
                             </tr>
                             <?php
                         endforeach;
