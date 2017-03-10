@@ -1253,10 +1253,10 @@ class USER extends CI_Controller {
 
     public function smssetting($method = null, $args = array()) {
         if (!empty($method)) {
-            if ($method[0] == 'add'):
+            if ($method[0] == 'add'){
                 $data = $this->load_module_info();
                 $this->layout->display_frontend($this->folder . 'smssetting-add', $data);
-            elseif ($method[0] == 'insert'):
+			}elseif ($method[0] == 'insert'){
                 $data = $this->load_module_info();
 
                 $this->form_validation->set_rules('sms_name', 'Sms Name', 'required|trim');
@@ -1283,25 +1283,128 @@ class USER extends CI_Controller {
                         $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Sms cannot be added. Please try again');
                         $this->session->set_userdata($session_datas);
                         redirect(frontend_url() . 'smssetting/add');
-                    }
-                } else {
+					}
+				} else {
                     $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
                     $this->session->set_userdata($session_datas);
                     redirect(frontend_url() . 'smssetting/add');
                 }
-            else:
-                $data = $this->load_module_info();
-                $getsmsdetails = $this->Mydb->custom_query("select * from $this->sms_table");
+			
+			}elseif($method[0] == 'update'){
+				$sms_id = $this->input->post('sms_id');
+				$this->form_validation->set_rules('sms_template', 'Sms Template', 'required|trim');
+				$this->form_validation->set_rules('sms_variable', 'Sms Variable', 'required|trim');
+				
+				$sms_template = $this->input->post('sms_template');
+				$sms_variable = $this->input->post('sms_variable');
+				if ($this->form_validation->run($this) == TRUE) {
+					$update_id = $this->Mydb->update($this->sms_table, array('id' => $sms_id), array('sms_content' => $sms_template, 'sms_variable' => $sms_variable));
+					if ($update_id) {
+						$session_datas = array('pms_err' => '0', 'pms_err_message' => 'Sms Setting has been successfully updated');
+						$this->session->set_userdata($session_datas);
+						redirect(frontend_url() . 'smssetting');
+					} else {
+						$session_datas = array('pms_err' => '1', 'pms_err_message' => 'Sms Setting not update. Please try again');
+						$this->session->set_userdata($session_datas);
+						redirect(frontend_url() . 'smssetting/edit/'.encode_value($sms_id));
+					}
+				}else{
+					$session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
+                    $this->session->set_userdata($session_datas);
+                    redirect(frontend_url() . 'smssetting/edit/'.encode_value($sms_id));
+				}
+			}else{
+                $edit_id = decode_value($method[1]);
+                $getsmsdetails = $this->Mydb->custom_query("select * from $this->sms_table where id=$edit_id");
                 $data['records'] = $getsmsdetails;
-                $this->layout->display_frontend($this->folder . 'smssetting', $data);
-            endif;
+                $this->layout->display_frontend($this->folder . 'smssetting-edit', $data);
+			}
         }else {
             $data = $this->load_module_info();
-            $getsmsdetails = $this->Mydb->custom_query("select * from $this->sms_table");
+            $getsmsdetails = $this->Mydb->custom_query("select * from $this->sms_table where status!='3'");
             $data['records'] = $getsmsdetails;
             $this->layout->display_frontend($this->folder . 'smssetting', $data);
         }
     }
+	
+	########### SMS Setting ... ###########
+
+    public function emailsetting($method = null, $args = array()) {
+        if (!empty($method)) {
+            if ($method[0] == 'add'){
+                $data = $this->load_module_info();
+                $this->layout->display_frontend($this->folder . 'emailsetting-add', $data);
+			}elseif ($method[0] == 'insert'){
+                $data = $this->load_module_info();
+
+                $this->form_validation->set_rules('email_name', 'Email Name', 'required|trim');
+                $this->form_validation->set_rules('email_template', 'Email Template', 'required|trim');
+                $this->form_validation->set_rules('email_variable', 'Email Variable', 'required|trim');
+                $this->form_validation->set_rules('email_status', 'Status', 'required');
+
+
+
+                $email_name = $this->input->post('email_name');
+                $email_template = $this->input->post('email_template');
+                $email_variable = $this->input->post('email_variable');
+                $email_status = $this->input->post('email_status');
+                if ($this->form_validation->run($this) == TRUE) {
+                    $typeslug = url_title($this->input->post('email_name'), '-', TRUE);
+
+                    $insertarray = array('name' => $email_name, 'slug' => $typeslug, 'email_content' => $email_template, 'email_variables' => $email_variable, 'status' => $email_status, 'created_on' => current_date());
+                    $emailinsertid = $this->Mydb->insert($this->sms_table, $insertarray);
+                    if (!empty($emailinsertid)) {
+                        $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Email has been successfully added..');
+                        $this->session->set_userdata($session_datas);
+                        redirect(frontend_url() . 'smssetting/add');
+                    } else {
+                        $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Email cannot be added. Please try again');
+                        $this->session->set_userdata($session_datas);
+                        redirect(frontend_url() . 'emailsetting/add');
+					}
+				} else {
+                    $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
+                    $this->session->set_userdata($session_datas);
+                    redirect(frontend_url() . 'emailsetting/add');
+                }
+			
+			}elseif($method[0] == 'update'){
+				$email_id = $this->input->post('email_id');
+				$this->form_validation->set_rules('email_template', 'Email Template', 'required|trim');
+				$this->form_validation->set_rules('email_variable', 'Email Variable', 'required|trim');
+				
+				$email_template = $this->input->post('email_template');
+				$email_variable = $this->input->post('email_variable');
+				if ($this->form_validation->run($this) == TRUE) {
+					$update_id = $this->Mydb->update($this->email_table, array('id' => $email_id), array('email_content' => $email_template, 'email_variables' => $email_variable));
+					if ($update_id) {
+						$session_datas = array('pms_err' => '0', 'pms_err_message' => 'Email Setting has been successfully updated');
+						$this->session->set_userdata($session_datas);
+						redirect(frontend_url() . 'emailsetting');
+					} else {
+						$session_datas = array('pms_err' => '1', 'pms_err_message' => 'Email Setting not update. Please try again');
+						$this->session->set_userdata($session_datas);
+						redirect(frontend_url() . 'emailsetting/edit/'.encode_value($email_id));
+					}
+				}else{
+					$session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
+                    $this->session->set_userdata($session_datas);
+                    redirect(frontend_url() . 'emailsetting/edit/'.encode_value($email_id));
+				}
+			}else{
+                $edit_id = decode_value($method[1]);
+                $getemaildetails = $this->Mydb->custom_query("select * from $this->email_table where id=$edit_id");
+                $data['records'] = $getemaildetails;
+                $this->layout->display_frontend($this->folder . 'emailsetting-edit', $data);
+			}
+        }else {
+            $data = $this->load_module_info();
+            $getemaildetails = $this->Mydb->custom_query("select * from $this->email_table where status!='3'");
+            $data['records'] = $getemaildetails;
+            $this->layout->display_frontend($this->folder . 'emailsetting', $data);
+        }
+    }
+	
 
     private function load_module_info() {
         $data = array();
@@ -1336,7 +1439,7 @@ class USER extends CI_Controller {
         $getcities = $this->Mydb->custom_query("select name,id from $this->cities_table where is_active=1 and country_id=$country_id and state_id=$state_id");
         echo json_encode($getcities);
     }
-
+	
     public function logout() {
         $user_id = get_session_value('user_id');
         $this->Mydb->insert($this->login_history_table, array('	logout_time' => current_date(), 'login_ip' => ip2long(get_ip()), 'user_id' => $user_id));
