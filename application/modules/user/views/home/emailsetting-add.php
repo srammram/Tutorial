@@ -14,11 +14,11 @@
                 </div>	
                 <div class="form-group">
                     <label >From Email <span style="color:red">*</span></label>
-                    <input type="email" name="email_from" id="email_from" tabindex="1" class="form-control" placeholder="Enter From Email" value="" required="" data-parsley-minlength="3" maxlength="50">
+                    <input type="email" name="email_from" id="email_from" tabindex="1" class="form-control" placeholder="Enter From Email" value="" required="" data-parsley-minlength="3" data-parsley-type="email">
                 </div>
                 <div class="form-group">
                     <label >to Email <span style="color:red">*</span></label>
-                    <input type="email" name="email_to" id="email_to" tabindex="1" class="form-control" placeholder="Enter To Email" value="" required="" data-parsley-minlength="3" maxlength="50">
+                    <input type="email" name="email_to" id="email_to" tabindex="1" class="form-control" placeholder="Enter To Email" value="" required="" data-parsley-minlength="3" data-parsley-type="email">
                 </div>
                 
                 <div class="form-group">
@@ -32,7 +32,7 @@
                 </div>	
                 <div class="form-group">
                     <label >Status <span style="color:red">*</span></label>
-                    <select name="email_status" id="email_status" class="form-control" required="" >
+                    <select name="email_status" id="email_status" class="form-control" required >
                         <option value="">-Select Status-</option>
                         <option value="0">Pending</option>
                         <option value="1">Active</option>

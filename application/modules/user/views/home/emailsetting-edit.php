@@ -7,8 +7,16 @@
         </div>
         <div class="panel-body">
         
-            <form name="email_form" id="email_form" method="post" action="<?php echo frontend_url() . 'smssetting/update'; ?>" data-parsley-validate="">
-                	
+            <form name="email_form" id="email_form" method="post" action="<?php echo frontend_url() . 'emailsetting/update'; ?>" data-parsley-validate="">
+                
+                <div class="form-group">
+                    <label >From Email <span style="color:red">*</span></label>
+                    <input type="email" name="email_from" id="email_from" tabindex="1" class="form-control" placeholder="Enter From Email" value="<?php echo $records[0]['from_email']; ?>" required="" data-parsley-minlength="3" data-parsley-type="email">
+                </div>
+                <div class="form-group">
+                    <label >to Email <span style="color:red">*</span></label>
+                    <input type="email" name="email_to" id="email_to" tabindex="1" class="form-control" placeholder="Enter To Email" value="<?php echo $records[0]['reply_to']; ?>" required="" data-parsley-minlength="3" data-parsley-type="email">
+                </div>
                 	
                 <div class="form-group">
                     <label >Template <span style="color:red">*</span></label>
@@ -23,7 +31,7 @@
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-3 col-sm-offset-3">
-                        	<input type="hidden" name="email_id" id="sms_id" value="<?php echo $records[0]['id']; ?>"/>
+                        	<input type="hidden" name="email_id" id="email_id" value="<?php echo $records[0]['id']; ?>"/>
                             <input type="submit" name="email_status-submit" id="email_status-submit" tabindex="4" class="form-control btn btn-primary" value="Update">
                         </div>
                         <div class="col-sm-3 ">
