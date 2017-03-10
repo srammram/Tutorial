@@ -106,6 +106,59 @@ if(!function_exists('get_random_key'))
 	}
 }
 
+/* Get Notification Count */
+if(!function_exists('get_notification_count'))
+{
+	function get_notification_count(){
+		$CI =& get_instance();
+		$notification = $CI->Mydb->custom_query("SELECT n.message, n.from_id, n.to_id, n.notification_type, n.created_on FROM notification AS n WHERE n.to_id='".get_session_value('user_id')."'");
+		return $notification;
+	}
+}
+
+/* Get Notification Insert */
+if(!function_exists('create_notification'))
+{
+	function create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type){
+		$CI =& get_instance();
+		$insert_array = array(
+			'message' => $notiy_msg,
+			'from_id' => $notiy_from,
+			'to_id' => $notiy_to,
+			'notification_type' => $notiy_type,
+			'created_on' => current_date(),
+			'created_ip' => get_ip()
+		); 
+		$notification = $CI->Mydb->insert("notification", $insert_array);
+		return $notification;
+	}
+}
+
+
+/* Get Notification Timing */
+if(!function_exists('humanTiming'))
+{
+	function humanTiming ($time)
+	{
+	
+		$time = time() - $time; // to get the time since that moment
+		$time = ($time<1)? 1 : $time;
+		$tokens = array (
+			31536000 => 'year',
+			2592000 => 'month',
+			604800 => 'week',
+			86400 => 'day',
+			3600 => 'hour',
+			60 => 'minute',
+			1 => 'second'
+		);
+		foreach ($tokens as $unit => $text) {
+			if ($time < $unit) continue;
+			$numberOfUnits = floor($time / $unit);
+			return $numberOfUnits.' '.$text.(($numberOfUnits>1)?'s':'');
+		}
+	}
+}
 /* chek ajax request .. skip to direct access... */
 if (! function_exists ( 'check_ajax_request' )) {
 	function check_ajax_request() {
@@ -283,5 +336,6 @@ if (!function_exists('create_folder')) {
 	}
 
 }
+
 
 
