@@ -332,6 +332,112 @@ input[type=text]:focus,input[type=password]:focus{outline: none;}
   -ms-transition: all 1s ease;
   transition: all 1s ease;
 }
+
+/*dashboard*/
+.accord
+{
+	padding: 0px;
+	margin: 0px;
+}
+.accord h3
+{
+	font-weight: 700;
+}
+.accord p
+{
+	color: #666666;
+	padding: 0px 0 0 0;
+	font-size: 18px;
+}
+.circle_blue, .circle_green, .circle_yellow, .circle_red
+{
+	padding: 20px !important;
+	text-align: center;
+	cursor: pointer;
+}
+.circle_blue:hover, .circle_green:hover, .circle_yellow:hover, .circle_red:hover
+{
+	padding: 20px;
+	-webkit-box-shadow: 0px 1px 13px 6px rgba(118,127,133,1);
+	-moz-box-shadow: 0px 1px 13px 6px rgba(118,127,133,1);
+	box-shadow: 0px 1px 13px 6px rgba(118,127,133,1);
+}
+.common .active
+{
+	-webkit-box-shadow: 0px 1px 13px 6px rgba(118,127,133,1) !important;
+	-moz-box-shadow: 0px 1px 13px 6px rgba(118,127,133,1) !important;
+	box-shadow: 0px 1px 13px 6px rgba(118,127,133,1) !important;
+	background-color: white !important;
+	color: #666666 !important;
+}
+.circle_blue .half-circle
+{
+	margin: 0px;
+	padding: 0px;
+}
+.circle_blue .half-circle {
+    width: 200px;
+    height: 100px;
+    border-top-left-radius: 100px;
+    border-top-right-radius: 100px;
+    border: 45px solid  #16CCC4;
+    border-bottom: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+	
+}
+.circle_green .half-circle {
+    width: 200px;
+    height: 100px;
+    /* background-color: gold; */
+    border-top-left-radius: 100px;
+    border-top-right-radius: 100px;
+    border: 45px solid  #0FF006;
+    border-bottom: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.circle_red .half-circle {
+    width: 200px;
+    height: 100px;
+    /* background-color: gold; */
+    border-top-left-radius: 100px;
+    border-top-right-radius: 100px;
+    border: 45px solid #F10D11;
+    border-bottom: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.circle_yellow .half-circle
+{
+	width: 200px;
+    height: 100px;
+    /* background-color: gold; */
+    border-top-left-radius: 100px;
+    border-top-right-radius: 100px;
+    border: 45px solid #F5E509;
+    border-bottom: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.section_accord
+{
+	margin: 30px 0px;
+}
+.card-block
+{
+	border: 1px solid #666666;
+	background: #666666;
+	color: #fff;
+	padding: 20px;
+	font-size: 14px;
+}
+
+/*end dashboard*/
 @media (max-width: 767px) {
   .nav-side-menu {
     position: relative;
