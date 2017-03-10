@@ -10,15 +10,15 @@
             <form name="sms_form" id="sms_form" method="post" action="<?php echo frontend_url() . 'smssetting/insert'; ?>" data-parsley-validate="">
                 <div class="form-group">
                     <label >Name <span style="color:red">*</span></label>
-                    <input type="text" name="sms_name" id="sms_name" tabindex="1" class="form-control" placeholder="Enter Name" value="<?php echo set_value('sms_name'); ?>" required="" data-parsley-minlength="3" maxlength="50">
+                    <input type="text" name="sms_name" id="sms_name" tabindex="1" class="form-control" placeholder="Enter Name" value="" required="" data-parsley-minlength="3" maxlength="50">
                 </div>	
                 <div class="form-group">
                     <label >Template <span style="color:red">*</span></label>
-                    <textarea class="form-control" name="sms_template" id="sms_template" placeholder="Enter Template" value="<?php echo set_value('sms_name'); ?>" required="" data-parsley-minlength="3"></textarea>
+                    <textarea class="form-control" name="sms_template" id="sms_template" placeholder="Enter Template" value="" required data-parsley-minlength="3"></textarea>
                 </div>	
                 <div class="form-group">
                     <label >Template Variable <span style="color:red">*</span></label>
-                    <input type="text" name="sms_variable" id="sms_variable" tabindex="1" class="form-control" placeholder="Enter Template Variable" value="<?php echo set_value('sms_name'); ?>" required="" data-parsley-minlength="3">
+                    <input type="text" name="sms_variable" id="sms_variable" tabindex="1" class="form-control" placeholder="Enter Template Variable" value="" required="" data-parsley-minlength="3">
                 </div>	
                 <div class="form-group">
                     <label >Status <span style="color:red">*</span></label>
