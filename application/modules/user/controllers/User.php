@@ -584,11 +584,16 @@ class USER extends CI_Controller {
                                 $to_email = $this->input->post('employee_email');
                                 $response_email = $this->send_welcome_email($name, $to_email, $username, $password);
 
-                                $sms_phone_otp = $this->input->post('employee_name') . '. Login details username: ' . $this->input->post('employee_email') . ', password: ' . $this->input->post('employee_pass');
+								
+								$sms_name = $this->input->post('employee_name');
+								$sms_username = $this->input->post('employee_email');
+								$sms_password = $this->input->post('employee_pass');
+								$sms_sitelink = frontend_url();
                                 $sms_phone = $this->input->post('emp_mobile');
                                 $sms_country_code = $this->input->post('emp_country');
 
-                                $response_sms = $this->sms_employee_add($sms_phone_otp, $sms_phone, $sms_country_code);
+
+							$response_sms = $this->sms_add_employee($sms_name, $sms_username, $sms_password, $sms_sitelink, $sms_phone, $sms_country_code);
 
                                 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Employee details has been successfully inserted');
                                 $this->session->set_userdata($session_datas);
@@ -1056,7 +1061,7 @@ class USER extends CI_Controller {
                         $sms_phone = $mobile_check[0]['new_one'];
                         $sms_country_code = $mobile_check[0]['user_country'];
 
-                        $response_sms = $this->sms_user_active($sms_phone_otp, $sms_phone, $sms_country_code);
+                        $response_sms = $this->sms_mobil_change($sms_phone_otp, $sms_phone, $sms_country_code);
 
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Activation OTP sent to mobile please check it', 'mobile' => $mobile_check[0]['new_one']);
                         $this->session->set_userdata($session_datas);
@@ -1082,7 +1087,7 @@ class USER extends CI_Controller {
                         $sms_phone_otp = $mobile_check[0]['activation_key'];
                         $sms_phone = $mobile_check[0]['new_one'];
                         $sms_country_code = $mobile_check[0]['user_country'];
-                        $response_sms = $this->sms_user_active($sms_phone_otp, $sms_phone, $sms_country_code);
+                        $response_sms = $this->sms_mobil_change($sms_phone_otp, $sms_phone, $sms_country_code);
 
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Activation OTP sent to mobile please check it', 'mobile' => $mobile_check[0]['new_one']);
 
@@ -1152,7 +1157,7 @@ class USER extends CI_Controller {
                 $sms_phone = $mobile_check[0]['new_one'];
                 $sms_country_code = $mobile_check[0]['user_country'];
 
-                $response_sms = $this->sms_user_active($sms_phone_otp, $sms_phone, $sms_country_code);
+                $response_sms = $this->sms_mobil_change($sms_phone_otp, $sms_phone, $sms_country_code);
 
                 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Resend OTP sent to mobile please check it', 'mobile' => $mobile_check[0]['new_one']);
                 $this->session->set_userdata($session_datas);
@@ -1184,35 +1189,27 @@ class USER extends CI_Controller {
         }
     }
 
-    ########### SMS User Active ... ###########
+    ########### SMS Mobile OTP ... ###########
 
-    public function sms_user_active($sms_phone_otp, $sms_phone, $sms_country_code) {
+    public function sms_mobil_change($sms_phone_otp, $sms_phone, $sms_country_code) {
 
-        $sms_chk_arr = array('[MOBILE_OTP]');
+        $sms_chk_arr = array('[CODE]');
         $sms_rep_arr = array($sms_phone_otp);
-        $response_sms = send_sms($sms_template_slug = "user-mobile-active", $sms_chk_arr, $sms_rep_arr, $sms_phone, $sms_country_code);
+        $response_sms = send_sms($sms_template_slug = "mobile-change", $sms_chk_arr, $sms_rep_arr, $sms_phone, $sms_country_code);
         return $response_sms;
     }
 
     ########### SMS Employee Add ... ###########
 
-    public function sms_employee_add($sms_phone_otp, $sms_phone, $sms_country_code) {
+    public function sms_add_employee($sms_name, $sms_username, $sms_password, $sms_sitelink, $sms_phone, $sms_country_code) {
 
-        $sms_chk_arr = array('[MOBILE_OTP]');
-        $sms_rep_arr = array($sms_phone_otp);
-        $response_sms = send_sms($sms_template_slug = "user-mobile-active", $sms_chk_arr, $sms_rep_arr, $sms_phone, $sms_country_code);
+        $sms_chk_arr = array('[NAME]','[USERNAME]','[PASSWORD]','[SITELINK]');
+        $sms_rep_arr = array($sms_name, $sms_username, $sms_password, $sms_sitelink);
+        $response_sms = send_sms($sms_template_slug = "add-employee", $sms_chk_arr, $sms_rep_arr, $sms_phone, $sms_country_code);
         return $response_sms;
     }
 
-    ########### SMS Resend ... ###########
-
-    public function sms_resend($sms_phone_otp, $sms_phone, $sms_country_code) {
-
-        $sms_chk_arr = array('[MOBILE_OTP]');
-        $sms_rep_arr = array($sms_phone_otp);
-        $response_sms = send_sms($sms_template_slug = "resend-otp-sms", $sms_chk_arr, $sms_rep_arr, $sms_phone, $sms_country_code);
-        return $response_sms;
-    }
+    
 
     ########### Email Active ... ###########
 
@@ -1335,9 +1332,13 @@ class USER extends CI_Controller {
                 $this->form_validation->set_rules('email_template', 'Email Template', 'required|trim');
                 $this->form_validation->set_rules('email_variable', 'Email Variable', 'required|trim');
                 $this->form_validation->set_rules('email_status', 'Status', 'required');
+				$this->form_validation->set_rules('email_from', 'From Email', 'required');
+				$this->form_validation->set_rules('email_to', 'To Email', 'required');
 
 
-
+				$email_from = $this->input->post('email_from');
+				$email_to = $this->input->post('email_to');
+				
                 $email_name = $this->input->post('email_name');
                 $email_template = $this->input->post('email_template');
                 $email_variable = $this->input->post('email_variable');
@@ -1345,12 +1346,12 @@ class USER extends CI_Controller {
                 if ($this->form_validation->run($this) == TRUE) {
                     $typeslug = url_title($this->input->post('email_name'), '-', TRUE);
 
-                    $insertarray = array('name' => $email_name, 'slug' => $typeslug, 'email_content' => $email_template, 'email_variables' => $email_variable, 'status' => $email_status, 'created_on' => current_date());
+                    $insertarray = array('name' => $email_name, 'slug' => $typeslug, 'from_email' => $email_from, 'reply_to' => $email_to, 'email_content' => $email_template, 'email_variables' => $email_variable, 'status' => $email_status, 'created_on' => current_date());
                     $emailinsertid = $this->Mydb->insert($this->sms_table, $insertarray);
                     if (!empty($emailinsertid)) {
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Email has been successfully added..');
                         $this->session->set_userdata($session_datas);
-                        redirect(frontend_url() . 'smssetting/add');
+                        redirect(frontend_url() . 'emailsetting/add');
                     } else {
                         $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Email cannot be added. Please try again');
                         $this->session->set_userdata($session_datas);
@@ -1365,11 +1366,17 @@ class USER extends CI_Controller {
                 $email_id = $this->input->post('email_id');
                 $this->form_validation->set_rules('email_template', 'Email Template', 'required|trim');
                 $this->form_validation->set_rules('email_variable', 'Email Variable', 'required|trim');
+				$this->form_validation->set_rules('email_from', 'From Email', 'required');
+				$this->form_validation->set_rules('email_to', 'To Email', 'required');
 
+
+				$email_from = $this->input->post('email_from');
+				$email_to = $this->input->post('email_to');
+				
                 $email_template = $this->input->post('email_template');
                 $email_variable = $this->input->post('email_variable');
                 if ($this->form_validation->run($this) == TRUE) {
-                    $update_id = $this->Mydb->update($this->email_table, array('id' => $email_id), array('email_content' => $email_template, 'email_variables' => $email_variable));
+                    $update_id = $this->Mydb->update($this->email_table, array('id' => $email_id), array('email_content' => $email_template,  'from_email' => $email_from, 'reply_to' => $email_to, 'email_variables' => $email_variable));
                     if ($update_id) {
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Email Setting has been successfully updated');
                         $this->session->set_userdata($session_datas);
