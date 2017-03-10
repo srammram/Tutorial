@@ -23,3 +23,4 @@
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/parsley-min.js"></script>
 <script type="text/javascript" src="<?php echo load_lib(); ?>theme/js/dropzone.js"></script>
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/login.js"></script>
+<script type="text/javascript" src="<?php echo load_lib(); ?>ckeditor/ckeditor.js"></script>
