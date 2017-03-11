@@ -2,7 +2,7 @@
     <div class="modal-header">
 
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <?php if ($task_details[0]['status'] != 6): ?>
+        <?php if ($task_details[0]['status'] != 4 && $_SESSION['user_type_id'] != 6): ?>
             <h4 class="modal-title">Edit Task</h4>
         <?php else: ?>
             <h4 class="modal-title">View Task</h4>
@@ -13,7 +13,7 @@
         <div class="form-group">
             <label>Select Project <span style="color:red">*</span></label>
             <select <?php
-            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 6): echo "readonly";
+            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 4): echo "readonly";
             endif;
             ?> name="task_project" id="task_project" class="form-control" required>
                 <option value="">-Select Project-</option>
@@ -28,7 +28,7 @@
         <div class="form-group">
             <label>Select Employee <span style="color:red">*</span></label>
             <select <?php
-            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 6): echo "readonly";
+            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 4): echo "readonly";
             endif;
             ?> name="task_employee" id="task_employee" class="form-control" required>
                 <option value="">-Select Employee-</option>
@@ -45,54 +45,33 @@
         <div class="form-group">
             <label>Description <span style="color:red">*</span></label>
             <textarea  <?php
-            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 6): echo "readonly";
+            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 4): echo "readonly";
             endif;
-            ?> name="task_description" required="" data-parsley-minlength="5" id="task_description" class="form-control" rows="5" style="resize:none" placeholder="Enter Description"><?php echo nl2br($task_details[0]['message']); ?></textarea>
+            ?> name="task_description" required="" data-parsley-minlength="5" id="task_description" class="form-control" rows="5" style="resize:none" placeholder="Enter Description"><?php echo (($task_details[0]['message'])); ?></textarea>
         </div>
         <div class="form-group">
             <label>Start Date <span style="color:red">*</span></label>
             <input type="text" <?php
-            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 6): echo "readonly";
+            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 4): echo "readonly";
             endif;
             ?> name="task_start_date" required=""  id="task_start_date" class="task_start_date form-control" value="<?php echo date('m/d/Y h:i a', strtotime($task_details[0]['assigned_datetime'])); ?>"/>
         </div>
         <div class="form-group">
             <label>End Date <span style="color:red">*</span></label>
             <input  <?php
-            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 6): echo "readonly";
+            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 4): echo "readonly";
             endif;
             ?>  type="text" name="task_end_date" required="" id="task_end_date" class="task_end_date form-control" value="<?php echo date('m/d/Y h:i a', strtotime($task_details[0]['finished_datetime'])); ?>" />
         </div>
-        <?php if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 6): ?>
-            <div class="form-group">
-                <label>Finished Date <span style="color:red">*</span></label>
-                <input type="text" name="task_finished_date" <?php
-                if ($_SESSION['user_type_id'] != 6): echo "readonly";
-                endif;
-                ?> required="" id="task_finished_date" class="task_finished_date form-control"  value="<?php echo date('m/d/Y h:i a', strtotime($task_details[0]['employee_finished_datetime'])) ?>"/>
-            </div>
-            <div class="form-group">
-                <label>Message</label>
-                <textarea name="task_finished_message" <?php
-                if ($_SESSION['user_type_id'] != 6): echo "readonly";
-                endif;
-                ?>  id="task_finished_message" rows="5" style="resize:none" class="form-control"><?php echo ($task_details[0]['employee_finished_message']); ?></textarea>
-            </div>
-            <?php if ($_SESSION['user_type_id'] != 6 && $task_details[0]['employee_finished_delay_hours'] != ''): ?>
-                <div class="form-group">
-                    <label>Finished Delayed Hours</label>
-                    <input type="text" class="form-control" readonly="" value="<?php echo $task_details[0]['employee_finished_delay_hours']; ?>"/>
-                </div>
-            <?php endif; ?>
-        <?php endif; ?>
+
         <div class="form-group">
             <label>Duration Hours <span style="color:red">*</span></label>
             <input type="text" <?php
-            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 6): echo "readonly";
+            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 4): echo "readonly";
             endif;
             ?> name="task_duration" id="task_duration" required="" class="task_duration form-control" value="<?php echo $task_details[0]['project_duration']; ?>"/>
         </div>
-        <?php if ($task_details[0]['status'] != 6): ?>
+        <?php if ($task_details[0]['status'] != 4 && $_SESSION['user_type_id'] != 6): ?>
             <div class="form-group">
                 <div class="row">
                     <div class="col-sm-3 col-sm-offset-3">

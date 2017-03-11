@@ -29,6 +29,10 @@
                     </select>
                 </div>
                 <div class="form-group">
+                    <label>Task Title</label>
+                    <input type="text" name="task_title" id="task_title" class="form-control" placeholder="Enter Task Title" required="" data-parsley-minlength="5"/>
+                </div>
+                <div class="form-group">
                     <label>Description <span style="color:red">*</span></label>
                     <textarea name="task_description" required="" data-parsley-minlength="5" id="task_description" class="form-control" rows="5" style="resize:none" placeholder="Enter Description"></textarea>
                 </div>
@@ -42,7 +46,7 @@
                 </div>
                 <div class="form-group">
                     <label>Duration Hours <span style="color:red">*</span></label>
-                    <input type="text" name="task_duration" id="task_duration" required="" class="task_duration form-control"/>
+                    <input type="text" name="task_duration" id="task_duration" required="" class="task_duration form-control" placeholder="25 Hours"/>
                 </div>
                 <div class="form-group">
                     <div class="row">
@@ -73,23 +77,8 @@ $currentdate = date('Y/m/d');
             useCurrent: false,
             daysOfWeekDisabled: [0]
         });
-        $("#task_start_date").on("dp.change", function (e) {
-            $('#task_end_date').data("DateTimePicker").minDate(e.date);
-        });
-        $("#task_end_date").on("dp.change", function (e) {
-            $('#task_start_date').data("DateTimePicker").maxDate(e.date);
-            var task_start_date = $('#task_start_date').val();
-            var task_end_date = $('#task_end_date').val();
-            $.ajax({
-                url: FRONTEND_URL + 'tasks/calculate_hours',
-                data: {task_start_date: task_start_date, task_end_date: task_end_date},
-                dataType: 'json',
-                type: 'post',
-                success: function (output) {
-                    $('#task_duration').val(output.message);
-                }
-            })
-        });
+
+
 
     });
 </script>

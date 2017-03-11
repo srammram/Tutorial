@@ -7,9 +7,11 @@
             Manage Tasks
         </div>
         <div class="panel-body">
-            <div class="col-xs-12">
-                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('departments', '3')">Delete</a>
-            </div>
+            <?php if ($_SESSION['user_type_id'] != 6): ?>
+                <div class="col-xs-12">
+                    <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('departments', '3')">Delete</a>
+                </div>
+            <?php endif; ?>
             <div class="col-xs-12" id="empsucc_message">
 
             </div>
@@ -20,17 +22,8 @@
                         <th>S.No</th>
                         <th>Project Title</th>
                         <th>Project Description</th>
-                        <?php
-                        if ($_SESSION['user_type_id'] == 5):
-                            ?>
-                            <th>Assigned To</th>
-                        <?php elseif ($_SESSION['user_type_id'] == 6): ?>
-                            <th>Assigned From</th>
-                        <?php else:
-                            ?>
-                            <th>Assigned To</th>
-                            <th>Assigned From</th>
-                        <?php endif; ?>
+                        <th>From</th>
+                        <th>To</th>
                         <th>Duration</th>
                         <th>Task Status</th>
                         <th>Action</th>
@@ -44,23 +37,23 @@
                             $finished_datetime = $taskdet['finished_datetime'];
                             $employee_finished_datetime = $taskdet['employee_finished_datetime'];
                             $currentdatetime = date('Y-m-d H:i:s');
-                            if ($taskdet['status'] != 6 && $taskdet['status'] != 3):
-                                if ($assigned_date < $currentdatetime):
-                                    if ($finished_datetime < $currentdatetime):
-                                        $prostatus = "<label class='label label-danger'>Task Delayed</label>";
-                                    else:
-                                        $prostatus = "<label class='label label-warning'>Task Ongoing</label>";
-                                    endif;
-                                else:
-                                    $prostatus = "<label class='label label-primary'>Task Pending</label>";
-                                endif;
-                            elseif ($taskdet['status'] == 6):
-                                if ($assigned_date < $employee_finished_datetime):
-                                    $prostatus = "<label class='label label-danger'>Task Finished Delayed</label>";
-                                else:
-                                    $prostatus = "<label class='label label-danger'>Task Properly Finished</label>";
-                                endif;
-                            endif;
+//                            if ($taskdet['status'] != 6 && $taskdet['status'] != 3):
+//                                if ($assigned_date < $currentdatetime):
+//                                    if ($finished_datetime < $currentdatetime):
+//                                        $prostatus = "<label class='label label-danger'>Task Delayed</label>";
+//                                    else:
+//                                        $prostatus = "<label class='label label-warning'>Task Ongoing</label>";
+//                                    endif;
+//                                else:
+//                                    $prostatus = "<label class='label label-primary'>Task Pending</label>";
+//                                endif;
+//                            elseif ($taskdet['status'] == 6):
+//                                if ($assigned_date < $employee_finished_datetime):
+//                                    $prostatus = "<label class='label label-danger'>Task Finished Delayed</label>";
+//                                else:
+//                                    $prostatus = "<label class='label label-danger'>Task Properly Finished</label>";
+//                                endif;
+//                            endif;
                             if ($taskdet['status'] == 0):
                                 $lableclass = "label label-warning";
                                 $status = 'Pending';
@@ -70,31 +63,35 @@
                             elseif ($taskdet['status'] == 2):
                                 $lableclass = "label label-danger";
                                 $status = 'Ignored';
-                            elseif ($taskdet['status'] == 6):
-                                $lableclass = "label label-primary";
-                                $status = 'Assigned';
+                            elseif ($taskdet['status'] == 3):
+                                $lableclass = "label label-warning";
+                                $status = 'In Progress';
+                            elseif ($taskdet['status'] == 4):
+                                $lableclass = "label label-success";
+                                $status = 'Completed';
+                            elseif ($taskdet['status'] == 5):
+                                $lableclass = "label label-danger";
+                                $status = 'Postponed';
                             endif;
                             ?>
                             <tr>
                                 <td><input type="checkbox" class="selectthis" value="<?php echo $taskdet['id']; ?>"/></td>
                                 <td><?= ($taskdet['id']); ?></td>
-                                <td><?= stripslashes($taskdet['project_name']); ?></td>
-                                <td><?= stripslashes($taskdet['project_description']); ?></td>
-                                <?php if ($_SESSION['user_type_id'] == 6 || $_SESSION['user_type_id'] == 5): ?>
-                                    <td><?= $taskdet['user_name']; ?></td>
-                                <?php else: ?>
-                                    <td><?= $taskdet['to_user_name']; ?></td>
-                                    <td><?= $taskdet['from_username']; ?></td>
-                                <?php endif; ?>
+                                <td><?= ($taskdet['project_name'] != '') ? stripslashes($taskdet['project_name']) : 'N/A'; ?></td>
+                                <td><?= $taskdet['project_description'] != '' ? stripslashes($taskdet['project_description']) : 'N/A'; ?></td>
+                                <td><?= $taskdet['to_user_name']; ?></td>
+                                <td><?= $taskdet['from_username']; ?></td>
                                 <td><?= $taskdet['project_duration']; ?></td>
-                                <td><?php echo $prostatus; ?></td>
+                                <td><label class="<?php echo $lableclass; ?>"><?php echo $status; ?></label></td>
                                 <td>
-                                    <?php if ($taskdet['status'] != 6): ?>
+                                    <?php if ($_SESSION['user_type_id'] != 6): ?>
                                         <a  class="btn btn-success" href="#EditTask" data-toggle="modal" onclick="edittask(<?php echo $taskdet['id']; ?>)"><i class="fa fa-edit"></i></a>
                                     <?php else: ?>
                                         <a  class="btn btn-primary" href="#EditTask" data-toggle="modal" onclick="edittask(<?php echo $taskdet['id']; ?>)"><i class="fa fa-eye"></i></a>
                                     <?php endif; ?>
-                                    <a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $taskdet['id']; ?>, 'task_history')"><i class="fa fa-trash"></i></a>
+                                    <?php if ($_SESSION['user_type_id'] != 6): ?>
+                                        <a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $taskdet['id']; ?>, 'task_history')"><i class="fa fa-trash"></i></a>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                             <?php
@@ -106,9 +103,11 @@
 
                 </tbody>
             </table>
-            <div class="col-xs-12">
-                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('departments', '3')">Delete</a>
-            </div>
+            <?php if ($_SESSION['user_type_id'] != 6): ?>
+                <div class="col-xs-12">
+                    <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('departments', '3')">Delete</a>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

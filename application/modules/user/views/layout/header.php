@@ -9,8 +9,9 @@
 
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib(); ?>theme/css/bootstrap_min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib(); ?>font-awesome/font-awesome.min.css">
-<link rel="stylesheet" type="text/css" href="<?php echo load_lib(); ?>theme/css/datatables.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib(); ?>theme/css/bootstrap-datepicker.min.css">
+<link rel="stylesheet" type="text/css" href="<?php echo load_lib(); ?>theme/css/datatables.min.css">
+
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib(); ?>theme/css/select2.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib(); ?>theme/css/style.css">
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib(); ?>theme/css/custom.min.css">

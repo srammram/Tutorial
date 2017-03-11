@@ -44,6 +44,7 @@
                                 <td><label class="<?php echo $lableclass; ?>" style="font-size:12px"><?php echo $status; ?></label></td>
                                 <td>
                                     <a href="#ViewAsignedProject" data-toggle="modal" class="btn btn-primary" onclick="getassignedproject_details(<?php echo $prodet['id']; ?>)"><i class="fa fa-eye"></i></a>
+                                    <a href="#ChangeStatus" data-toggle="modal" class="btn btn-success" onclick="changestatus_forteamprojects(<?php echo $prodet['id']; ?>)" title="change finished status"><i class="fa fa-edit"></i></a>
                                 </td>
                             </tr>
                             <?php
@@ -62,6 +63,13 @@
 <div id="ViewAsignedProject" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content" id="viewassignedproject">
+
+        </div>
+    </div>
+</div>
+<div id="ChangeStatus" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content" id="changeasignproject">
 
         </div>
     </div>

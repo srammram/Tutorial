@@ -33,24 +33,6 @@
                     <input type="text" name="emp_address" id="emp_address" tabindex="1" class="form-control" placeholder="Enter Address" value="<?php echo isset($_SESSION['emp_address']) ? $_SESSION['emp_address'] : ''; ?>" required="" data-parsley-minlength="5"  maxlength="50">
                 </div>
 
-
-                <div class="form-group">
-                    <label>User Type <span style="color:red">*</span></label>
-                    <select name="user_type" id="user_type" class="form-control" required="">
-                        <option value="">-Select User Type-</option>
-                        <?php foreach ($usertype as $utype): ?>
-                            <option value="<?= $utype['id'] ?>" <?php
-                            if (isset($_SESSION['user_type'])) {
-                                if ($_SESSION['user_type'] == $utype['id']) {
-                                    echo "selected";
-                                }
-                            }
-                            ?>><?= ucwords($utype['type_name']); ?></option>
-                                    <?php
-                                endforeach;
-                                ?>
-                    </select>
-                </div>
                 <div class="form-group">
                     <label>Departments <span style="color:red">*</span></label>
                     <select name="emp_departments" id="emp_departments" class="form-control" required="">
@@ -68,6 +50,30 @@
                                 ?>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label>User Type <span style="color:red">*</span></label>
+                    <select name="user_type" id="user_type" class="form-control" required="" onchange="get_reporting_person(this.value)">
+                        <option value="">-Select User Type-</option>
+                        <?php foreach ($usertype as $utype): ?>
+                            <option value="<?= $utype['id'] ?>" <?php
+                            if (isset($_SESSION['user_type'])) {
+                                if ($_SESSION['user_type'] == $utype['id']) {
+                                    echo "selected";
+                                }
+                            }
+                            ?>><?= ucwords($utype['type_name']); ?></option>
+                                    <?php
+                                endforeach;
+                                ?>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Reporting Person</label>
+                    <select name="reporting_person" id="reporting_person" class="form-control" required="">
+                        <option value="">-Select Person-</option>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <label >DOB<span style="color:red">*</span></label>
                     <input type="text" name="employee_dob" id="employee_dob" tabindex="1" class="form-control" placeholder="choose your dob" value="<?php echo isset($_SESSION['employee_dob']) ? $_SESSION['employee_dob'] : ''; ?>" required="" >

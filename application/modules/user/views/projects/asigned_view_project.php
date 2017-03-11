@@ -15,6 +15,14 @@
         <p style="color:#333;font-size:18px;word-wrap: break-word"><?php echo $records[0]['project_description']; ?></p>
     </div>
     <div class="form-group">
+        <label>Duration Hours</label>
+        <p style="color:#333;font-size:18px;word-wrap: break-word"><?php echo $records[0]['time_duration'] . ' Hours'; ?></p>
+    </div>
+    <div class="form-group">
+        <label>Created Time</label>
+        <p style="color:#333;font-size:18px;word-wrap: break-word"><?php echo $records[0]['created_at']; ?></p>
+    </div>
+    <div class="form-group">
         <label>Assigned By</label>
         <p style="color:#333;font-size:18px;word-wrap: break-word"><?php echo $records[0]['user_name']; ?></p>
     </div>
