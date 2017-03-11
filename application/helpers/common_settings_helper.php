@@ -127,9 +127,25 @@ if(!function_exists('create_notification'))
 			'to_id' => $notiy_to,
 			'notification_type' => $notiy_type,
 			'created_on' => current_date(),
-			'created_ip' => get_ip()
+			'created_ip' => get_ip(),
+			'status' => '1'
 		); 
 		$notification = $CI->Mydb->insert("notification", $insert_array);
+		return $notification;
+	}
+}
+
+/* Get Notification Update */
+if(!function_exists('update_notification'))
+{
+	function update_notification($notiy_id, $notiy_to){
+		$CI =& get_instance();
+		$update_array = array(
+			'created_on' => current_date(),
+			'created_ip' => get_ip(),
+			'status' => '0'
+		); 
+		$notification = $CI->Mydb->update("notification", array('id'=> $notiy_id, 'to_id' => $notiy_to), $update_array);
 		return $notification;
 	}
 }
