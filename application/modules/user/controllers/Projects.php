@@ -173,6 +173,19 @@ class Projects extends CI_Controller {
             'created_ip' => ip2long(get_ip()),
             'status' => 1
         );
+        if (!empty($_FILES['pro_file']['name']) && isset($_FILES ['pro_file'] ['name'])) {
+            $create_user_doc_name = url_title(substr($pro_title, 0, 10), '-', TRUE) . '-project-' . $_FILES['pro_file']['name'];
+            $doc_image = $this->common->upload_image('pro_file', 'project/', $create_user_doc_name);
+            $image_arr = array(
+                'project_file' => $doc_image
+            );
+            $update_array = array_merge($update_array, $image_arr);
+        } else {
+            $image_arr = array(
+                'project_file' => $this->input->post('pro_filename'),
+            );
+            $update_array = array_merge($update_array, $image_arr);
+        }
         $update_id = $this->Mydb->update($this->projects_table, array('id' => $edit_id), $update_array);
         if ($update_id) {
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Project has been successfully updated');
