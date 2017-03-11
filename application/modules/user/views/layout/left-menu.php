@@ -108,13 +108,7 @@
                             <li><a href="<?php echo frontend_url() . 'mobilechange'; ?>">Mobile Change</a></li>
                         </ul>
                     <?php endif; ?>
-                    <?php
-                    if (isset($_SESSION['user_access_menus_id']) && (in_array('Edit Profile', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
-                        ?>
-                        <li  >
-                            <a href="<?php echo frontend_url() . 'editprofile' ?>"><i class="fa fa-user fa-lg"></i> Edit Profile</a>
-                        </li>
-                    <?php endif; ?>
+                    
                     <?php
                     if (isset($_SESSION['user_access_menus_id']) && (in_array('Edit Profile', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
                         ?>
