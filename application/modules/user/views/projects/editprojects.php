@@ -15,7 +15,7 @@
         <div class="form-group">
             <label >Project Description <span style="color:red">*</span></label>
             <textarea name="pro_description" id="pro_description" class="form-control" rows="5"  style="resize: none" placeholder="Enter Project Description" required="" data-parsley-minlength="5" maxlength="5000"><?php echo $records[0]['project_description']; ?></textarea>
-
+            <input type="hidden" name="pro_filename" id="pro_filename" value="<?php echo $records[0]['project_file'] ?>"/>
         </div>
         <div class="form-group">
             <label >Project Type <span style="color:red">*</span></label>
@@ -51,6 +51,17 @@
             <div class="form-group">
                 <label>Duration Hours</label>
                 <input type="text" name="pro_duration" id="pro_duration" class="form-control" value="<?php echo $records[0]['project_during_hours']; ?>" readonly=""/>
+            </div>
+            <div class="form-group">
+                <label>Project File</label>
+                <input type="file" name="pro_file" id="pro_file" class="form-control" value="" <?php if ($records[0]['project_file'] != ''): ?>style="display:none" <?php endif; ?>/>
+                <?php if ($records[0]['project_file'] != ''): ?>
+                    <div class="clear" style="clear:both;height:0.5em"></div>
+                    <div id="profilediv">
+                        <a href="<?php echo frontend_url() . 'projects/download_files/' . $records[0]['project_file']; ?>" class="btn btn-success">Download</a>
+                        <a href="javascript:void(0)" class="btn btn-danger" onclick="$('#profilediv').hide();$('#pro_file').show();">Change</a>
+                    </div>
+                <?php endif; ?>
             </div>
             <div class="form-group">
                 <label>Select Team This Project <span style="color:red">*</span></label><br>

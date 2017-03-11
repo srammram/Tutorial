@@ -20,8 +20,8 @@
                     <tr>
                         <th><input type="checkbox" name="selectall" id="selectall" value="selectall"/></th>
                         <th>S.No</th>
-                        <th>Project Title</th>
-                        <th>Project Description</th>
+                        <th>Task Title</th>
+                        <th>Description</th>
                         <th>From</th>
                         <th>To</th>
                         <th>Duration</th>
@@ -77,17 +77,19 @@
                             <tr>
                                 <td><input type="checkbox" class="selectthis" value="<?php echo $taskdet['id']; ?>"/></td>
                                 <td><?= ($taskdet['id']); ?></td>
-                                <td><?= ($taskdet['project_name'] != '') ? stripslashes($taskdet['project_name']) : 'N/A'; ?></td>
-                                <td><?= $taskdet['project_description'] != '' ? stripslashes($taskdet['project_description']) : 'N/A'; ?></td>
-                                <td><?= $taskdet['to_user_name']; ?></td>
+                                <td><?= ($taskdet['task_title'] != '') ? stripslashes($taskdet['task_title']) : 'N/A'; ?></td>
+                                <td><?= $taskdet['message'] != '' ? stripslashes($taskdet['message']) : 'N/A'; ?></td>
                                 <td><?= $taskdet['from_username']; ?></td>
+                                <td><?= $taskdet['to_user_name']; ?></td>
                                 <td><?= $taskdet['project_duration']; ?></td>
                                 <td><label class="<?php echo $lableclass; ?>"><?php echo $status; ?></label></td>
                                 <td>
-                                    <?php if ($_SESSION['user_type_id'] != 6): ?>
-                                        <a  class="btn btn-success" href="#EditTask" data-toggle="modal" onclick="edittask(<?php echo $taskdet['id']; ?>)"><i class="fa fa-edit"></i></a>
-                                    <?php else: ?>
-                                        <a  class="btn btn-primary" href="#EditTask" data-toggle="modal" onclick="edittask(<?php echo $taskdet['id']; ?>)"><i class="fa fa-eye"></i></a>
+                                    <?php if ($_SESSION['user_id'] == $taskdet['from_user_id']): ?>
+                                        <?php if ($_SESSION['user_type_id'] != 6): ?>
+                                            <a  class="btn btn-success" href="#EditTask" data-toggle="modal" onclick="edittask(<?php echo $taskdet['id']; ?>)"><i class="fa fa-edit"></i></a>
+                                        <?php else: ?>
+                                            <a  class="btn btn-primary" href="#EditTask" data-toggle="modal" onclick="edittask(<?php echo $taskdet['id']; ?>)"><i class="fa fa-eye"></i></a>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                     <?php if ($_SESSION['user_type_id'] != 6): ?>
                                         <a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $taskdet['id']; ?>, 'task_history')"><i class="fa fa-trash"></i></a>
