@@ -67,18 +67,23 @@ class Tasks extends CI_Controller {
             $this->layout->display_frontend($this->folder . 'add-tasks', $data);
         } else if ($user_type_id == 6) {
             $projects_id = $this->Mydb->custom_query("select DISTINCT(projects_id) as projects_id from $this->task_history_table where to_user_id=$user_id and status<>3");
+            $projecttitle = array();
+            $projectsid = array();
             foreach ($projects_id as $projects):
                 $projectid = $projects['projects_id'];
                 $getprojectdetails = $this->Mydb->custom_query("select id,project_name from $this->projects_table where id=$projectid");
                 $projecttitle[] = $getprojectdetails[0]['project_name'];
                 $projectsid[] = $getprojectdetails[0]['id'];
             endforeach;
-            $data['project_title'] = $projecttitle;
-
+            if ($projecttitle != ''):
+                $data['project_title'] = $projecttitle;
+            else:
+                $data['project_title'] = '';
+            endif;
             $data['project_id'] = $projectsid;
             $this->layout->display_frontend($this->folder . 'add-employeetask', $data);
         } else {
-            $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where  status<>3");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where  t1.status<>3");
             $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where user_departments_id=$user_departments_id and user_type_id=6 and status=1");
             $data['project_details'] = $getprojectdetails;
             $data['employee_details'] = $getemployeedetails;
@@ -222,7 +227,7 @@ class Tasks extends CI_Controller {
         if ($this->form_validation->run($this) == TRUE) :
             $current_user_id = $_SESSION['user_id'];
             $project_id = $this->input->post('task_project');
-            if ($_SESSION['user_id'] == 6):
+            if ($_SESSION['user_type_id'] == 6):
                 $task_employee = $_SESSION['user_reporter_id'];
                 $task_status = $this->input->post('task_status');
             else:
