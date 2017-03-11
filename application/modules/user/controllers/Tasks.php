@@ -59,7 +59,7 @@ class Tasks extends CI_Controller {
         $user_type_id = $_SESSION['user_type_id'];
         $user_departments_id = $_SESSION['user_departments_id'];
 
-        if ($user_type_id != 6) {
+        if ($user_type_id == 5) {
             $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where team_tl_id=$user_id and t1.status<>3");
             $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where user_departments_id=$user_departments_id and user_type_id=6 and user_reporter_id=$user_id and status=1");
             $data['project_details'] = $getprojectdetails;
@@ -82,6 +82,12 @@ class Tasks extends CI_Controller {
             endif;
             $data['project_id'] = $projectsid;
             $this->layout->display_frontend($this->folder . 'add-employeetask', $data);
+        }else if ($user_type_id >= 4) {
+            $getprojectdetails = $this->Mydb->custom_query("select t2.project_name,t2.project_slug,t2.project_description,t2.id as projects_id from $this->projects_table t2 where t2.status<>3");
+            $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where user_departments_id=$user_departments_id and user_type_id=6 and user_reporter_id=$user_id and status=1");
+            $data['project_details'] = $getprojectdetails;
+            $data['employee_details'] = $getemployeedetails;
+            $this->layout->display_frontend($this->folder . 'add-managetasks', $data);
         } else {
             $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where  t1.status<>3");
             $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where user_departments_id=$user_departments_id and user_type_id=6 and status=1");
@@ -97,8 +103,10 @@ class Tasks extends CI_Controller {
         $edit_id = $this->input->post('edit_id');
         $user_type_id = $_SESSION['user_type_id'];
         $user_departments_id = $_SESSION['user_departments_id'];
-        if ($user_type_id != 6):
+        if ($user_type_id == 5):
             $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where team_tl_id=$user_id");
+        elseif ($user_type_id >= 4):
+            $getprojectdetails = $this->Mydb->custom_query("select t2.project_name,t2.project_slug,t2.project_description,t2.id as projects_id from $this->projects_table t2 where t2.status<>3");
         elseif ($user_type_id == 6):
             $reporter_id = $_SESSION['user_reporter_id'];
             $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where team_tl_id=$reporter_id");
@@ -119,7 +127,7 @@ class Tasks extends CI_Controller {
         $project_id = $this->input->post('project_id');
         $user_id = $_SESSION['user_id'];
         if ($project_id != 'others'):
-            $gettask_details = $this->Mydb->custom_query("select task_title,id,task_id from $this->task_history_table where projects_id=$project_id and (from_user_id=$user_id or to_user_id=$user_id)");
+            $gettask_details = $this->Mydb->custom_query("select DISTINCT(task_title),id,task_id from $this->task_history_table where projects_id=$project_id and (from_user_id=$user_id or to_user_id=$user_id)");
             $reponse['task_details'] = $gettask_details;
         else:
             $gettask_details = $this->Mydb->custom_query("select reason as task_title,id from $this->static_reasons_table where status=1");
@@ -284,6 +292,83 @@ class Tasks extends CI_Controller {
             endif;
         else:
             $session_datas = array('pms_err' => '0', 'pms_err_message' => validation_errors());
+            $this->session->set_userdata($session_datas);
+            redirect(frontend_url() . 'tasks/add');
+        endif;
+    }
+
+    public function task_insert() {
+        $data = $this->load_module_info();
+//        $this->form_validation->set_rules('task_project', 'Project Title', 'required|trim');
+//        if ($_SESSION['user_type_id'] != 6):
+//            $this->form_validation->set_rules('task_employee', 'Employee Name', 'required|trim');
+//        endif;
+//        $this->form_validation->set_rules('task_description', 'Task Description', 'required|trim');
+//        $this->form_validation->set_rules('task_start_date', 'Start Date', 'required|trim');
+//        $this->form_validation->set_rules('task_end_date', 'End Date', 'required|trim');
+//        $this->form_validation->set_rules('task_duration', 'Duration', 'required|trim');
+
+        $current_user_id = $_SESSION['user_id'];
+        $project_id = $this->input->post('task_project');
+        if ($_SESSION['user_type_id'] == 6):
+            $task_employee = $_SESSION['user_reporter_id'];
+            $task_status = $this->input->post('task_status');
+        elseif ($_SESSION['user_type_id'] == 5):
+            $task_employee = $this->input->post('task_employee');
+            $task_status = 1;
+        elseif ($_SESSION['user_type_id'] == 4):
+            $task_employee = $_SESSION['user_reporter_id'];
+            $task_status = 1;
+        elseif ($_SESSION['user_type_id'] > 4):
+            $task_employee = 0;
+            $task_status = 1;
+        endif;
+
+        $task_description = $this->input->post('task_description');
+        $task_title = $this->input->post('task_title');
+        $task_start_date = date('Y-m-d H:i:s', strtotime($this->input->post('task_start_date')));
+        $task_end_date = date('Y-m-d H:i:s', strtotime($this->input->post('task_end_date')));
+        $task_duration = $this->input->post('task_duration');
+        $insert_array = array('projects_id' => $project_id,
+            'project_duration' => $task_duration,
+            'task_title' => $task_title,
+            'message' => $task_description,
+            'from_user_id' => $current_user_id,
+            'to_user_id' => $task_employee,
+            'task_type' => $this->input->post('task_type'),
+            'departments_id' => $_SESSION['user_departments_id'],
+            'assigned_datetime' => $task_start_date,
+            'finished_datetime' => $task_end_date,
+            'created_ip' => ip2long(get_ip()),
+            'status' => $task_status);
+        $insert_id = $this->Mydb->insert($this->task_history_table, $insert_array);
+        if ($_SESSION['user_type_id'] != 6):
+            $notiy_msg = stripslashes($task_title) . ' Task has been asigned by ' . $_SESSION['user_name'];
+            $notiy_from = $_SESSION['user_id'];
+            $notiy_to = $task_employee;
+            $notiy_type = 3;
+        else:
+            if ($task_status == '3'):
+                $statusmessage = "In Progress";
+            elseif ($task_status == '4'):
+                $statusmessage = "Completed";
+            elseif ($task_status == '5'):
+                $statusmessage = "Postponed";
+            else:
+                $statusmessage = "Pending";
+            endif;
+            $notiy_msg = stripslashes($task_title) . ' Task has been ' . $statusmessage . ' by ' . $_SESSION['user_name'];
+            $notiy_from = $_SESSION['user_id'];
+            $notiy_to = $task_employee;
+            $notiy_type = 3;
+        endif;
+        create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
+        if ($insert_id):
+            $session_datas = array('pms_err' => '0', 'pms_err_message' => 'New Task has been successfully added');
+            $this->session->set_userdata($session_datas);
+            redirect(frontend_url() . 'tasks/add');
+        else:
+            $session_datas = array('pms_err' => '0', 'pms_err_message' => 'New Task can not be added');
             $this->session->set_userdata($session_datas);
             redirect(frontend_url() . 'tasks/add');
         endif;

@@ -29,6 +29,7 @@ class USER extends CI_Controller {
         $this->srm_holidays_table = 'srm_holidays';
         $this->default_leftmenus_table = 'default_leftmenus';
         $this->account_history_table = 'account_history';
+        $this->projects_table = 'projects';
         $this->email_table = 'email_setting';
         $this->sms_table = 'sms_setting';
         $this->load->helper('smstemplate');
@@ -370,8 +371,17 @@ class USER extends CI_Controller {
 
     public function dashboard() {
         $data = $this->load_module_info();
-
+        $getnotificationcount = $this->Mydb->custom_query("SELECT id, (select count(id) from $this->projects_table where project_type_status=1 limit 1) as ongoing,(select count(id) from $this->projects_table where project_type_status=2 limit 1) as Upcoming,(select count(id) from $this->projects_table where project_type_status=3 limit 1) as Pipeline from $this->projects_table limit 1");
+        $data['dashboard_count'] = $getnotificationcount;
         $this->layout->display_frontend($this->folder . 'dashboard', $data);
+    }
+
+    public function getdashboard_details() {
+        $id = $this->input->post('id');
+        $getdetails = $this->Mydb->custom_query("select *,(if(project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as projecttype_status,(if(status=0,'Pending',if(status=1,'Active','Finished'))) as project_status from $this->projects_table where project_type_status=$id");
+        $data['records'] = $getdetails;
+        $body = $this->load->view($this->folder . 'dashboard_details', $data);
+        echo $body;
     }
 
     public function usertype($method = null, $args = array()) {
