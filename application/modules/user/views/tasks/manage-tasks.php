@@ -25,6 +25,7 @@
                         <th>From</th>
                         <th>To</th>
                         <th>Duration</th>
+                        <th>Type</th>
                         <th>Task Status</th>
                         <th>Action</th>
                     </tr>
@@ -73,15 +74,26 @@
                                 $lableclass = "label label-danger";
                                 $status = 'Postponed';
                             endif;
+                            if ($taskdet['task_type'] == 1):
+                                $typetask = "Assigned";
+                            else:
+                                $typetask = "Add";
+                            endif;
                             ?>
                             <tr>
                                 <td><input type="checkbox" class="selectthis" value="<?php echo $taskdet['id']; ?>"/></td>
                                 <td><?= ($taskdet['id']); ?></td>
                                 <td><?= ($taskdet['task_title'] != '') ? stripslashes($taskdet['task_title']) : 'N/A'; ?></td>
                                 <td><?= $taskdet['message'] != '' ? stripslashes($taskdet['message']) : 'N/A'; ?></td>
-                                <td><?= $taskdet['from_username']; ?></td>
-                                <td><?= $taskdet['to_user_name']; ?></td>
+                                <?php if ($taskdet['task_type'] == 1 && $taskdet['task_type'] != 6): ?>
+                                    <td><?= $taskdet['from_username']; ?></td>
+                                    <td><?= $taskdet['to_user_name']; ?></td>
+                                <?php else: ?>
+                                    <td><?= 'N/A'; ?></td>
+                                    <td><?= 'N/A'; ?></td>
+                                <?php endif; ?>
                                 <td><?= $taskdet['project_duration']; ?></td>
+                                <td><?= $typetask; ?></td>
                                 <td><label class="<?php echo $lableclass; ?>"><?php echo $status; ?></label></td>
                                 <td>
                                     <?php if ($_SESSION['user_id'] == $taskdet['from_user_id']): ?>
@@ -91,6 +103,11 @@
                                             <a  class="btn btn-primary" href="#EditTask" data-toggle="modal" onclick="edittask(<?php echo $taskdet['id']; ?>)"><i class="fa fa-eye"></i></a>
                                         <?php endif; ?>
                                     <?php endif; ?>
+                                    <?php if ($_SESSION['user_type_id'] != 6 && $taskdet['task_type'] == 2): ?>
+                                        <a  class="btn btn-primary" href="#ChangeStatus" data-toggle="modal" onclick="changetaskstatus(<?php echo $taskdet['id']; ?>)"><i class="fa fa-tasks"></i></a>                                       
+                                        <?php
+                                    endif;
+                                    ?>
                                     <?php if ($_SESSION['user_type_id'] != 6): ?>
                                         <a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $taskdet['id']; ?>, 'task_history')"><i class="fa fa-trash"></i></a>
                                     <?php endif; ?>
@@ -117,6 +134,13 @@
 <div id="EditTask" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content" id="taskedit">
+
+        </div>
+    </div>
+</div>
+<div id="ChangeStatus" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content" id="change_status">
 
         </div>
     </div>

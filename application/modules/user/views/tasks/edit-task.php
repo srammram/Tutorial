@@ -25,23 +25,25 @@
                         <?php endforeach; ?>
             </select>
         </div>
-        <div class="form-group">
-            <label>Select Employee <span style="color:red">*</span></label>
-            <select <?php
-            if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 4): echo "readonly";
-            endif;
-            ?> name="task_employee" id="task_employee" class="form-control" required>
-                <option value="">-Select Employee-</option>
-                <?php
-                foreach ($employee_details as $empdet):
-                    ?>
-                    <option value="<?php echo $empdet['id'] ?>" <?php
-                    if ($empdet['id'] == $task_details[0]['to_user_id']): echo "selected";
-                    endif;
-                    ?>><?php echo $empdet['user_name']; ?></option>
-                        <?php endforeach; ?>
-            </select>
-        </div>
+        <?php if ($task_details[0]['task_type'] == 1 && $_SESSION['user_type_id'] != 6): ?>
+            <div class="form-group">
+                <label>Select Employee <span style="color:red">*</span></label>
+                <select <?php
+                if ($_SESSION['user_type_id'] == 6 || $task_details[0]['status'] == 4): echo "readonly";
+                endif;
+                ?> name="task_employee" id="task_employee" class="form-control" required>
+                    <option value="">-Select Employee-</option>
+                    <?php
+                    foreach ($employee_details as $empdet):
+                        ?>
+                        <option value="<?php echo $empdet['id'] ?>" <?php
+                        if ($empdet['id'] == $task_details[0]['to_user_id']): echo "selected";
+                        endif;
+                        ?>><?php echo $empdet['user_name']; ?></option>
+                            <?php endforeach; ?>
+                </select>
+            </div>
+        <?php endif; ?>
         <div class="form-group">
             <label>Description <span style="color:red">*</span></label>
             <textarea  <?php

@@ -27,39 +27,39 @@
                 </thead>
                 <tbody>
                     <?php
-                    if (!empty($project_details)):
-                        foreach ($project_details as $prodet):
-                            if ($prodet['status'] == 0):
-                                $lableclass = "label label-warning";
-                                $status = 'Pending';
-                            elseif ($prodet['status'] == 1):
-                                $lableclass = "label label-success";
-                                $status = 'Active';
-                            elseif ($prodet['status'] == 2):
-                                $lableclass = "label label-danger";
-                                $status = 'Ignored';
-                            elseif ($prodet['status'] == 6):
-                                $lableclass = "label label-primary";
-                                $status = 'Assigned';
-                            endif;
-                            if ($prodet['project_type_status'] == 1):
-                                $protype = 'Ongoing';
-                            elseif ($prodet['project_type_status'] == 2):
-                                $protype = 'Upcoming';
-                            elseif ($prodet['project_type_status'] == 3):
-                                $protype = 'Pipeline';
-                            endif;
-                            ?>
-                            <tr>
-                                <td><input type="checkbox" class="selectthis" value="<?php echo $prodet['id']; ?>"/></td>
-                                <td><?= ($prodet['id']); ?></td>
-                                <td><?= stripslashes($prodet['project_name']); ?></td>
-                                <td><?= stripslashes($prodet['project_description']); ?></td>
-                                <td><?= $protype; ?></td>
-                                <td><label class="<?php echo $lableclass; ?>" style="font-size:12px"><?php echo $status; ?></label></td>
-                                <td>
-                                    <a  class="btn btn-success" href="#EditProject" data-toggle="modal" onclick="editproject(<?php echo $prodet['id']; ?>)"><i class="fa fa-edit"></i></a>
-                                    <a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $prodet['id']; ?>, 'projects')"><i class="fa fa-trash"></i></a>
+                    foreach ($project_details as $prodet):
+                        if ($prodet['status'] == 0):
+                            $lableclass = "label label-warning";
+                            $status = 'Pending';
+                        elseif ($prodet['status'] == 1):
+                            $lableclass = "label label-success";
+                            $status = 'Active';
+                        elseif ($prodet['status'] == 2):
+                            $lableclass = "label label-danger";
+                            $status = 'Ignored';
+                        elseif ($prodet['status'] == 6):
+                            $lableclass = "label label-primary";
+                            $status = 'Assigned';
+                        endif;
+                        if ($prodet['project_type_status'] == 1):
+                            $protype = 'Ongoing';
+                        elseif ($prodet['project_type_status'] == 2):
+                            $protype = 'Upcoming';
+                        elseif ($prodet['project_type_status'] == 3):
+                            $protype = 'Pipeline';
+                        endif;
+                        ?>
+                        <tr>
+                            <td><input type="checkbox" class="selectthis" value="<?php echo $prodet['id']; ?>"/></td>
+                            <td><?= ($prodet['id']); ?></td>
+                            <td><?= stripslashes($prodet['project_name']); ?></td>
+                            <td><?= stripslashes($prodet['project_description']); ?></td>
+                            <td><?= $protype; ?></td>
+                            <td><label class="<?php echo $lableclass; ?>" style="font-size:12px"><?php echo $status; ?></label></td>
+                            <td>
+                                <a  class="btn btn-success" href="#EditProject" data-toggle="modal" onclick="editproject(<?php echo $prodet['id']; ?>)"><i class="fa fa-edit"></i></a>
+                                <a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $prodet['id']; ?>, 'projects')"><i class="fa fa-trash"></i></a>
+                                <?php if ($prodet['project_type_status'] == 1): ?>                                   
                                     <?php
                                     if ($prodet['status'] != 6):
                                         ?>
@@ -68,13 +68,11 @@
                                         ?>
                                         <a  class="btn btn-primary" title="View Assigned Team for this project" href="#AssignProject" data-toggle="modal" onclick="asigned_projects(<?php echo $prodet['id']; ?>)"><i class="fa fa-eye"></i></a>
                                     <?php endif; ?>
-                                </td>
-                            </tr>
-                            <?php
-                        endforeach;
-                    else:
-                        echo "No Records Found";
-                    endif;
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+                        <?php
+                    endforeach;
                     ?>
 
                 </tbody>
