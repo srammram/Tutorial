@@ -70,7 +70,7 @@ class USER extends CI_Controller {
         $this->form_validation->set_rules('password', 'Password', 'required|min_length[' . PASSWORD_LENGHT . ']|trim');
         $emailaddress = $this->input->post('emailaddress');
         $password = md5($this->input->post('password'));
-        if (empty(get_session_value('user_id'))) {
+        if ((get_session_value('user_id') == '')) {
             if ($this->form_validation->run($this) == TRUE) {
 
                 $userdetails = $this->Mydb->custom_query("select * from $this->login_table where user_email='$emailaddress' and user_pass='$password'");
@@ -85,16 +85,12 @@ class USER extends CI_Controller {
                         $user_departments_id = $userdetails[0]['user_departments_id'];
                         $user_access_menus_id = $userdetails[0]['user_access_menus_id'];
                         $user_access_menus_details = $userdetails[0]['user_access_menus_details'];
-                        $session_datas = array('user_id' => $user_id, 'user_mobile' => $user_mobile, 'user_email' => $user_email, 'user_name' => $user_name, 'user_type_id' => $user_type_id, 'user_departments_id' => $user_departments_id, 'user_access_menus_id' => $user_access_menus_id, 'user_access_menus_details' => $user_access_menus_details);
+                        $user_reporter_id = $userdetails[0]['user_reporter_id'];
+                        $session_datas = array('user_id' => $user_id, 'user_mobile' => $user_mobile, 'user_email' => $user_email, 'user_name' => $user_name, 'user_type_id' => $user_type_id, 'user_departments_id' => $user_departments_id, 'user_access_menus_id' => $user_access_menus_id, 'user_access_menus_details' => $user_access_menus_details, 'user_reporter_id' => $user_reporter_id);
                         $this->session->set_userdata($session_datas);
                         $this->Mydb->insert($this->login_history_table, array('login_time' => current_date(), 'login_ip' => ip2long(get_ip()), 'user_id' => $user_id));
-						/*Sample notification insert (mesage, from_id, to_id, notification_type)*/
-						$notiy_msg = 'Thank You login';
-						$notiy_from = '1';
-						$notiy_to = '1';
-						$notiy_type = '1';
-						create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
-						
+                        /* Sample notification insert (mesage, from_id, to_id, notification_type) */
+
                         redirect(frontend_url() . 'dashboard');
                     } else {
                         $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Your user details is not active. Contact your reporting person');
@@ -116,12 +112,25 @@ class USER extends CI_Controller {
         }
     }
 
+    public function get_reporting_person_by_user_type() {
+        $user_type_id = $this->input->post('user_type_id');
+        $emp_departments = $this->input->post('emp_departments');
+        $user_typeid = intval($user_type_id - 1);
+        if ($user_type_id == 6):
+            $where = " AND user_departments_id=$emp_departments";
+        else:
+            $where = "";
+        endif;
+        $getdetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where user_type_id=$user_typeid $where");
+        echo json_encode($getdetails);
+    }
+
     ########### Forgot Password ... ###########
 
     function forgot() {
         $this->form_validation->set_rules('user_email', 'Email Address', 'required|trim');
         $user_email = $this->input->post('user_email');
-        if (empty(get_session_value('user_id'))) {
+        if ((get_session_value('user_id') == '')) {
             if ($this->form_validation->run($this) == TRUE) {
                 $check = $this->Mydb->get_record('user_name, user_email', $this->login_table, array('user_email' => $user_email));
                 $user_forgot = md5(uniqid(rand()));
@@ -158,7 +167,7 @@ class USER extends CI_Controller {
     public function resetpassword($method = null, $args = array()) {
         $data = $this->load_module_info();
 
-        if (empty(get_session_value('user_id'))) {
+        if ((get_session_value('user_id') == '')) {
             if (!empty($method)) {
                 $user_forgot = $method[0];
                 $check = $this->Mydb->get_record('user_forgot', $this->login_table, array('user_forgot' => $user_forgot));
@@ -569,6 +578,7 @@ class USER extends CI_Controller {
                                 'user_country' => $this->input->post('emp_country'),
                                 'user_state' => $this->input->post('emp_state'),
                                 'user_city' => $this->input->post('emp_city'),
+                                'user_reporter_id' => $this->input->post('reporting_person'),
                                 'user_dob' => date('Y-m-d', strtotime($this->input->post('employee_dob'))),
                                 'user_details' => $jsonvalue,
                                 'user_access_menus_id' => implode(',', $this->input->post('emp_accessmenu')),
@@ -591,16 +601,16 @@ class USER extends CI_Controller {
                                 $to_email = $this->input->post('employee_email');
                                 $response_email = $this->send_welcome_email($name, $to_email, $username, $password);
 
-								
-								$sms_name = $this->input->post('employee_name');
-								$sms_username = $this->input->post('employee_email');
-								$sms_password = $this->input->post('employee_pass');
-								$sms_sitelink = frontend_url();
+
+                                $sms_name = $this->input->post('employee_name');
+                                $sms_username = $this->input->post('employee_email');
+                                $sms_password = $this->input->post('employee_pass');
+                                $sms_sitelink = frontend_url();
                                 $sms_phone = $this->input->post('emp_mobile');
                                 $sms_country_code = $this->input->post('emp_country');
 
 
-							$response_sms = $this->sms_add_employee($sms_name, $sms_username, $sms_password, $sms_sitelink, $sms_phone, $sms_country_code);
+                                $response_sms = $this->sms_add_employee($sms_name, $sms_username, $sms_password, $sms_sitelink, $sms_phone, $sms_country_code);
 
                                 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Employee details has been successfully inserted');
                                 $this->session->set_userdata($session_datas);
@@ -1210,13 +1220,11 @@ class USER extends CI_Controller {
 
     public function sms_add_employee($sms_name, $sms_username, $sms_password, $sms_sitelink, $sms_phone, $sms_country_code) {
 
-        $sms_chk_arr = array('[NAME]','[USERNAME]','[PASSWORD]','[SITELINK]');
+        $sms_chk_arr = array('[NAME]', '[USERNAME]', '[PASSWORD]', '[SITELINK]');
         $sms_rep_arr = array($sms_name, $sms_username, $sms_password, $sms_sitelink);
         $response_sms = send_sms($sms_template_slug = "add-employee", $sms_chk_arr, $sms_rep_arr, $sms_phone, $sms_country_code);
         return $response_sms;
     }
-
-    
 
     ########### Email Active ... ###########
 
@@ -1339,13 +1347,13 @@ class USER extends CI_Controller {
                 $this->form_validation->set_rules('email_template', 'Email Template', 'required|trim');
                 $this->form_validation->set_rules('email_variable', 'Email Variable', 'required|trim');
                 $this->form_validation->set_rules('email_status', 'Status', 'required');
-				$this->form_validation->set_rules('email_from', 'From Email', 'required');
-				$this->form_validation->set_rules('email_to', 'To Email', 'required');
+                $this->form_validation->set_rules('email_from', 'From Email', 'required');
+                $this->form_validation->set_rules('email_to', 'To Email', 'required');
 
 
-				$email_from = $this->input->post('email_from');
-				$email_to = $this->input->post('email_to');
-				
+                $email_from = $this->input->post('email_from');
+                $email_to = $this->input->post('email_to');
+
                 $email_name = $this->input->post('email_name');
                 $email_template = $this->input->post('email_template');
                 $email_variable = $this->input->post('email_variable');
@@ -1373,17 +1381,17 @@ class USER extends CI_Controller {
                 $email_id = $this->input->post('email_id');
                 $this->form_validation->set_rules('email_template', 'Email Template', 'required|trim');
                 $this->form_validation->set_rules('email_variable', 'Email Variable', 'required|trim');
-				$this->form_validation->set_rules('email_from', 'From Email', 'required');
-				$this->form_validation->set_rules('email_to', 'To Email', 'required');
+                $this->form_validation->set_rules('email_from', 'From Email', 'required');
+                $this->form_validation->set_rules('email_to', 'To Email', 'required');
 
 
-				$email_from = $this->input->post('email_from');
-				$email_to = $this->input->post('email_to');
-				
+                $email_from = $this->input->post('email_from');
+                $email_to = $this->input->post('email_to');
+
                 $email_template = $this->input->post('email_template');
                 $email_variable = $this->input->post('email_variable');
                 if ($this->form_validation->run($this) == TRUE) {
-                    $update_id = $this->Mydb->update($this->email_table, array('id' => $email_id), array('email_content' => $email_template,  'from_email' => $email_from, 'reply_to' => $email_to, 'email_variables' => $email_variable));
+                    $update_id = $this->Mydb->update($this->email_table, array('id' => $email_id), array('email_content' => $email_template, 'from_email' => $email_from, 'reply_to' => $email_to, 'email_variables' => $email_variable));
                     if ($update_id) {
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Email Setting has been successfully updated');
                         $this->session->set_userdata($session_datas);
@@ -1411,9 +1419,7 @@ class USER extends CI_Controller {
             $this->layout->display_frontend($this->folder . 'emailsetting', $data);
         }
     }
-	
-	
-	
+
     private function load_module_info() {
         $data = array();
         $data ['module_label'] = $this->module_label;

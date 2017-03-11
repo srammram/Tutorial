@@ -30,6 +30,15 @@ class Projects extends CI_Controller {
         $this->project_teams_table = 'project_teams';
         $this->load->library('common');
         $this->load->helper('download');
+        $this->email_table = 'email_setting';
+        $this->sms_table = 'sms_setting';
+        $this->load->helper('smstemplate');
+        $this->load->helper('emailtemplate');
+        $config = Array(
+            'mailtype' => 'html',
+            'charset' => 'utf-8',
+            'wordwrap' => TRUE
+        );
     }
 
     function _remap($method, $args) {
@@ -91,6 +100,7 @@ class Projects extends CI_Controller {
                 'created_ip' => ip2long(get_ip()),
                 'status' => 1
             );
+
             if (!empty($_FILES['pro_file']['name']) && isset($_FILES ['pro_file'] ['name'])) {
                 $create_user_doc_name = url_title(substr($pro_title, 0, 10), '-', TRUE) . '-project-' . $_FILES['pro_file']['name'];
                 $doc_image = $this->common->upload_image('pro_file', 'project/', $create_user_doc_name);
@@ -108,6 +118,22 @@ class Projects extends CI_Controller {
             if ($insert_id):
                 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'New Project has been successfully added');
                 $this->session->set_userdata($session_datas);
+                if ($_SESSION['user_id'] == 1):
+                    $getmanagerdetails = $this->Mydb->custom_query("select id from $this->login_table where user_type_id=4");
+                    foreach ($getmanagerdetails as $userdet):
+                        $notiy_msg = stripslashes($pro_title) . ' Project has been added';
+                        $notiy_from = $_SESSION['user_id'];
+                        $notiy_to = $userdet['id'];
+                        $notiy_type = '1';
+                        $notification = create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
+                    endforeach;
+                else:
+                    $notiy_msg = stripslashes($pro_title) . ' Project has been added';
+                    $notiy_from = $_SESSION['user_id'];
+                    $notiy_to = '1';
+                    $notiy_type = '1';
+                    $notification = create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
+                endif;
                 redirect(frontend_url() . 'projects/add');
             else:
                 $session_datas = array('pms_err' => '1', 'pms_err_message' => 'New Project cant be added. Please try again');
@@ -151,6 +177,22 @@ class Projects extends CI_Controller {
         if ($update_id) {
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Project has been successfully updated');
             $this->session->set_userdata($session_datas);
+            if ($_SESSION['user_id'] == 1):
+                $getmanagerdetails = $this->Mydb->custom_query("select id from $this->login_table where user_type_id=2");
+                foreach ($getmanagerdetails as $userdet):
+                    $notiy_msg = stripslashes($pro_title) . ' Project has been updated';
+                    $notiy_from = $userdet['id'];
+                    $notiy_to = '1';
+                    $notiy_type = '1';
+                    create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
+                endforeach;
+            else:
+                $notiy_msg = stripslashes($pro_title) . ' Project has been updated';
+                $notiy_from = $_SESSION['user_id'];
+                $notiy_to = '1';
+                $notiy_type = '1';
+                create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
+            endif;
             redirect(frontend_url() . 'projects');
         } else {
             $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Project cant be updated. Please try again');
@@ -168,6 +210,17 @@ class Projects extends CI_Controller {
         $data['team_details'] = $team_details;
         $data['edit_id'] = $edit_id;
         $body = $this->load->view($this->folder . 'editprojects', $data);
+        echo $body;
+    }
+
+    public function changestatus_fromteam() {
+        $project_id = $this->input->post('project_id');
+        $getprojectdetails = $this->Mydb->custom_query("select * from $this->projects_table where id=$project_id");
+        $team_details = $this->Mydb->custom_query("select name,id from $this->departments_table where status=1");
+        $data['records'] = $getprojectdetails;
+        $data['team_details'] = $team_details;
+        $data['project_id'] = $project_id;
+        $body = $this->load->view($this->folder . 'changestatus_forteam', $data);
         echo $body;
     }
 
@@ -228,7 +281,7 @@ class Projects extends CI_Controller {
         $team_duration_hours = $this->input->post('team_duration_hours');
         $select_team_tl = $this->input->post('select_team_tl');
         $countteamtl = count($select_team_tl);
-
+        $getprojectdetails = $this->Mydb->custom_query("select project_name from $this->projects_table where id=$project_id");
         for ($i = 0; $i < $countteamtl; $i++) {
             $tlid = $select_team_tl[$i];
             $duration_hours = $team_duration_hours[$i];
@@ -242,6 +295,12 @@ class Projects extends CI_Controller {
                 'created_ip' => ip2long(get_ip()),
                 'status' => 1);
             $insert_id = $this->Mydb->insert($this->project_teams_table, $insert_array);
+
+            $notiy_msg = stripslashes($getprojectdetails[0]['project_title']) . ' Project has been asigned your team';
+            $notiy_from = $_SESSION['user_id'];
+            $notiy_to = $tlid;
+            $notiy_type = 2;
+            create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
         }
         if ($insert_id):
             $update_array = array('status' => 6);
