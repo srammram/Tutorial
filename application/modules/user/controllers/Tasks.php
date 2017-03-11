@@ -252,10 +252,26 @@ class Tasks extends CI_Controller {
                 'created_ip' => ip2long(get_ip()),
                 'status' => $task_status);
             $insert_id = $this->Mydb->insert($this->task_history_table, $insert_array);
-            $notiy_msg = stripslashes($task_title) . ' Task has been asigned your Team Leader';
-            $notiy_from = $_SESSION['user_id'];
-            $notiy_to = $task_employee;
-            $notiy_type = 3;
+            if ($_SESSION['user_type_id'] != 6):
+                $notiy_msg = stripslashes($task_title) . ' Task has been asigned by ' . $_SESSION['user_name'];
+                $notiy_from = $_SESSION['user_id'];
+                $notiy_to = $task_employee;
+                $notiy_type = 3;
+            else:
+                if ($task_status == '3'):
+                    $statusmessage = "In Progress";
+                elseif ($task_status == '4'):
+                    $statusmessage = "Completed";
+                elseif ($task_status == '5'):
+                    $statusmessage = "Postponed";
+                else:
+                    $statusmessage = "Pending";
+                endif;
+                $notiy_msg = stripslashes($task_title) . ' Task has been ' . $statusmessage . ' by ' . $_SESSION['user_name'];
+                $notiy_from = $_SESSION['user_id'];
+                $notiy_to = $task_employee;
+                $notiy_type = 3;
+            endif;
             create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
             if ($insert_id):
                 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'New Task has been successfully added');
