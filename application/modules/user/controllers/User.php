@@ -118,6 +118,9 @@ class USER extends CI_Controller {
         $user_typeid = intval($user_type_id - 1);
         if ($user_type_id == 6):
             $where = " AND user_departments_id=$emp_departments";
+        elseif ($user_type_id == 4):
+            $where = "";
+            $user_typeid = 1;
         else:
             $where = "";
         endif;
