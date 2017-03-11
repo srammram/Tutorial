@@ -88,6 +88,13 @@ class USER extends CI_Controller {
                         $session_datas = array('user_id' => $user_id, 'user_mobile' => $user_mobile, 'user_email' => $user_email, 'user_name' => $user_name, 'user_type_id' => $user_type_id, 'user_departments_id' => $user_departments_id, 'user_access_menus_id' => $user_access_menus_id, 'user_access_menus_details' => $user_access_menus_details);
                         $this->session->set_userdata($session_datas);
                         $this->Mydb->insert($this->login_history_table, array('login_time' => current_date(), 'login_ip' => ip2long(get_ip()), 'user_id' => $user_id));
+						/*Sample notification insert (mesage, from_id, to_id, notification_type)*/
+						$notiy_msg = 'Thank You login';
+						$notiy_from = '1';
+						$notiy_to = '1';
+						$notiy_type = '1';
+						create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
+						
                         redirect(frontend_url() . 'dashboard');
                     } else {
                         $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Your user details is not active. Contact your reporting person');
@@ -1318,7 +1325,7 @@ class USER extends CI_Controller {
         }
     }
 
-    ########### SMS Setting ... ###########
+    ########### Email Setting ... ###########
 
     public function emailsetting($method = null, $args = array()) {
         if (!empty($method)) {
@@ -1404,7 +1411,9 @@ class USER extends CI_Controller {
             $this->layout->display_frontend($this->folder . 'emailsetting', $data);
         }
     }
-
+	
+	
+	
     private function load_module_info() {
         $data = array();
         $data ['module_label'] = $this->module_label;
