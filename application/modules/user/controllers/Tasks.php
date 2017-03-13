@@ -63,9 +63,9 @@ class Tasks extends CI_Controller {
         if ($user_type_id < 5):
             $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>3");
         elseif ($user_type_id == 5):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>3 and team_tl_id=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id");
         elseif ($user_type_id == 6):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>3 and t1.assigned_to=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and t1.assigned_to=$user_id");
         endif;
         $data['project_details'] = $getprojectdetails;
         $this->layout->display_frontend($this->folder . 'add-new-tasks', $data);
@@ -75,7 +75,7 @@ class Tasks extends CI_Controller {
         $project_id = $this->input->post('project_id');
         $user_id = $_SESSION['user_id'];
         if ($project_id != 'others'):
-            $gettask_details = $this->Mydb->custom_query("select t1.id,t1.task_name from $this->assigned_tasks_table t1 where t1.status<>3 and projects_id=$project_id and assigned_to=$user_id");
+            $gettask_details = $this->Mydb->custom_query("select t1.id,t1.task_name from $this->assigned_tasks_table t1 where  projects_id=$project_id and assigned_to=$user_id and t1.status<>5 and t1.status<>2");
         else:
             $gettask_details = $this->Mydb->custom_query("select id,reason as task_name from $this->static_reasons_table where status=1");
         endif;
@@ -111,6 +111,7 @@ class Tasks extends CI_Controller {
             'start_datetime' => date('Y-m-d H:i:s', strtotime($add_start_date)),
             'end_datetime' => date('Y-m-d H:i:s', strtotime($add_end_date)),
             'created_ip' => ip2long(get_ip()),
+            'asigned_task_id' => $assigned_task_id,
             'status' => $this->input->post('task_status'));
         if ($task_status == 5):
             $finished_array = array('finished_datetime' => current_date(),
@@ -331,10 +332,10 @@ class Tasks extends CI_Controller {
         $data = $this->load_module_info();
         $user_id = $_SESSION['user_id'];
         $user_type_id = $_SESSION['user_type_id'];
-        if ($user_type_id > 4):
-            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' where t1.to_user_id=$user_id AND t1.status<>3");
+        if ($user_type_id < 4):
+            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' where t1.to_user_id=$user_id AND t1.status<>2");
         else:
-            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' where  t1.status<>3");
+            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' where  t1.status<>2");
         endif;
 
         $data['records'] = $getdetails;
