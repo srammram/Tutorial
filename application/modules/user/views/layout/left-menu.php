@@ -89,8 +89,10 @@
                             <a href="#"><i class="fa fa-tasks fa-lg"></i> Tasks<span class="arrow"></span></a>
                         </li>
                         <ul class="sub-menu collapse" id="tasks">
-                            <li class=""><a href="<?php echo frontend_url() . 'tasks/add'; ?>">Add Task</a></li>
-                            <li><a href="<?php echo frontend_url() . 'tasks/'; ?>">Manage Tasks</a></li>
+                            <li class=""><a href="<?php echo frontend_url() . 'tasks/asign'; ?>">Assign Task</a></li>
+                            <li class=""><a href="<?php echo frontend_url() . 'tasks/manage_asign_task'; ?>">Manage Assigned Task</a></li>
+                            <li class=""><a href="<?php echo frontend_url() . 'tasks/add_new_task'; ?>">Add Task</a></li>
+                            <li><a href="<?php echo frontend_url() . 'tasks/manage_new_task'; ?>">Manage Tasks</a></li>
 
                         </ul>
                     <?php endif; ?>
@@ -108,7 +110,7 @@
                             <li><a href="<?php echo frontend_url() . 'mobilechange'; ?>">Mobile Change</a></li>
                         </ul>
                     <?php endif; ?>
-                    
+
                     <?php
                     if (isset($_SESSION['user_access_menus_id']) && (in_array('Edit Profile', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
                         ?>

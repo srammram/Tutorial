@@ -11,11 +11,17 @@
     var FRONTEND_URL = '<?php echo frontend_url(); ?>';
 </script>
 <script>
-$(document).ready(function () {
-  $(".notificationicon").click(function () {
-    $(this).toggleClass("open");
-    $("#notificationMenu").toggleClass("open");
-  });
-});
+    $(document).ready(function () {
+        $(".notificationicon").click(function () {
+            $(this).toggleClass("open");
+            $("#notificationMenu").toggleClass("open");
+        });
+    });
 
+</script>
+<script>
+    $("#menu-toggle").click(function (e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
 </script>

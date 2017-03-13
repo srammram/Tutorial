@@ -4,25 +4,21 @@
 
 <div class="clear" style="clear: both;height:3em"></div>
 <div class="common">
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 circle_blue accord" onclick="accord(1)" title="one">
+
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red one accord active" onclick="accord(1)" title="one">
         <div class="half-circle"></div>
-        <h3>175</h3>
-        <p>All Users</p>
+        <h3><?php echo $dashboard_count[0]['ongoing']; ?></h3>
+        <p>Ongoing Project</p>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 circle_red accord active" onclick="accord(2)" title="two">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_green two accord " onclick="accord(2)" title="two">
         <div class="half-circle"></div>
-        <h3>205</h3>
-        <p>All Ongoing Project</p>
+        <h3><?php echo $dashboard_count[0]['Upcoming']; ?></h3>
+        <p>Upcoming Projects</p>
     </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 circle_green accord" onclick="accord(3)" title="three">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_yellow three accord " onclick="accord(3)" title="three">
         <div class="half-circle"></div>
-        <h3>105</h3>
-        <p>All Upcoming Projects</p>
-    </div>
-    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 circle_yellow accord" onclick="accord(4)" title="four">
-        <div class="half-circle"></div>
-        <h3>95</h3>
-        <p>All Pipeline Projects</p>
+        <h3><?php echo $dashboard_count[0]['Pipeline']; ?></h3>
+        <p>Pipeline Projects</p>
     </div>
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 section_accord">
@@ -44,13 +40,6 @@
             Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
             Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
 
-        </div>
-    </div>
-    <div class="accord_box" id="four" style="display:none;">
-        <div class="card card-block">
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim 
-            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
         </div>
     </div>
 
