@@ -31,9 +31,15 @@
                             elseif ($prodet['status'] == 2):
                                 $lableclass = "label label-danger";
                                 $status = 'Ignored';
-                            elseif ($prodet['status'] == 6):
+                            elseif ($prodet['status'] == 3):
                                 $lableclass = "label label-primary";
-                                $status = 'Assigned';
+                                $status = 'In Progress';
+                            elseif ($prodet['status'] == 4):
+                                $lableclass = "label label-warning";
+                                $status = 'In Complete';
+                            elseif ($prodet['status'] == 5):
+                                $lableclass = "label label-success";
+                                $status = 'Completed';
                             endif;
                             ?>
                             <tr>
