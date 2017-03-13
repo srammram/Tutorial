@@ -89,8 +89,10 @@
                             <a href="#"><i class="fa fa-tasks fa-lg"></i> Tasks<span class="arrow"></span></a>
                         </li>
                         <ul class="sub-menu collapse" id="tasks">
-                            <li class=""><a href="<?php echo frontend_url() . 'tasks/asign'; ?>">Assign Task</a></li>
-                            <li class=""><a href="<?php echo frontend_url() . 'tasks/manage_asign_task'; ?>">Manage Assigned Task</a></li>
+                            <?php if ($_SESSION['user_type_id'] != 6): ?>
+                                <li class=""><a href="<?php echo frontend_url() . 'tasks/asign'; ?>">Assign Task</a></li>
+                                <li class=""><a href="<?php echo frontend_url() . 'tasks/manage_asign_task'; ?>">Manage Assigned Task</a></li>
+                            <?php endif; ?>
                             <li class=""><a href="<?php echo frontend_url() . 'tasks/add_new_task'; ?>">Add Task</a></li>
                             <li><a href="<?php echo frontend_url() . 'tasks/manage_new_task'; ?>">Manage Tasks</a></li>
 
