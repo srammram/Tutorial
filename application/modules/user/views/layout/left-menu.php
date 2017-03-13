@@ -1,4 +1,4 @@
-<div class="col-xs-3">
+<div class="col-xs-2">
 
     <div class="nav-side-menu">
         <div class="menu-list">
@@ -154,7 +154,7 @@
         </div>
     </div>
 </div>
-<div class="col-xs-9">
+<div class="col-xs-10">
     <?php
     if (isset($_SESSION['pms_err']) && $_SESSION['pms_err'] == 1):
         ?>

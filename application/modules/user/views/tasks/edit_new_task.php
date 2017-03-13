@@ -72,28 +72,6 @@
                 </div>
             </div>
             <div class="clear" style="clear: both;height:1em"></div>
-            <?php if ($records[0]['finished_status'] == 5): ?>
-                <div class="form-group">
-                    <div class="col-xs-12">
-                        <div class="col-xs-4"><label>Finished hours</label></div>
-                        <div class="col-xs-1"><label>:</label></div>
-                        <div class="col-xs-6">
-                            <label><?php echo $records[0]['finished_hours']; ?></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="clear" style="clear: both;height:1em"></div>
-                <div class="form-group">
-                    <div class="col-xs-12">
-                        <div class="col-xs-4"><label>Message</label></div>
-                        <div class="col-xs-1"><label>:</label></div>
-                        <div class="col-xs-6">
-                            <label><?php echo $records[0]['finished_message']; ?></label>
-                        </div>
-                    </div>
-                </div>
-            <?php endif; ?>
-            <div class="clear" style="clear: both;height:2em"></div>
             <div class="form-group">
                 <input type="button" name="task_close" id="task_close" class="btn btn-danger" value="Close" style="float:right" data-dismiss="modal" aria-hidden="true"/>
             </div>

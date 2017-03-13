@@ -1,46 +1,60 @@
-<div class="col-xs-12">
-    <h1>Manage Projects</h1>
-    <div class="clear" style="clear: both;height:3em"></div>
-    <div class="panel panel-default">
-        <div class="panel-heading text-center">
-            Manage Projects
-        </div>
-        <div class="panel-body">
-            <div class="col-xs-12">
-                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('departments', '3')">Delete</a>
-            </div>
-            <div class="col-xs-12" id="empsucc_message">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 project_list">
+    <div class="row">
+        <?php
+        $i = 1;
+        foreach ($records as $det):
+            ?>
 
+            <div class="col-xs-3" data-toggle="modal" data-target="#myModal" >
+                <a href="#">
+                    <div class="boxTile">
+                        <div class="square info easeAni">
+                            <div class="text">
+                                <h2><?php echo $det['project_name']; ?></h2>
+                            </div>
+                        </div>
+                    </div>
+                </a>
             </div>
-            <table id="dashboarddetails" class="display" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th>S.No</th>
-                        <th>Project Title</th>
-                        <th>Project Description</th>
-                        <th>Project Type</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($records as $det): ?>
-                        <tr>
-                            <th><?php echo $det['id']; ?></th>
-                            <th><?php echo $det['project_name']; ?></th>
-                            <th><?php echo $det['project_description']; ?></th>
-                            <th><?php echo $det['projecttype_status']; ?></th>
-                            <th><?php echo $det['project_status']; ?></th>
+            <?php if (($i % 4 == 0)): ?>
+                <div class="clear" style="clear: both;height:1em"></div>
+            <?php endif; ?>
+    <!--    <tr>
+    <th><?php echo $det['id']; ?></th>
+    <th><?php echo $det['project_name']; ?></th>
+    <th><?php echo $det['project_description']; ?></th>
+    <th><?php echo $det['projecttype_status']; ?></th>
+    <th><?php echo $det['project_status']; ?></th>
 
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
+    </tr>-->
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Projects</h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Project Title = <?php echo $det['project_name']; ?></p>
+                            <p>Project Description = <?php echo $det['project_description']; ?></p>
+                            <p>Estimated Hours = <?php echo $det['time_duration']; ?></p>
+                            <p>Used Hours =</p>
+                            <p>Team Involved =</p>
+                            <p>Current Status =</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <?php
+            $i++;
+        endforeach;
+        ?>
     </div>
 </div>
-<script type="text/javascript" charset="utf-8">
-    $(document).ready(function () {
-        $('#dashboarddetails').DataTable();
-    });
 
-</script>

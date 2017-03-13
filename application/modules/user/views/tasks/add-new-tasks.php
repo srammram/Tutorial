@@ -50,17 +50,6 @@
                         <option value="5">Completed</option>
                     </select>
                 </div>
-                <div id="finished_div" style="display:none">
-                    <div class="form-group">
-                        <label>Enter Finished Duration Hours <span style="color:red">*</span></label>
-                        <input type="text"  name="add_finished_duration_hours" id="add_finished_duration_hours" class="form-control" placeholder="Choose Duration Hours"/>
-                    </div>
-                    <div class="form-group">
-                        <label>Finished Message <span style="color:red">*</span></label>
-                        <textarea placeholder="Enter Message" name="add_finished_message" id="add_finished_message" class="form-control" rows="5" style="resize:none"  data-parsley-minlength="5" maxlength="1000"></textarea>
-                    </div>
-                </div>
-
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-3 col-sm-offset-3">

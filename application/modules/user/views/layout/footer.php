@@ -25,3 +25,49 @@
         $("#wrapper").toggleClass("toggled");
     });
 </script>
+<script>
+    /**
+     * Define source data
+     */
+    var chartData = [{
+            "country": "Average",
+            "litres": 150
+        }, {
+            "country": "Good",
+            "litres": 200.9
+        }, {
+            "country": "Excellent",
+            "litres": 501.9
+        }];
+
+    /**
+     * Add a 50% slice
+     */
+
+    var sum = 0;
+    for (var x in chartData) {
+        sum += chartData[x].litres;
+    }
+    chartData.push({
+        "litres": sum,
+        "alpha": 0
+    });
+
+    /**
+     * Create the chart
+     */
+
+    var chart = AmCharts.makeChart("chartdiv", {
+        "type": "pie",
+        "startAngle": 0,
+        "radius": "90%",
+        "innerRadius": "0%",
+        "dataProvider": chartData,
+        "valueField": "litres",
+        "titleField": "country",
+        "alphaField": "alpha",
+        "labelsEnabled": false,
+        "pullOutRadius": 0,
+        "pieY": "95%"
+    });
+</script>
