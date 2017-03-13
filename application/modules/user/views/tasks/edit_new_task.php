@@ -73,6 +73,31 @@
             </div>
             <div class="clear" style="clear: both;height:1em"></div>
             <div class="form-group">
+                <div class="col-xs-12">
+                    <?php
+                    if ($records[0]['status'] == 1):
+                        $labelclass = "label label-primary";
+                        $status = "Active";
+                    elseif ($records[0]['status'] == 3):
+                        $labelclass = "label label-warning";
+                        $status = "In Progress";
+                    elseif ($records[0]['status'] == 4):
+                        $labelclass = "label label-success";
+                        $status = "In Completed";
+                    elseif ($records[0]['status'] == 5):
+                        $labelclass = "label label-success";
+                        $status = "Completed";
+                    endif;
+                    ?>
+                    <div class="col-xs-4"><label>Status</label></div>
+                    <div class="col-xs-1"><label>:</label></div>
+                    <div class="col-xs-6">
+                        <label><?php echo $status; ?></label>
+                    </div>
+                </div>
+            </div>
+            <div class="clear" style="clear: both;height:1em"></div>
+            <div class="form-group">
                 <input type="button" name="task_close" id="task_close" class="btn btn-danger" value="Close" style="float:right" data-dismiss="modal" aria-hidden="true"/>
             </div>
             <div class="clear" style="clear: both;height:2em"></div>

@@ -44,8 +44,11 @@
                         elseif ($prodet['status'] == 4):
                             $lableclass = "label label-warning";
                             $status = 'In Complete';
-                        elseif ($prodet['status'] == 5):
+                        elseif ($prodet['status'] == 6):
                             $lableclass = "label label-success";
+                            $status = 'Assigned';
+                        else:
+                            $lableclass = "label label-primary";
                             $status = 'Completed';
                         endif;
                         if ($prodet['project_type_status'] == 1):
