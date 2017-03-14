@@ -244,6 +244,7 @@ class Projects extends CI_Controller {
 
     public function change_project_status() {
         $edit_id = $this->input->post('edit_id');
+        $finished_hours = $this->input->post('finished_hours') != '' ? $this->input->post('finished_hours') : 0;
         $update_array = array('status' => $this->input->post('change_status'));
         $update_id = $this->Mydb->update($this->project_teams_table, array('id' => $edit_id), $update_array);
         if ($update_id) {

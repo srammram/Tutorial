@@ -31,6 +31,7 @@ class USER extends CI_Controller {
         $this->account_history_table = 'account_history';
         $this->projects_table = 'projects';
         $this->email_table = 'email_setting';
+        $this->project_teams_table = 'project_teams';
         $this->sms_table = 'sms_setting';
         $this->load->helper('smstemplate');
         $this->load->helper('emailtemplate');
@@ -378,9 +379,32 @@ class USER extends CI_Controller {
 
     public function getdashboard_details() {
         $id = $this->input->post('id');
-        $getdetails = $this->Mydb->custom_query("select *,(if(project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as projecttype_status,(if(status=0,'Pending',if(status=1,'Active','Finished'))) as project_status from $this->projects_table where project_type_status=$id");
+        $getdetails = $this->Mydb->custom_query("select *,(if(project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as projecttype_status,(if(status=0,'Pending',if(status=1,'Active','Finished'))) as project_status from $this->projects_table where project_type_status=$id and status<>2");
+        $getteamdetails = $this->Mydb->custom_query("select project_team,id from $this->projects_table where project_type_status=$id and status<>2");
+
         $data['records'] = $getdetails;
         $body = $this->load->view($this->folder . 'dashboard_details', $data);
+        echo $body;
+    }
+
+    public function get_project_details() {
+        $project_id = $this->input->post('project_id');
+        $getdetails = $this->Mydb->custom_query("select *,(if(project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as projecttype_status,(if(status=0,'Pending',if(status=1,'Active','Finished'))) as project_status from $this->projects_table where id=$project_id and status<>2");
+        $project_team = explode(',', $getdetails[0]['project_team']);
+        for ($i = 0; $i < count($project_team); $i++):
+
+            $getteamdetails = $this->Mydb->custom_query("select t1.name,t1.id,t2.time_duration,t2.finished_hours,t2.status as team_status from $this->departments_table t1 LEFT JOIN $this->project_teams_table t2 ON t2.team_departments_id=t1.id and t2.projects_id=$project_id where t1.id=$project_team[$i]");
+            $team_name[] = $getteamdetails[0]['name'];
+            $time_duration[] = $getteamdetails[0]['time_duration'];
+            $finished_hours[] = $getteamdetails[0]['finished_hours'];
+            $team_status[] = $getteamdetails[0]['team_status'];
+        endfor;
+        $data['team_details'] = $team_name;
+        $data['time_duration'] = $time_duration;
+        $data['finished_hours'] = $finished_hours;
+        $data['team_status'] = $team_status;
+        $data['records'] = $getdetails;
+        $body = $this->load->view($this->folder . 'dashboard_modal_details', $data);
         echo $body;
     }
 
