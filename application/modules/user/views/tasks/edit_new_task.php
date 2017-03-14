@@ -85,8 +85,16 @@
                         $labelclass = "label label-success";
                         $status = "In Completed";
                     elseif ($records[0]['status'] == 5):
-                        $labelclass = "label label-success";
-                        $status = "Completed";
+                        if ($manage_tasks['assigned_hours'] > $manage_tasks['finished_hours']):
+                            $labelclass = "label label-success";
+                            $status = "In Time Completed";
+                        elseif ($manage_tasks['assigned_hours'] == $manage_tasks['finished_hours']):
+                            $labelclass = "label label-primary";
+                            $status = "On Time Completed";
+                        elseif ($manage_tasks['assigned_hours'] < $manage_tasks['finished_hours']):
+                            $labelclass = "label label-danger";
+                            $status = "Delay Completed";
+                        endif;
                     endif;
                     ?>
                     <div class="col-xs-4"><label>Status</label></div>

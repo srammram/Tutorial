@@ -24,6 +24,7 @@
                         <th>Task Title</th>
                         <th>Description</th>
                         <th>Duration</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -40,8 +41,16 @@
                             $labelclass = "label label-success";
                             $status = "In Completed";
                         elseif ($manage_tasks['status'] == 5):
-                            $labelclass = "label label-success";
-                            $status = "Completed";
+                            if ($manage_tasks['assigned_hours'] > $manage_tasks['finished_hours']):
+                                $labelclass = "label label-success";
+                                $status = "In Time Completed";
+                            elseif ($manage_tasks['assigned_hours'] == $manage_tasks['finished_hours']):
+                                $labelclass = "label label-primary";
+                                $status = "On Time Completed";
+                            elseif ($manage_tasks['assigned_hours'] < $manage_tasks['finished_hours']):
+                                $labelclass = "label label-danger";
+                                $status = "Delay Completed";
+                            endif;
                         endif;
                         ?>
                         <tr>
@@ -55,7 +64,7 @@
                             <td><?php echo $manage_tasks['task_title']; ?></td>
                             <td><?php echo $manage_tasks['message']; ?></td>
                             <td><?php echo $manage_tasks['project_duration']; ?></td>
-                            <!--<td><label class="<?php echo $labelclass; ?>"><?php echo $status; ?></label></td>-->
+                            <td><label class="<?php echo $labelclass; ?>"><?php echo $status; ?></label></td>
                             <td>
                                 <a class="btn btn-primary" href="#EditTasks" data-toggle="modal" onclick="edittaskdetails(<?php echo $manage_tasks['id'] ?>);"><i class="fa fa-eye" ></i></a>
                             </td>

@@ -45,13 +45,13 @@
                             $status = "In Completed";
                         elseif ($manage_tasks['status'] == 5):
 
-                            if ($manage_tasks['end_datetime'] > $manage_tasks['finished_datetime']):
+                            if ($manage_tasks['assigned_hours'] > $manage_tasks['finished_hours']):
                                 $labelclass = "label label-success";
-                                $status = "Quickly Completed";
-                            elseif ($manage_tasks['end_datetime'] == $manage_tasks['finished_datetime']):
+                                $status = "In Time Completed";
+                            elseif ($manage_tasks['assigned_hours'] == $manage_tasks['finished_hours']):
                                 $labelclass = "label label-primary";
-                                $status = "Completed";
-                            elseif ($manage_tasks['end_datetime'] < $manage_tasks['finished_datetime']):
+                                $status = "On Time Completed";
+                            elseif ($manage_tasks['assigned_hours'] < $manage_tasks['finished_hours']):
                                 $labelclass = "label label-danger";
                                 $status = "Delay Completed";
                             endif;
