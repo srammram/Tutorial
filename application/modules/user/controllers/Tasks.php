@@ -267,7 +267,7 @@ class Tasks extends CI_Controller {
         $user_id = $_SESSION['user_id'];
         $user_type_id = $_SESSION['user_type_id'];
         $task_id = $this->input->post('task_id');
-        $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_description,t3.user_name as from_name,t4.user_name as to_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->login_table t3 ON t3.id=t1.assigned_from LEFT JOIN $this->login_table t4 ON t4.id=t1.assigned_to where t1.status<>2");
+        $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_description,t3.user_name as from_name,t4.user_name as to_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->login_table t3 ON t3.id=t1.assigned_from LEFT JOIN $this->login_table t4 ON t4.id=t1.assigned_to where t1.id=$task_id");
         if ($user_type_id < 5):
             $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>2");
         elseif ($user_type_id == 5):
@@ -289,7 +289,7 @@ class Tasks extends CI_Controller {
         $data['employee_details'] = $getemployeedetails;
         $data['department_details'] = $getdepartments;
         $data['usertype_details'] = $getusertypes;
-        $body = $this->load->view($this->folder . 'edit_asign_task', $data);
+        $body = $this->load->view($this->folder . 'view_asign_task', $data);
         echo $body;
     }
 
