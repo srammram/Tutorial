@@ -31,6 +31,7 @@ class Projects extends CI_Controller {
         $this->load->library('common');
         $this->load->helper('download');
         $this->email_table = 'email_setting';
+        $this->media_history_table = 'media_history';
         $this->sms_table = 'sms_setting';
         $this->load->helper('smstemplate');
         $this->load->helper('emailtemplate');
@@ -88,7 +89,7 @@ class Projects extends CI_Controller {
             $pro_finished = $this->input->post('pro_finished');
             $pro_duration = $this->input->post('pro_duration');
             $pro_team = $proteam;
-
+            $mediafiles = $this->input->post('mediaFiles');
             $insert_array = array('project_name' => $pro_title,
                 'project_slug' => url_title($pro_title, '-', TRUE),
                 'project_description' => $pro_description,
@@ -97,24 +98,14 @@ class Projects extends CI_Controller {
                 'project_start_date' => $pro_start,
                 'project_finished_date' => $pro_finished,
                 'project_team' => $pro_team,
+                'project_file' => implode('|*|', $mediafiles),
                 'created_on' => current_date(),
                 'created_ip' => ip2long(get_ip()),
                 'status' => 1
             );
 
-            if (!empty($_FILES['pro_file']['name']) && isset($_FILES ['pro_file'] ['name'])) {
-                $create_user_doc_name = url_title(substr($pro_title, 0, 10), '-', TRUE) . '-project-' . $_FILES['pro_file']['name'];
-                $doc_image = $this->common->upload_image('pro_file', 'project/', $create_user_doc_name);
-                $image_arr = array(
-                    'project_file' => $doc_image
-                );
-                $insert_array = array_merge($insert_array, $image_arr);
-            } else {
-                $image_arr = array(
-                    'project_file' => ''
-                );
-                $insert_array = array_merge($insert_array, $image_arr);
-            }
+
+
             $insert_id = $this->Mydb->insert($this->projects_table, $insert_array);
             if ($insert_id):
                 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'New Project has been successfully added');
@@ -152,6 +143,29 @@ class Projects extends CI_Controller {
         endif;
     }
 
+    public function upload_files() {
+        if (!empty($_FILES['file']['name']) && isset($_FILES ['file'] ['name'])) {
+//            $create_user_doc_name = url_title(substr($pro_title, 0, 10), '-', TRUE) . '-project-' . $_FILES['pro_file']['name'];
+            $doc_image = $this->common->upload_image('file', 'project/', '');
+            $image_arr = array(
+                'image_name' => $doc_image,
+                'created_at' => current_date(),
+                'status' => 1
+            );
+            $json['success'] = 1;
+            $json['success_message'] = "Image successfully uploaded";
+            $json['file'] = $doc_image;
+        } else {
+            $json['success'] = 0;
+            $json['success_message'] = "Image not uploaded";
+        }
+        echo json_encode($json);
+    }
+
+    public function get_upload_images() {
+        echo $this->input->get('project_id');
+    }
+
     public function update() {
         $data = $this->load_module_info();
         $edit_id = $this->input->post('edit_id');
@@ -162,6 +176,8 @@ class Projects extends CI_Controller {
         $pro_finished = $this->input->post('pro_finished');
         $pro_duration = $this->input->post('pro_duration');
         $pro_team = implode(',', $this->input->post('pro_team'));
+        $mediafiles = $this->input->post('mediaFiles');
+
         $update_array = array('project_name' => $pro_title,
             'project_slug' => url_title($pro_title, '-', TRUE),
             'project_description' => $pro_description,
@@ -172,21 +188,10 @@ class Projects extends CI_Controller {
             'project_team' => $pro_team,
             'updated_on' => current_date(),
             'created_ip' => ip2long(get_ip()),
+            'project_file' => implode('|*|', $mediafiles),
             'status' => 1
         );
-        if (!empty($_FILES['pro_file']['name']) && isset($_FILES ['pro_file'] ['name'])) {
-            $create_user_doc_name = url_title(substr($pro_title, 0, 10), '-', TRUE) . '-project-' . $_FILES['pro_file']['name'];
-            $doc_image = $this->common->upload_image('pro_file', 'project/', $create_user_doc_name);
-            $image_arr = array(
-                'project_file' => $doc_image
-            );
-            $update_array = array_merge($update_array, $image_arr);
-        } else {
-            $image_arr = array(
-                'project_file' => $this->input->post('pro_filename'),
-            );
-            $update_array = array_merge($update_array, $image_arr);
-        }
+
         $update_id = $this->Mydb->update($this->projects_table, array('id' => $edit_id), $update_array);
         if ($update_id) {
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Project has been successfully updated');
