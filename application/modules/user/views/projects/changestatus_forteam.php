@@ -6,12 +6,16 @@
     <div class="modal-body">
         <input type="hidden" name="edit_id" id="edit_id" value="<?php echo $project_id; ?>"/>
         <div class="form-group">
-            <select name="change_status" id="change_status" class="form-control" required="">
+            <select onchange="check_status(this.value)" name="change_status" id="change_status" class="form-control" required="">
                 <option value="">-Select Status-</option>
                 <option value="3">In Progress</option>
                 <option value="4">In Completed</option>
                 <option value="5">Completed</option>
             </select>
+        </div>
+        <div class="form-group" id="finished_hours_div" style="display:none">
+            <label>Enter Finished Hours</label>
+            <input type="text" name="finished_hours" id="finished_hours" class="form-control" placeholder="Enter Finished Hours"/>
         </div>
         <div class="form-group">
             <div class="row">

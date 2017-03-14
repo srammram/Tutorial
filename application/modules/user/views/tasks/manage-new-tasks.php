@@ -41,15 +41,19 @@
                             $labelclass = "label label-success";
                             $status = "In Completed";
                         elseif ($manage_tasks['status'] == 5):
-                            if ($manage_tasks['assigned_hours'] > $manage_tasks['finished_hours']):
-                                $labelclass = "label label-success";
-                                $status = "In Time Completed";
-                            elseif ($manage_tasks['assigned_hours'] == $manage_tasks['finished_hours']):
-                                $labelclass = "label label-primary";
-                                $status = "On Time Completed";
-                            elseif ($manage_tasks['assigned_hours'] < $manage_tasks['finished_hours']):
-                                $labelclass = "label label-danger";
-                                $status = "Delay Completed";
+                            if ($manage_tasks['projects_id'] != 'others'):
+                                if ($manage_tasks['assigned_hours'] > $manage_tasks['finished_hours']):
+                                    $labelclass = "label label-success";
+                                    $status = "In Time Completed";
+                                elseif ($manage_tasks['assigned_hours'] == $manage_tasks['finished_hours']):
+                                    $labelclass = "label label-primary";
+                                    $status = "On Time Completed";
+                                elseif ($manage_tasks['assigned_hours'] < $manage_tasks['finished_hours']):
+                                    $labelclass = "label label-danger";
+                                    $status = "Delay Completed";
+                                endif;
+                            else:
+                                $status = "Completed";
                             endif;
                         endif;
                         ?>

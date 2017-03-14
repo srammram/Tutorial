@@ -15,7 +15,7 @@
                         <i class="fa fa-cubes fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge"><?php echo $dashboard_count[0]['ongoing']; ?></div>
+                        <div class="huge"><?php echo count($dashboard_count) != '0' ? $dashboard_count[0]['ongoing'] : '0'; ?></div>
                         <div>All Ongoing Project</div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                         <i class="fa fa-building-o fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge"><?php echo $dashboard_count[0]['Upcoming']; ?></div>
+                        <div class="huge"><?php echo count($dashboard_count) != '0' ? $dashboard_count[0]['Upcoming'] : '0'; ?></div>
                         <div>All Upcoming Project</div>
                     </div>
                 </div>
@@ -61,7 +61,7 @@
                         <i class="fa fa-database fa-5x"></i>
                     </div>
                     <div class="col-xs-9 text-right">
-                        <div class="huge"><?php echo $dashboard_count[0]['Pipeline']; ?></div>
+                        <div class="huge"><?php echo count($dashboard_count) != '0' ? $dashboard_count[0]['Pipeline'] : '0'; ?></div>
                         <div>All pipeline Project</div>
                     </div>
                 </div>
