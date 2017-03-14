@@ -38,6 +38,9 @@
                             $status = "In Progress";
                         elseif ($manage_tasks['status'] == 4):
                             $labelclass = "label label-success";
+                            $status = "In Completed";
+                        elseif ($manage_tasks['status'] == 5):
+                            $labelclass = "label label-success";
                             $status = "Completed";
                         endif;
                         ?>

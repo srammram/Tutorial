@@ -33,6 +33,7 @@
                 <tbody>
                     <?php
                     foreach ($records as $manage_tasks):
+
                         if ($manage_tasks['status'] == 1):
                             $labelclass = "label label-primary";
                             $status = "Active";
@@ -40,6 +41,10 @@
                             $labelclass = "label label-warning";
                             $status = "In Progress";
                         elseif ($manage_tasks['status'] == 4):
+                            $labelclass = "label label-warning";
+                            $status = "In Completed";
+                        elseif ($manage_tasks['status'] == 5):
+
                             if ($manage_tasks['end_datetime'] > $manage_tasks['finished_datetime']):
                                 $labelclass = "label label-success";
                                 $status = "Quickly Completed";
@@ -50,7 +55,6 @@
                                 $labelclass = "label label-danger";
                                 $status = "Delay Completed";
                             endif;
-
                         endif;
                         ?>
                         <tr>
