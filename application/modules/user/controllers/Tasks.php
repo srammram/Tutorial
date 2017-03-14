@@ -125,6 +125,21 @@ class Tasks extends CI_Controller {
             $updateid = $this->Mydb->update($this->assigned_tasks_table, array('id' => $assigned_task_id), $finished_array);
         endif;
         $insert_id = $this->Mydb->insert($this->task_history_table, $insert_array);
+        if ($task_status == '3'):
+            $statusmessage = "In Progress";
+        elseif ($task_status == '4'):
+            $statusmessage = "In Completed";
+        elseif ($task_status == '5'):
+            $statusmessage = "Completed";
+        else:
+            $statusmessage = "Pending";
+        endif;
+        $notiy_msg = stripslashes($gettaskdetails[0]['task_name']) . ' Task has been ' . $statusmessage . ' by ' . $_SESSION['user_name'];
+        $notiy_from = $_SESSION['user_id'];
+        $notiy_to = $_SESSION['user_reporter_id'];
+        $notiy_type = 3;
+
+        create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
         if ($insert_id):
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'New Task has been successfully added');
             $this->session->set_userdata($session_datas);
@@ -219,6 +234,13 @@ class Tasks extends CI_Controller {
         );
         $insert_task_id = $this->Mydb->insert($this->task_history_table, $insert_task_array);
         if ($insert_id):
+
+            $notiy_msg = stripslashes($asign_task_title) . ' Task has been Assigned by ' . $_SESSION['user_name'];
+            $notiy_from = $_SESSION['user_id'];
+            $notiy_to = $asign_user_details;
+            $notiy_type = 3;
+            create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
+
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Asign Task has been successfully inserted');
             $this->session->set_userdata($session_datas);
             redirect(frontend_url() . 'tasks/asign');
