@@ -96,7 +96,7 @@ class Tasks extends CI_Controller {
         $add_duration_hours = $this->input->post('add_duration_hours');
         $task_status = $this->input->post('task_status');
         $assigned_task_id = $this->input->post('add_selected_task');
-        if ($add_project != 'ohers'):
+        if ($add_project != 'others'):
             $gettaskdetails = $this->Mydb->custom_query("select task_name from $this->assigned_tasks_table where id=$add_selected_task");
         else:
             $gettaskdetails = $this->Mydb->custom_query("select reason as task_name from $this->static_reasons_table where id=$add_selected_task");
