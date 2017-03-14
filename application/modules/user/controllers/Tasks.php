@@ -114,12 +114,14 @@ class Tasks extends CI_Controller {
             'asigned_task_id' => $assigned_task_id,
             'status' => $this->input->post('task_status'));
         if ($task_status == 5):
-            $gethours_details = $this->Mydb->custom_query("select SUM(project_duration) as duration_hours from $this->task_history_table where projects_id=$add_project and from_user_id=$user_id");
-            $finished_array = array('finished_datetime' => current_date(),
-                'finished_message' => $add_message,
-                'finished_hours' => $gethours_details[0]['duration_hours'],
-                'status' => $this->input->post('task_status'));
-            $updateid = $this->Mydb->update($this->assigned_tasks_table, array('id' => $assigned_task_id), $finished_array);
+            if ($add_project != 'others'):
+                $gethours_details = $this->Mydb->custom_query("select SUM(project_duration) as duration_hours from $this->task_history_table where projects_id=$add_project and from_user_id=$user_id");
+                $finished_array = array('finished_datetime' => current_date(),
+                    'finished_message' => $add_message,
+                    'finished_hours' => $gethours_details[0]['duration_hours'],
+                    'status' => $this->input->post('task_status'));
+                $updateid = $this->Mydb->update($this->assigned_tasks_table, array('id' => $assigned_task_id), $finished_array);
+            endif;
         else:
             $finished_array = array('status' => $this->input->post('task_status'));
             $updateid = $this->Mydb->update($this->assigned_tasks_table, array('id' => $assigned_task_id), $finished_array);
