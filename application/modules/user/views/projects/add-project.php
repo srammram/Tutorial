@@ -76,7 +76,7 @@
         url: "<?php echo frontend_url(); ?>projects/upload_files",
         maxFiles: 5,
         addRemoveLinks: true,
-        acceptedFiles: 'image/*',
+        acceptedFiles: 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel.sheet.macroEnabled.12,text/plain',
         maxfilesexceeded: function (file) {
             this.removeAllFiles();
             this.addFile(file);

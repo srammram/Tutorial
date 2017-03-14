@@ -28,8 +28,20 @@
     </div>
     <div class="form-group">
         <label>Project File</label>
-        <br>
-        <a href="<?php echo frontend_url() . 'projects/download_files/' . $records[0]['project_file']; ?>" style="font-size:20px" class="btn btn-success" >Download</a>
+        <?php
+        $mediafiles = explode('|*|', $records[0]['project_file']);
+        ?>
+        <?php
+        $i = 1;
+        foreach ($mediafiles as $media):
+            ?>
+            <br>
+
+            <a href="<?php echo frontend_url() . 'projects/download_files/' . $media; ?>" style="font-size:20px" class="btn btn-success" >Download File <?php echo $i; ?></a>
+            <?php
+            $i++;
+        endforeach;
+        ?>
     </div>
 </div>
 <div class="modal-footer">
