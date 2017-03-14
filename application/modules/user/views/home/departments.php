@@ -8,7 +8,7 @@
         </div>
         <div class="panel-body">
             <div class="col-xs-12">
-                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('departments', '3')">Delete</a>
+                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('departments', '2')">Delete</a>
             </div>
             <div class="col-xs-12" id="empsucc_message">
 

@@ -189,7 +189,6 @@ class Projects extends CI_Controller {
             'updated_on' => current_date(),
             'created_ip' => ip2long(get_ip()),
             'project_file' => implode('|*|', $mediafiles),
-            'status' => 1
         );
 
         $update_id = $this->Mydb->update($this->projects_table, array('id' => $edit_id), $update_array);

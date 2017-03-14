@@ -45,11 +45,11 @@ class Tasks extends CI_Controller {
         $user_type_id = $_SESSION['user_type_id'];
         $user_departments_id = $_SESSION['user_departments_id'];
         if ($user_type_id == 5):
-            $gettaskdetails = $this->Mydb->custom_query("select t1.*,t2.user_name as from_username,t4.user_name as to_user_name,t3.project_name,t3.project_description from $this->task_history_table t1 LEFT JOIN $this->login_table t2 ON t2.id=t1.from_user_id LEFT JOIN $this->login_table t4 ON t4.id=t1.to_user_id LEFT JOIN $this->projects_table t3 ON t3.id=t1.projects_id where (from_user_id=$user_id OR to_user_id=$user_id) AND t1.status<>3");
+            $gettaskdetails = $this->Mydb->custom_query("select t1.*,t2.user_name as from_username,t4.user_name as to_user_name,t3.project_name,t3.project_description from $this->task_history_table t1 LEFT JOIN $this->login_table t2 ON t2.id=t1.from_user_id LEFT JOIN $this->login_table t4 ON t4.id=t1.to_user_id LEFT JOIN $this->projects_table t3 ON t3.id=t1.projects_id where (from_user_id=$user_id OR to_user_id=$user_id) AND t1.status<>2");
         elseif ($user_type_id == 6):
-            $gettaskdetails = $this->Mydb->custom_query("select t1.*,t2.user_name as from_username,t4.user_name as to_user_name,t3.project_name,t3.project_description from $this->task_history_table t1 LEFT JOIN $this->login_table t2 ON t2.id=t1.from_user_id LEFT JOIN $this->login_table t4 ON t4.id=t1.to_user_id LEFT JOIN $this->projects_table t3 ON t3.id=t1.projects_id where (from_user_id=$user_id OR to_user_id=$user_id) AND t1.status<>3");
+            $gettaskdetails = $this->Mydb->custom_query("select t1.*,t2.user_name as from_username,t4.user_name as to_user_name,t3.project_name,t3.project_description from $this->task_history_table t1 LEFT JOIN $this->login_table t2 ON t2.id=t1.from_user_id LEFT JOIN $this->login_table t4 ON t4.id=t1.to_user_id LEFT JOIN $this->projects_table t3 ON t3.id=t1.projects_id where (from_user_id=$user_id OR to_user_id=$user_id) AND t1.status<>2");
         else:
-            $gettaskdetails = $this->Mydb->custom_query("select t1.*,t2.user_name as from_username,t4.user_name as to_user_name,t3.project_name,t3.project_description from $this->task_history_table t1 LEFT JOIN $this->login_table t2 ON t2.id=t1.from_user_id LEFT JOIN $this->login_table t4 ON t4.id=t1.to_user_id LEFT JOIN $this->projects_table t3 ON t3.id=t1.projects_id where t1.status<>3");
+            $gettaskdetails = $this->Mydb->custom_query("select t1.*,t2.user_name as from_username,t4.user_name as to_user_name,t3.project_name,t3.project_description from $this->task_history_table t1 LEFT JOIN $this->login_table t2 ON t2.id=t1.from_user_id LEFT JOIN $this->login_table t4 ON t4.id=t1.to_user_id LEFT JOIN $this->projects_table t3 ON t3.id=t1.projects_id where t1.status<>2");
         endif;
         $data['task_details'] = $gettaskdetails;
         $this->layout->display_frontend($this->folder . 'manage-tasks', $data);
@@ -61,7 +61,7 @@ class Tasks extends CI_Controller {
         $user_reporter_id = $_SESSION['user_reporter_id'];
         $user_type_id = $_SESSION['user_type_id'];
         if ($user_type_id < 5):
-            $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>3");
+            $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>2");
         elseif ($user_type_id == 5):
             $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t1.projects_id),t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id");
         elseif ($user_type_id == 6):
@@ -142,14 +142,14 @@ class Tasks extends CI_Controller {
         $user_reporter_id = $_SESSION['user_reporter_id'];
         $user_type_id = $_SESSION['user_type_id'];
         if ($user_type_id < 5):
-            $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>3");
+            $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>2");
         elseif ($user_type_id == 5):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>3 and team_tl_id=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id");
         elseif ($user_type_id == 6):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_table where t1.status<>3 and t1.team_tl_id=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_table where t1.status<>2 and t1.team_tl_id=$user_id");
         endif;
-        $getdepartments = $this->Mydb->custom_query("select id,name from $this->departments_table where status<>3");
-        $getusertypes = $this->Mydb->custom_query("select id,type_name from $this->user_type_table where status<>3");
+        $getdepartments = $this->Mydb->custom_query("select id,name from $this->departments_table where status<>2");
+        $getusertypes = $this->Mydb->custom_query("select id,type_name from $this->user_type_table where status<>2");
         $data['project_details'] = $getprojectdetails;
         $data['department_details'] = $getdepartments;
         $data['usertype_details'] = $getusertypes;
@@ -234,21 +234,50 @@ class Tasks extends CI_Controller {
         $user_departments_id = $_SESSION['user_departments_id'];
         $user_id = $_SESSION['user_id'];
         $user_type_id = $_SESSION['user_type_id'];
-        if ($user_type_id >= 4):
-            $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_description,t3.user_name as from_name,t4.user_name as to_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->login_table t3 ON t3.id=t1.assigned_from LEFT JOIN $this->login_table t4 ON t4.id=t1.assigned_to where t1.assigned_from=$user_id AND t1.status<>3");
-        else:
-            $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_description,t3.user_name as from_name,t4.user_name as to_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->login_table t3 ON t3.id=t1.assigned_from LEFT JOIN $this->login_table t4 ON t4.id=t1.assigned_to where t1.status<>3");
-        endif;
+        $task_id = $this->input->post('task_id');
+        $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_description,t3.user_name as from_name,t4.user_name as to_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->login_table t3 ON t3.id=t1.assigned_from LEFT JOIN $this->login_table t4 ON t4.id=t1.assigned_to where t1.id=$task_id");
         if ($user_type_id < 5):
-            $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>3");
+            $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>2");
         elseif ($user_type_id == 5):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>3 and team_tl_id=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id");
         elseif ($user_type_id == 6):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_table where t1.status<>3 and t1.team_tl_id=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_table where t1.status<>2 and t1.team_tl_id=$user_id");
         endif;
         $data['records'] = $getdetails;
-        $getdepartments = $this->Mydb->custom_query("select id,name from $this->departments_table where status<>3");
-        $getusertypes = $this->Mydb->custom_query("select id,type_name from $this->user_type_table where status<>3");
+        $getdepartments = $this->Mydb->custom_query("select id,name from $this->departments_table where status<>2");
+        $getusertypes = $this->Mydb->custom_query("select id,type_name from $this->user_type_table where status<>2");
+        if ($user_type_id == 5) {
+            $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where user_departments_id=$user_departments_id and user_type_id=6 and user_reporter_id=$user_id and status=1");
+        } else if ($user_type_id >= 4) {
+            $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where status=1");
+        } else {
+            $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where  status=1");
+        }
+        $data['project_details'] = $getprojectdetails;
+        $data['employee_details'] = $getemployeedetails;
+        $data['department_details'] = $getdepartments;
+        $data['usertype_details'] = $getusertypes;
+        $body = $this->load->view($this->folder . 'edit_asign_task', $data);
+        echo $body;
+    }
+
+    public function view_asign_task() {
+        $data = $this->load_module_info();
+        $user_departments_id = $_SESSION['user_departments_id'];
+        $user_id = $_SESSION['user_id'];
+        $user_type_id = $_SESSION['user_type_id'];
+        $task_id = $this->input->post('task_id');
+        $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_description,t3.user_name as from_name,t4.user_name as to_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->login_table t3 ON t3.id=t1.assigned_from LEFT JOIN $this->login_table t4 ON t4.id=t1.assigned_to where t1.status<>2");
+        if ($user_type_id < 5):
+            $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>2");
+        elseif ($user_type_id == 5):
+            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id");
+        elseif ($user_type_id == 6):
+            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_table where t1.status<>2 and t1.team_tl_id=$user_id");
+        endif;
+        $data['records'] = $getdetails;
+        $getdepartments = $this->Mydb->custom_query("select id,name from $this->departments_table where status<>2");
+        $getusertypes = $this->Mydb->custom_query("select id,type_name from $this->user_type_table where status<>2");
         if ($user_type_id == 5) {
             $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where user_departments_id=$user_departments_id and user_type_id=6 and user_reporter_id=$user_id and status=1");
         } else if ($user_type_id >= 4) {
@@ -287,7 +316,6 @@ class Tasks extends CI_Controller {
             'end_datetime' => date('Y-m-d H:i:s', strtotime($asign_end_date)),
             'created_at' => $_SESSION['user_id'],
             'created_ip' => ip2long(get_ip()),
-            'status' => 1,
         );
 
         $update_id = $this->Mydb->update($this->assigned_tasks_table, array('id' => $edit_id), $update_array);
@@ -302,7 +330,6 @@ class Tasks extends CI_Controller {
             'end_datetime' => date('Y-m-d H:i:s', strtotime($asign_end_date)),
             'created_ip' => ip2long(get_ip()),
             'asigned_task_id' => $edit_id,
-            'status' => 1,
         );
         $update_task_id = $this->Mydb->update($this->task_history_table, array('asigned_task_id' => $edit_id), $update_task_array);
         if ($update_id):
@@ -321,9 +348,9 @@ class Tasks extends CI_Controller {
         $user_id = $_SESSION['user_id'];
         $user_type_id = $_SESSION['user_type_id'];
         if ($user_type_id >= 4):
-            $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_description,t3.user_name as from_name,t4.user_name as to_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->login_table t3 ON t3.id=t1.assigned_from LEFT JOIN $this->login_table t4 ON t4.id=t1.assigned_to where t1.assigned_from=$user_id AND t1.status<>3");
+            $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_description,t3.user_name as from_name,t4.user_name as to_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->login_table t3 ON t3.id=t1.assigned_from LEFT JOIN $this->login_table t4 ON t4.id=t1.assigned_to where t1.assigned_from=$user_id AND t1.status<>2");
         else:
-            $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_description,t3.user_name as from_name,t4.user_name as to_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->login_table t3 ON t3.id=t1.assigned_from LEFT JOIN $this->login_table t4 ON t4.id=t1.assigned_to where t1.status<>3");
+            $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_description,t3.user_name as from_name,t4.user_name as to_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->login_table t3 ON t3.id=t1.assigned_from LEFT JOIN $this->login_table t4 ON t4.id=t1.assigned_to where t1.status<>2");
         endif;
         $data['records'] = $getdetails;
         $this->layout->display_frontend($this->folder . 'manage-asign-tasks', $data);
@@ -349,11 +376,11 @@ class Tasks extends CI_Controller {
         $user_id = $_SESSION['user_id'];
         $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t3.status as finished_status,t3.finished_hours,t3.finished_message,t3.id as asigned_task_id,t3.assigned_hours,t3.finished_hours from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where t1.id=$task_id");
         if ($user_type_id < 5):
-            $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>3");
+            $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>2");
         elseif ($user_type_id == 5):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>3 and team_tl_id=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id");
         elseif ($user_type_id == 6):
-            $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t1.projects_id),t2.project_name from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>3 and t1.to_user_id=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t1.projects_id),t2.project_name from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and t1.to_user_id=$user_id");
         endif;
         $data['records'] = $getdetails;
         $data['project_details'] = $getprojectdetails;
@@ -368,13 +395,13 @@ class Tasks extends CI_Controller {
         $user_departments_id = $_SESSION['user_departments_id'];
 
         if ($user_type_id == 5) {
-            $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where team_tl_id=$user_id and t1.status<>3");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where team_tl_id=$user_id and t1.status<>2");
             $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where user_departments_id=$user_departments_id and user_type_id=6 and user_reporter_id=$user_id and status=1");
             $data['project_details'] = $getprojectdetails;
             $data['employee_details'] = $getemployeedetails;
             $this->layout->display_frontend($this->folder . 'add-tasks', $data);
         } else if ($user_type_id == 6) {
-            $projects_id = $this->Mydb->custom_query("select DISTINCT(projects_id) as projects_id from $this->task_history_table where to_user_id=$user_id and status<>3");
+            $projects_id = $this->Mydb->custom_query("select DISTINCT(projects_id) as projects_id from $this->task_history_table where to_user_id=$user_id and status<>2");
             $projecttitle = array();
             $projectsid = array();
             foreach ($projects_id as $projects):
@@ -391,13 +418,13 @@ class Tasks extends CI_Controller {
             $data['project_id'] = $projectsid;
             $this->layout->display_frontend($this->folder . 'add-employeetask', $data);
         }else if ($user_type_id >= 4) {
-            $getprojectdetails = $this->Mydb->custom_query("select t2.project_name,t2.project_slug,t2.project_description,t2.id as projects_id from $this->projects_table t2 where t2.status<>3");
+            $getprojectdetails = $this->Mydb->custom_query("select t2.project_name,t2.project_slug,t2.project_description,t2.id as projects_id from $this->projects_table t2 where t2.status<>2");
             $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where user_departments_id=$user_departments_id and user_type_id=6 and user_reporter_id=$user_id and status=1");
             $data['project_details'] = $getprojectdetails;
             $data['employee_details'] = $getemployeedetails;
             $this->layout->display_frontend($this->folder . 'add-managetasks', $data);
         } else {
-            $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where  t1.status<>3");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where  t1.status<>2");
             $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where user_departments_id=$user_departments_id and user_type_id=6 and status=1");
             $data['project_details'] = $getprojectdetails;
             $data['employee_details'] = $getemployeedetails;
@@ -414,7 +441,7 @@ class Tasks extends CI_Controller {
         if ($user_type_id == 5):
             $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where team_tl_id=$user_id");
         elseif ($user_type_id >= 4):
-            $getprojectdetails = $this->Mydb->custom_query("select t2.project_name,t2.project_slug,t2.project_description,t2.id as projects_id from $this->projects_table t2 where t2.status<>3");
+            $getprojectdetails = $this->Mydb->custom_query("select t2.project_name,t2.project_slug,t2.project_description,t2.id as projects_id from $this->projects_table t2 where t2.status<>2");
         elseif ($user_type_id == 6):
             $reporter_id = $_SESSION['user_reporter_id'];
             $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where team_tl_id=$reporter_id");

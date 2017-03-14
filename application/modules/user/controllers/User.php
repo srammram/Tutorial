@@ -761,7 +761,7 @@ class USER extends CI_Controller {
                 $where = '';
             endif;
             $data = $this->load_module_info();
-            $getemployeedetails = $this->Mydb->custom_query("select t1.*,t2.name as department_name,t3.type_name as usertype_name  from $this->login_table as t1 LEFT JOIN $this->departments_table t2 ON t2.id=t1.user_departments_id LEFT JOIN $this->user_type_table t3 ON t3.id=t1.user_type_id where t1.status<>3 and user_departments_id<>9999 $where");
+            $getemployeedetails = $this->Mydb->custom_query("select t1.*,t2.name as department_name,t3.type_name as usertype_name  from $this->login_table as t1 LEFT JOIN $this->departments_table t2 ON t2.id=t1.user_departments_id LEFT JOIN $this->user_type_table t3 ON t3.id=t1.user_type_id where t1.status<>2 and user_departments_id<>9999 $where");
             $data['records'] = $getemployeedetails;
             $this->layout->display_frontend($this->folder . 'employee', $data);
         }

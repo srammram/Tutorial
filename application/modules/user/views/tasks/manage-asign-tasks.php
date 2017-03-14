@@ -9,7 +9,7 @@
         <div class="panel-body">
             <?php if ($_SESSION['user_type_id'] != 6): ?>
                 <div class="col-xs-12">
-                    <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('departments', '3')">Delete</a>
+                    <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('assigned_tasks', '2')">Delete</a>
                 </div>
             <?php endif; ?>
             <div class="col-xs-12" id="empsucc_message">
