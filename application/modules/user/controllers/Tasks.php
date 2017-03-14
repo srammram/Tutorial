@@ -114,9 +114,10 @@ class Tasks extends CI_Controller {
             'asigned_task_id' => $assigned_task_id,
             'status' => $this->input->post('task_status'));
         if ($task_status == 5):
+            $gethours_details = $this->Mydb->custom_query("select SUM(project_duration) as duration_hours from $this->task_history_table where projects_id=$add_project and from_user_id=$user_id");
             $finished_array = array('finished_datetime' => current_date(),
                 'finished_message' => $add_message,
-                'finished_hours' => $add_duration_hours,
+                'finished_hours' => $gethours_details[0]['duration_hours'],
                 'status' => $this->input->post('task_status'));
             $updateid = $this->Mydb->update($this->assigned_tasks_table, array('id' => $assigned_task_id), $finished_array);
         else:
@@ -333,9 +334,9 @@ class Tasks extends CI_Controller {
         $user_id = $_SESSION['user_id'];
         $user_type_id = $_SESSION['user_type_id'];
         if ($user_type_id < 4):
-            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' where t1.to_user_id=$user_id AND t1.status<>2");
+            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id,t3.assigned_hours,t3.finished_hours from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where t1.to_user_id=$user_id AND t1.status<>2");
         else:
-            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' where  t1.status<>2");
+            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id,t3.assigned_hours,t3.finished_hours from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where  t1.status<>2");
         endif;
 
         $data['records'] = $getdetails;
@@ -346,7 +347,7 @@ class Tasks extends CI_Controller {
         $task_id = $this->input->post('task_id');
         $user_type_id = $_SESSION['user_type_id'];
         $user_id = $_SESSION['user_id'];
-        $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t3.status as finished_status,t3.finished_hours,t3.finished_message,t3.id as asigned_task_id from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where t1.id=$task_id");
+        $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t3.status as finished_status,t3.finished_hours,t3.finished_message,t3.id as asigned_task_id,t3.assigned_hours,t3.finished_hours from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where t1.id=$task_id");
         if ($user_type_id < 5):
             $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>3");
         elseif ($user_type_id == 5):
