@@ -63,9 +63,9 @@ class Tasks extends CI_Controller {
         if ($user_type_id < 5):
             $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>3");
         elseif ($user_type_id == 5):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t1.projects_id),t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id");
         elseif ($user_type_id == 6):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and t1.assigned_to=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t1.projects_id),t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and t1.assigned_to=$user_id");
         endif;
         $data['project_details'] = $getprojectdetails;
         $this->layout->display_frontend($this->folder . 'add-new-tasks', $data);
