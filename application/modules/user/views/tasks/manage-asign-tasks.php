@@ -52,6 +52,7 @@
                                 $labelclass = "label label-primary";
                                 $status = "On Time Completed";
                             elseif ($manage_tasks['assigned_hours'] < $manage_tasks['finished_hours']):
+
                                 $labelclass = "label label-danger";
                                 $status = "Delay Completed";
                             endif;
@@ -68,7 +69,7 @@
                             <td><?php echo $manage_tasks['assigned_hours']; ?></td>
                             <td><label class="<?php echo $labelclass; ?>"><?php echo $status; ?></label></td>
                             <td>
-                                <?php if ($manage_tasks['status'] == 5): ?>
+                                <?php if ($manage_tasks['status'] != 5): ?>
                                     <a class="btn btn-success" href="#EditAsignTasks" data-toggle="modal" onclick="edit_asign_task(<?php echo $manage_tasks['id']; ?>);"><i class="fa fa-edit" ></i></a>
                                 <?php else: ?>
                                     <a class="btn btn-primary" href="#ViewAsignTasks" data-toggle="modal" onclick="view_asign_task(<?php echo $manage_tasks['id']; ?>);"><i class="fa fa-eye" ></i></a>

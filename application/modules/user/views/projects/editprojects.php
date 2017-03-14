@@ -68,8 +68,9 @@
             <script type="text/javascript">
                 var projectsFilesDropzoneOptions = {
                     url: "<?php echo frontend_url(); ?>projects/upload_files",
-                    maxFiles: 10,
+                    maxFiles: 5,
                     addRemoveLinks: true,
+                    acceptedFiles: 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel.sheet.macroEnabled.12,text/plain',
                     success: function (file, response, e) {
                         response = JSON.parse(response);
                         if (response.success == 0) {
