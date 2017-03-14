@@ -27,10 +27,7 @@
                         <option value="3">Pipeline</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Upload File</label>
-                    <input type="file" name="pro_file" id="pro_file" class="form-control"/>
-                </div>
+
                 <div id="project_select">
                     <div class="form-group">
                         <label>Project Estimation Start Date</label>
@@ -53,6 +50,11 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
+                    <div class="form-group">
+                        <label>Select Files</label>
+                        <div class="dropzone" id="projectsFiles" name="projectsFilesFileUploader"></div>
+                        <input id="projectFileHidden" type="hidden" name="thumbnail" value="" />
+                    </div>
                 </div>
                 <div class="form-group">
                     <div class="row">
@@ -70,6 +72,41 @@
 </div>
 </div>
 <script type="text/javascript">
+    var projectsFilesDropzoneOptions = {
+        url: "<?php echo frontend_url(); ?>projects/upload_files",
+        maxFiles: 5,
+        addRemoveLinks: true,
+        acceptedFiles: 'image/*',
+        maxfilesexceeded: function (file) {
+            this.removeAllFiles();
+            this.addFile(file);
+        },
+        success: function (file, response, e) {
+            response = JSON.parse(response);
+            if (response.success == 0) {
+                this.defaultOptions.error(file, response.message);
+            } else {
+                var input = document.createElement("input");
+                input.setAttribute("type", "hidden");
+                input.setAttribute("name", "mediaFiles[]");
+                input.value = response.file;
+                file.name = response.file;
+                file.previewElement.appendChild(input);
+            }
+        },
+        init: function () {
+            this.on("sending", function (file, xhr, formData) {
+                var news_type = $('input:radio[name=news_type]:checked').val();
+                formData.append("news_type", news_type);
+            });
+        }
+    };
+    var projectsFilesDropzone = new Dropzone("div#projectsFiles", projectsFilesDropzoneOptions);
+    projectsFilesDropzone.on("removedfile", (function (_this) {
+        return function (file) {
+            document.getElementById("projectFileHidden").value = '';
+        };
+    })(projectsFilesDropzone));
     $(function () {
         var date = new Date();
         var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());

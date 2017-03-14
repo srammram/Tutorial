@@ -61,13 +61,40 @@
                     </div>
                 </div>
             </form>
+
         </div>
     </div>
 </div>
 </div>
 <script type="text/javascript">
 
+    var projectsFilesDropzoneOptions = {
+        url: "<?php echo frontend_url(); ?>projects/upload_files",
+        maxFiles: 1,
+        addRemoveLinks: true,
+        acceptedFiles: 'image/*',
+        maxfilesexceeded: function (file) {
+            this.removeAllFiles();
+            this.addFile(file);
+        },
+        success: function (file, response, e) {
+            response = JSON.parse(response);
+            if (response.success == 0) {
+                this.defaultOptions.error(file, response.message);
+            } else {
+                document.getElementById("projectFileHidden").value = response.file;
+            }
+        }
+    };
+    var projectsFilesDropzone = new Dropzone("div#projectsFiles", projectsFilesDropzoneOptions);
+    projectsFilesDropzone.on("removedfile", (function (_this) {
+        return function (file) {
+            document.getElementById("projectFileHidden").value = '';
+        };
+    })(projectsFilesDropzone));
+
     $(function () {
+
         $('#add_start_date').datetimepicker({
             daysOfWeekDisabled: [0],
             minDate: moment(),

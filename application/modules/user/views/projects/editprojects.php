@@ -6,6 +6,7 @@
     </div>
     <?php
     $project_team = explode(',', $records[0]['project_team']);
+    $mediafiles = explode('|*|', $records[0]['project_file']);
     ?>
     <div class="modal-body" >
         <div class="form-group">
@@ -53,16 +54,77 @@
                 <input type="text" name="pro_duration" id="pro_duration" class="form-control" value="<?php echo $records[0]['project_during_hours']; ?>" readonly=""/>
             </div>
             <div class="form-group">
-                <label>Project File</label>
-                <input type="file" name="pro_file" id="pro_file" class="form-control" value="" <?php if ($records[0]['project_file'] != ''): ?>style="display:none" <?php endif; ?>/>
-                <?php if ($records[0]['project_file'] != ''): ?>
-                    <div class="clear" style="clear:both;height:0.5em"></div>
-                    <div id="profilediv">
-                        <a href="<?php echo frontend_url() . 'projects/download_files/' . $records[0]['project_file']; ?>" class="btn btn-success">Download</a>
-                        <a href="javascript:void(0)" class="btn btn-danger" onclick="$('#profilediv').hide();$('#pro_file').show();">Change</a>
-                    </div>
-                <?php endif; ?>
+                <label>Select Files</label>
+                <div class="dropzone" id="projectsFiles" name="projectsFilesFileUploader"></div>
+                <div id="projectFilesHiddenContainer">
+                    <?php
+                    foreach ($mediafiles as $media) {
+
+                        echo "<input type=\"hidden\" name=\"mediaFiles_stopped[]\" value=\"" . $media . "\" id='news_media_img_" . $media . "' />";
+                    }
+                    ?>
+                </div>
             </div>
+            <script type="text/javascript">
+                var projectsFilesDropzoneOptions = {
+                    url: "<?php echo frontend_url(); ?>projects/upload_files",
+                    maxFiles: 10,
+                    addRemoveLinks: true,
+                    success: function (file, response, e) {
+                        response = JSON.parse(response);
+                        if (response.success == 0) {
+                            this.defaultOptions.error(file, response.message);
+                        } else {
+                            var input = document.createElement("input");
+                            input.setAttribute("type", "hidden");
+                            input.setAttribute("name", "mediaFiles[]");
+                            input.value = response.file;
+                            file.previewElement.appendChild(input);
+                        }
+                    },
+                    init: function () {
+                        this.on("sending", function (file, xhr, formData) {
+                            var news_type = $('input:radio[name=news_type]:checked').val();
+                            formData.append("news_type", news_type);
+                        });
+<?php
+foreach ($mediafiles as $media) {
+
+    $filetype = explode('.', $media);
+    $fileurl = base_url() . 'media/project/' . $media;
+//    $filesize = filesize($fileurl);
+    ?>
+                            var mockFile = {
+                                name: '<?php echo $media; ?>',
+                                accepted: true,
+                                url: '<?php echo $fileurl; ?>',
+                                status: Dropzone.SUCCESS,
+                                upload: {progress: 100}
+                            };
+                            this.files.push(mockFile);
+                            this.emit('addedfile', mockFile);
+                            mockFile.previewElement.classList.remove("dz-file-preview");
+                            _ref = mockFile.previewElement.querySelectorAll("[data-dz-thumbnail]");
+                            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                                thumbnailElement = _ref[_i];
+                                thumbnailElement.src = mockFile.url;
+                                thumbnailElement.style.maxHeight = '100%';
+                            }
+
+                            var input = document.createElement("input");
+                            input.setAttribute("type", "hidden");
+                            input.setAttribute("name", "mediaFiles[]");
+                            input.value = '<?php echo $media; ?>';
+                            mockFile.previewElement.appendChild(input);
+
+                            this.emit('complete', mockFile);
+                            this._updateMaxFilesReachedClass();
+<?php } ?>
+                    }
+                };
+                var projectsFilesDropzone = new Dropzone("div#projectsFiles", projectsFilesDropzoneOptions);
+
+            </script>
             <div class="form-group">
                 <label>Select Team This Project <span style="color:red">*</span></label><br>
                 <select name="pro_team[]" id="pro_team" class="form-control" multiple="multiple" style="width:100%">
@@ -98,5 +160,40 @@
 
     });
 
+    var projectsFilesDropzoneOptions = {
+        url: "<?php echo frontend_url(); ?>projects/upload_files",
+        maxFiles: 5,
+        addRemoveLinks: true,
+        acceptedFiles: 'image/*',
+        maxfilesexceeded: function (file) {
+            this.removeAllFiles();
+            this.addFile(file);
+        },
+        success: function (file, response, e) {
+            response = JSON.parse(response);
+            if (response.success == 0) {
+                this.defaultOptions.error(file, response.message);
+            } else {
+                var input = document.createElement("input");
+                input.setAttribute("type", "hidden");
+                input.setAttribute("name", "mediaFiles[]");
+                input.value = response.file;
+                file.name = response.file;
+                file.previewElement.appendChild(input);
+            }
+        },
+        init: function () {
+            this.on("sending", function (file, xhr, formData) {
+                var news_type = $('input:radio[name=news_type]:checked').val();
+                formData.append("news_type", news_type);
+            });
+        }
+    };
+    var projectsFilesDropzone = new Dropzone("div#projectsFiles", projectsFilesDropzoneOptions);
+    projectsFilesDropzone.on("removedfile", (function (_this) {
+        return function (file) {
+            document.getElementById("projectFileHidden").value = '';
+        };
+    })(projectsFilesDropzone));
 </script>
 
