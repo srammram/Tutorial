@@ -32,6 +32,7 @@ class USER extends CI_Controller {
         $this->projects_table = 'projects';
         $this->email_table = 'email_setting';
         $this->project_teams_table = 'project_teams';
+        $this->task_history_table = 'task_history';
         $this->sms_table = 'sms_setting';
         $this->load->helper('smstemplate');
         $this->load->helper('emailtemplate');
@@ -394,16 +395,18 @@ class USER extends CI_Controller {
         for ($i = 0; $i < count($project_team); $i++):
 
             $getteamdetails = $this->Mydb->custom_query("select t1.name,t1.id,t2.time_duration,t2.finished_hours,t2.status as team_status from $this->departments_table t1 LEFT JOIN $this->project_teams_table t2 ON t2.team_departments_id=t1.id and t2.projects_id=$project_id where t1.id=$project_team[$i]");
-//            $getused_hours=$this->Mydb->custom_query("select SUM() ")
+            $getused_hours = $this->Mydb->custom_query("select SUM(project_duration) as duration_hours from $this->task_history_table where projects_id=$project_id and departments_id=$project_team[$i] and status<>2 and status<>1");
             $team_name[] = $getteamdetails[0]['name'];
             $time_duration[] = $getteamdetails[0]['time_duration'];
             $finished_hours[] = $getteamdetails[0]['finished_hours'];
             $team_status[] = $getteamdetails[0]['team_status'];
+            $team_used_hours[] = $getused_hours[0]['duration_hours'];
         endfor;
         $data['team_details'] = $team_name;
         $data['time_duration'] = $time_duration;
         $data['finished_hours'] = $finished_hours;
         $data['team_status'] = $team_status;
+        $data['team_used_hours'] = $team_used_hours;
         $data['records'] = $getdetails;
         $body = $this->load->view($this->folder . 'dashboard_modal_details', $data);
         echo $body;

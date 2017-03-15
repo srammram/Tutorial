@@ -79,6 +79,21 @@ foreach ($team_details as $details):
             </div>
         </div>
     </div>
+
+    <div class="clear" style="clear:both;height:0.5em"></div>
+    <div class="form-group">
+        <div class="col-xs-12">
+            <div class="col-xs-4"><label><?php echo $details ?> Team Used Hours</label></div>
+            <div class="col-xs-1"><label>:</label></div>
+            <div class="col-xs-6">
+                <?php if ($team_used_hours[$i] != ''): ?>
+                    <label><?php echo $team_used_hours[$i]; ?> Hours</label>
+                <?php else: ?>
+                    <label>N/A</label>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
     <div class="clear" style="clear:both;height:1em"></div>
     <div class="form-group">
         <div class="col-xs-12">
@@ -121,13 +136,23 @@ foreach ($team_details as $details):
                 ?>
                 <label class="<?php echo $labelclass ?>" style="font-size:15px"><?php echo $status; ?></label>
             </div>
-            <!--            <div class="progress">
-                            <div class="progress-bar" role="progressbar" style="width: 15%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar bg-success" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                            <div class="progress-bar bg-info" role="progressbar" style="width: 20%" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>-->
+
         </div>
+
     </div>
+    <?php
+    $progress = round(($team_used_hours[$i] * 100) / $time_duration[$i]);
+    ?>
+    <div class="clear" style="clear:both;height:1em"></div>
+    <?php if ($progress != 0): ?>
+        <div class="form-group">
+            <div class="col-xs-12">
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" style="width: <?php echo $progress; ?>%" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100"><?php echo $progress . ' % time is used'; ?></div>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
     <div class="clear" style="clear:both;height:1em;border-bottom: 1px dotted silver"></div>
     <?php
     $i++;
