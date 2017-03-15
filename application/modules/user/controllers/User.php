@@ -373,7 +373,7 @@ class USER extends CI_Controller {
 
     public function dashboard() {
         $data = $this->load_module_info();
-        $getnotificationcount = $this->Mydb->custom_query("SELECT id, (select count(id) from $this->projects_table where project_type_status=1 limit 1) as ongoing,(select count(id) from $this->projects_table where project_type_status=2 limit 1) as Upcoming,(select count(id) from $this->projects_table where project_type_status=3 limit 1) as Pipeline from $this->projects_table limit 1");
+        $getnotificationcount = $this->Mydb->custom_query("SELECT id, (select count(id) from $this->projects_table where project_type_status=1 and status<>6 and status<>2 limit 1) as ongoing,(select count(id) from $this->projects_table where project_type_status=2 and status<>6 and status<>2 limit 1) as Upcoming,(select count(id) from $this->projects_table where status=6 and status<>2 limit 1) as completed,(select count(id) from $this->projects_table where project_type_status=3 and status<>6 and status<>2 limit 1) as Pipeline from $this->projects_table limit 1");
         $data['dashboard_count'] = $getnotificationcount;
         $this->layout->display_frontend($this->folder . 'dashboard', $data);
     }

@@ -117,7 +117,7 @@ class Tasks extends CI_Controller {
         $insert_id = $this->Mydb->insert($this->task_history_table, $insert_array);
         if ($task_status == 5):
             if ($add_project != 'others'):
-                $gethours_details = $this->Mydb->custom_query("select SUM(project_duration) as duration_hours from $this->task_history_table where projects_id=$add_project and from_user_id=$user_id");
+                $gethours_details = $this->Mydb->custom_query("select SUM(project_duration) as duration_hours from $this->task_history_table where projects_id=$add_project and from_user_id=$user_id and asigned_task_id=$assigned_task_id");
                 $finished_array = array('finished_datetime' => current_date(),
                     'finished_message' => $add_message,
                     'finished_hours' => $gethours_details[0]['duration_hours'],
@@ -237,7 +237,16 @@ class Tasks extends CI_Controller {
         );
         $insert_task_id = $this->Mydb->insert($this->task_history_table, $insert_task_array);
         if ($insert_id):
-
+            if ($_SESSION['user_type_id'] >= 4):
+                $getreporter_details = $this->Mydb->custom_query("select user_type_id,user_reporter_id,user_name from $this->login_table where id=$asign_user_details");
+                if ($getreporter_details[0]['user_type_id'] == 6):
+                    $notiy_msg = stripslashes($asign_task_title) . ' Task has been Assigned by ' . $_SESSION['user_name'] . ' for your team member ' . $getreporter_details[0]['user_name'];
+                    $notiy_from = $_SESSION['user_id'];
+                    $notiy_to = $getreporter_details[0]['user_reporter_id'];
+                    $notiy_type = 3;
+                    create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
+                endif;
+            endif;
             $notiy_msg = stripslashes($asign_task_title) . ' Task has been Assigned by ' . $_SESSION['user_name'];
             $notiy_from = $_SESSION['user_id'];
             $notiy_to = $asign_user_details;
