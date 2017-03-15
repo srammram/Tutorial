@@ -113,6 +113,8 @@ class Tasks extends CI_Controller {
             'created_ip' => ip2long(get_ip()),
             'asigned_task_id' => $assigned_task_id,
             'status' => $this->input->post('task_status'));
+
+        $insert_id = $this->Mydb->insert($this->task_history_table, $insert_array);
         if ($task_status == 5):
             if ($add_project != 'others'):
                 $gethours_details = $this->Mydb->custom_query("select SUM(project_duration) as duration_hours from $this->task_history_table where projects_id=$add_project and from_user_id=$user_id");
@@ -126,7 +128,6 @@ class Tasks extends CI_Controller {
             $finished_array = array('status' => $this->input->post('task_status'));
             $updateid = $this->Mydb->update($this->assigned_tasks_table, array('id' => $assigned_task_id), $finished_array);
         endif;
-        $insert_id = $this->Mydb->insert($this->task_history_table, $insert_array);
         if ($task_status == '3'):
             $statusmessage = "In Progress";
         elseif ($task_status == '4'):

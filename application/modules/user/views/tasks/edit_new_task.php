@@ -67,7 +67,7 @@
                 <div class="col-xs-4"><label>Estimated Hours</label></div>
                 <div class="col-xs-1"><label>:</label></div>
                 <div class="col-xs-6">
-                    <label><?php echo $records[0]['project_duration']; ?></label>
+                    <label><?php echo $records[0]['assigned_hours']; ?></label>
                 </div>
             </div>
         </div>
@@ -85,13 +85,13 @@
                     $labelclass = "label label-success";
                     $status = "In Completed";
                 elseif ($records[0]['status'] == 5):
-                    if ($manage_tasks['assigned_hours'] > $manage_tasks['finished_hours']):
+                    if ($records[0]['assigned_hours'] > $records[0]['finished_hours']):
                         $labelclass = "label label-success";
                         $status = "In Time Completed";
-                    elseif ($manage_tasks['assigned_hours'] == $manage_tasks['finished_hours']):
+                    elseif ($records[0]['assigned_hours'] == $records[0]['finished_hours']):
                         $labelclass = "label label-primary";
                         $status = "On Time Completed";
-                    elseif ($manage_tasks['assigned_hours'] < $manage_tasks['finished_hours']):
+                    elseif ($records[0]['assigned_hours'] < $records[0]['finished_hours']):
                         $labelclass = "label label-danger";
                         $status = "Delay Completed";
                     endif;
@@ -105,35 +105,40 @@
             </div>
         </div>
         <?php if ($records[0]['status'] == 5): ?>
+            <div class="clear" style="clear: both;height:1em"></div>
             <div class="form-group">
                 <div class="col-xs-12">
                     <div class="col-xs-4"><label>Finished Hours</label></div>
                     <div class="col-xs-1"><label>:</label></div>
                     <div class="col-xs-6">
-                        <label><?php echo $manage_tasks['finished_hours']; ?></label>
+                        <label><?php echo $records[0]['finished_hours']; ?></label>
                     </div>
                 </div>
             </div>
             <?php
             if ($status == 'In Time Completed'):
                 ?>
+                <div class="clear" style="clear: both;height:1em"></div>
                 <div class="form-group">
                     <div class="col-xs-12">
                         <div class="col-xs-4"><label>Saved Hours</label></div>
                         <div class="col-xs-1"><label>:</label></div>
                         <div class="col-xs-6">
-                            <?php $savedhours = ($manage_tasks['assigned_hours'] - $manage_tasks['finished_hours']); ?>
+                            <?php $savedhours = ($records[0]['assigned_hours'] - $records[0]['finished_hours']); ?>
                             <label><?php echo number_format($savedhours, 2); ?></label>
                         </div>
                     </div>
                 </div>
-            <?php elseif ($status == 'Delay Completed'): ?>
+                <?php
+            elseif ($status == 'Delay Completed'):
+                ?>
+                <div class="clear" style="clear: both;height:1em"></div>
                 <div class="form-group">
                     <div class="col-xs-12">
                         <div class="col-xs-4"><label>Delay Hours</label></div>
                         <div class="col-xs-1"><label>:</label></div>
                         <div class="col-xs-6">
-                            <?php $savedhours = ($manage_tasks['finished_hours'] - $manage_tasks['assigned_hours']); ?>
+                            <?php $savedhours = ($records[0]['finished_hours'] - $records[0]['assigned_hours']); ?>
                             <label><?php echo number_format($savedhours, 2); ?></label>
                         </div>
                     </div>

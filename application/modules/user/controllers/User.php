@@ -394,6 +394,7 @@ class USER extends CI_Controller {
         for ($i = 0; $i < count($project_team); $i++):
 
             $getteamdetails = $this->Mydb->custom_query("select t1.name,t1.id,t2.time_duration,t2.finished_hours,t2.status as team_status from $this->departments_table t1 LEFT JOIN $this->project_teams_table t2 ON t2.team_departments_id=t1.id and t2.projects_id=$project_id where t1.id=$project_team[$i]");
+//            $getused_hours=$this->Mydb->custom_query("select SUM() ")
             $team_name[] = $getteamdetails[0]['name'];
             $time_duration[] = $getteamdetails[0]['time_duration'];
             $finished_hours[] = $getteamdetails[0]['finished_hours'];
