@@ -17,6 +17,8 @@
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib(); ?>theme/css/custom.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib(); ?>theme/css/bootstrap-datetimepicker.min.css">
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib() ?>theme/css/dropzone.css">
+<link rel="stylesheet" type="text/css" href="<?php echo load_lib() ?>theme/css/icon.css">
+<link rel="stylesheet" type="text/css" href="<?php echo load_lib() ?>theme/css/export.css">
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/jquery-2.2.0.min.js"></script>
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/bootstrap_min.js"></script>
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/datatables.min.js"></script>
@@ -29,4 +31,7 @@
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/login.js"></script>
 <script type="text/javascript" src="<?php echo load_lib(); ?>ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/amcharts.js"></script>
+<script type="text/javascript" src="<?php echo load_lib() ?>theme/js/serial.js"></script>
+<script type="text/javascript" src="<?php echo load_lib() ?>theme/js/export.min.js"></script>
+<script type="text/javascript" src="<?php echo load_lib() ?>theme/js/light.js"></script>
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/pie.js"></script>

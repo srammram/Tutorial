@@ -19,7 +19,10 @@
 
             </select>
         </div>
-        <?php if ($_SESSION['user_type_id'] != 5): ?>
+        <?php
+        $mediafiles = explode('|*|', $records[0]['task_file']);
+        if ($_SESSION['user_type_id'] != 5):
+            ?>
             <div class="form-group">
                 <label>Select User Type <span style="color:red">*</span></label>
                 <select name="asign_usertype" id="asign_usertype" class="form-control" required="" onchange="getdepartments(this.value)">
@@ -85,7 +88,80 @@
             <label>Enter Duration Hours <span style="color:red">*</span></label>
             <input type="text" required="" name="asign_duration_hours" id="add_duration_hours" class="form-control" placeholder="Choose Duration Hours" value="<?php echo $records[0]['assigned_hours']; ?>"/>
         </div>
+        <div class="form-group">
+            <label>Select Files</label>
+            <div class="dropzone" id="taskFiles" name="taskFilesFileUploader"></div>
+            <div id="projecttaskFilesHiddenContainer">
+                <?php
+                foreach ($mediafiles as $media) {
 
+                    echo "<input type=\"hidden\" name=\"mediaFiles_stopped[]\" value=\"" . $media . "\" id='news_media_img_" . $media . "' />";
+                }
+                ?>
+            </div>
+        </div>
+        <script type="text/javascript">
+            var taskFilesDropzoneOptions = {
+                url: "<?php echo frontend_url(); ?>tasks/upload_files",
+                maxFiles: 5,
+                addRemoveLinks: true,
+                acceptedFiles: 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel.sheet.macroEnabled.12,text/plain',
+                success: function (file, response, e) {
+
+                    response = JSON.parse(response);
+                    if (response.success == 0) {
+                        this.defaultOptions.error(file, response.message);
+                    } else {
+                        var input = document.createElement("input");
+                        input.setAttribute("type", "hidden");
+                        input.setAttribute("name", "mediaFiles[]");
+                        input.value = response.file;
+                        file.previewElement.appendChild(input);
+                    }
+                },
+                init: function () {
+                    this.on("sending", function (file, xhr, formData) {
+                        var news_type = $('input:radio[name=news_type]:checked').val();
+                        formData.append("news_type", news_type);
+                    });
+<?php
+foreach ($mediafiles as $media) {
+
+    $filetype = explode('.', $media);
+    $fileurl = base_url() . 'media/task/' . $media;
+    //    $filesize = filesize($fileurl);
+    ?>
+                        var mockFile = {
+                            name: '<?php echo $media; ?>',
+                            accepted: true,
+                            url: '<?php echo $fileurl; ?>',
+                            status: Dropzone.SUCCESS,
+                            upload: {progress: 100}
+                        };
+                        this.files.push(mockFile);
+                        this.emit('addedfile', mockFile);
+                        mockFile.previewElement.classList.remove("dz-file-preview");
+                        _ref = mockFile.previewElement.querySelectorAll("[data-dz-thumbnail]");
+                        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                            thumbnailElement = _ref[_i];
+                            thumbnailElement.src = mockFile.url;
+                            thumbnailElement.style.maxHeight = '100%';
+                        }
+
+                        var input = document.createElement("input");
+                        input.setAttribute("type", "hidden");
+                        input.setAttribute("name", "mediaFiles[]");
+                        input.value = '<?php echo $media; ?>';
+                        mockFile.previewElement.appendChild(input);
+
+                        this.emit('complete', mockFile);
+                        this._updateMaxFilesReachedClass();
+<?php } ?>
+                }
+            };
+            var taskFilesDropzone = new Dropzone("div#taskFiles", taskFilesDropzoneOptions);
+
+        </script>
         <div class="form-group">
             <div class="row">
                 <div class="col-sm-3 col-sm-offset-3">

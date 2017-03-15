@@ -2,11 +2,12 @@
     <div class="row">
         <?php
         $i = 1;
+//        print_r($records);
         foreach ($records as $det):
             ?>
 
             <div class="col-xs-3"  >
-                <a href="#" onclick="get_project_details(<?php echo $det['id']; ?>)" data-toggle="modal" data-target="#myModal">
+                <a href="#" onclick="get_project_details(<?php echo $det['id']; ?>)" data-toggle="modal" data-target="#DashboradModal">
                     <div class="boxTile">
                         <div class="square info easeAni">
                             <div class="text">
@@ -34,7 +35,7 @@
         ?>
     </div>
 </div>
-<div class="modal fade" id="myModal" role="dialog">
+<div class="modal fade" id="DashboradModal" role="dialog">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->

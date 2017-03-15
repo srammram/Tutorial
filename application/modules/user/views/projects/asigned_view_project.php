@@ -35,9 +35,10 @@
         $i = 1;
         foreach ($mediafiles as $media):
             ?>
-            <br>
+
 
             <a href="<?php echo frontend_url() . 'projects/download_files/' . $media; ?>" style="font-size:20px" class="btn btn-success" >Download File <?php echo $i; ?></a>
+            <br>          
             <?php
             $i++;
         endforeach;

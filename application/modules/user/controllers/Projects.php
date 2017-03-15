@@ -85,9 +85,9 @@ class Projects extends CI_Controller {
             $pro_description = $this->input->post('pro_description');
             $pro_type = $this->input->post('pro_type');
             $pro_file = $_FILES['pro_file']['name'];
-            $pro_start = $this->input->post('pro_start');
-            $pro_finished = $this->input->post('pro_finished');
-            $pro_duration = $this->input->post('pro_duration');
+            $pro_start = $this->input->post('pro_start') != '' ? $this->input->post('pro_start') : '';
+            $pro_finished = $this->input->post('pro_finished') != '' ? $this->input->post('pro_finished') : '';
+            $pro_duration = $this->input->post('pro_duration') != '' ? $this->input->post('pro_duration') : '';
             $pro_team = $proteam;
             $mediafiles = $this->input->post('mediaFiles');
             $insert_array = array('project_name' => $pro_title,
@@ -98,7 +98,7 @@ class Projects extends CI_Controller {
                 'project_start_date' => $pro_start,
                 'project_finished_date' => $pro_finished,
                 'project_team' => $pro_team,
-                'project_file' => implode('|*|', $mediafiles),
+                'project_file' => $mediafiles != '' ? implode('|*|', $mediafiles) : '',
                 'created_on' => current_date(),
                 'created_ip' => ip2long(get_ip()),
                 'status' => 1
@@ -172,11 +172,11 @@ class Projects extends CI_Controller {
         $pro_title = $this->input->post('pro_title');
         $pro_description = $this->input->post('pro_description');
         $pro_type = $this->input->post('pro_type');
-        $pro_start = $this->input->post('pro_start');
-        $pro_finished = $this->input->post('pro_finished');
-        $pro_duration = $this->input->post('pro_duration');
-        $pro_team = implode(',', $this->input->post('pro_team'));
-        $mediafiles = $this->input->post('mediaFiles');
+        $pro_start = $this->input->post('pro_start') != '' ? $this->input->post('pro_start') : '';
+        $pro_finished = $this->input->post('pro_finished') != '' ? $this->input->post('pro_finished') : '';
+        $pro_duration = $this->input->post('pro_duration') != '' ? $this->input->post('pro_duration') : '';
+        $pro_team = $this->input->post('pro_team') != '' ? implode(',', $this->input->post('pro_team')) : '';
+        $mediafiles = $this->input->post('mediaFiles') != '' ? $this->input->post('mediaFiles') : '';
 
         $update_array = array('project_name' => $pro_title,
             'project_slug' => url_title($pro_title, '-', TRUE),
@@ -338,7 +338,7 @@ class Projects extends CI_Controller {
             create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
         }
         if ($insert_id):
-            $update_array = array('status' => 6);
+            $update_array = array('status' => 5);
             $updateproject = $this->Mydb->update($this->projects_table, array('id' => $project_id), $update_array);
             $response = "<div class='alert alert-success'>Your details has been successfully added.</div>";
         else:
@@ -545,14 +545,14 @@ class Projects extends CI_Controller {
     }
 
     public function download_files($fileName = NULL) {
-        if ($fileName[0]) {
-            $file = FCPATH . 'media/project/' . $fileName[0];
+        if ($fileName) {
+            $file = FCPATH . 'media/project/' . $fileName;
             // check file exists    
             if (file_exists($file)) {
                 // get file content
                 $data = file_get_contents($file);
                 //force download
-                force_download($fileName[0], $data);
+                force_download($fileName, $data);
             } else {
                 // Redirect to base url
                 redirect(frontend_url() . 'projects/assigned_teamprojects');

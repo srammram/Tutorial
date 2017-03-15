@@ -19,9 +19,11 @@
                         <option value="others">Others</option>
                     </select>
                 </div>
+                <input type="text" name="finisehd_hours" id="finished_hours" value=""/>
+                <input type="text" name="estimated_hours" id="estimated_hours" value=""/>
                 <div class="form-group">
                     <label>Select Task</label>
-                    <select name="add_selected_task" id="add_selected_task" class="form-control">
+                    <select name="add_selected_task" id="add_selected_task" class="form-control" onchange="getfinished_hours(this.value);">
                         <option value="">-Select Task-</option>
                     </select>
                 </div>
@@ -49,6 +51,10 @@
                         <option value="4">In Completed</option>
                         <option value="5">Completed</option>
                     </select>
+                </div>
+                <div class="form-group" id="delay_reason_div" style="display:none">
+                    <label>Enter Delay Reason </label>
+                    <textarea placeholder="Enter Delay Reason" name="delay_reason" value="delay_reason" rows="5" style="resize:none" class="form-control"></textarea>
                 </div>
                 <div class="form-group">
                     <div class="row">

@@ -65,7 +65,11 @@
                     <input type="text" required="" name="asign_duration_hours" id="add_duration_hours" class="form-control" placeholder="Choose Duration Hours"/>
                 </div>
 
-
+                <div class="form-group">
+                    <label>Select Files</label>
+                    <div class="dropzone" id="taskFiles" name="taskFilesFileUploader"></div>
+                    <input id="TaskFileHidden" type="hidden" name="thumbnail" value="" />
+                </div>
 
                 <div class="form-group">
                     <div class="row">
@@ -83,7 +87,41 @@
 </div>
 </div>
 <script type="text/javascript">
-
+    var taskFilesDropzoneOptions = {
+        url: "<?php echo frontend_url(); ?>tasks/upload_files",
+        maxFiles: 5,
+        addRemoveLinks: true,
+        acceptedFiles: 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.ms-excel.sheet.macroEnabled.12,text/plain',
+        maxfilesexceeded: function (file) {
+            this.removeAllFiles();
+            this.addFile(file);
+        },
+        success: function (file, response, e) {
+            response = JSON.parse(response);
+            if (response.success == 0) {
+                this.defaultOptions.error(file, response.message);
+            } else {
+                var input = document.createElement("input");
+                input.setAttribute("type", "hidden");
+                input.setAttribute("name", "mediaFiles[]");
+                input.value = response.file;
+                file.name = response.file;
+                file.previewElement.appendChild(input);
+            }
+        },
+        init: function () {
+            this.on("sending", function (file, xhr, formData) {
+                var news_type = $('input:radio[name=news_type]:checked').val();
+                formData.append("news_type", news_type);
+            });
+        }
+    };
+    var taskFilesDropzone = new Dropzone("div#taskFiles", taskFilesDropzoneOptions);
+    taskFilesDropzone.on("removedfile", (function (_this) {
+        return function (file) {
+            document.getElementById("taskFileHidden").value = '';
+        };
+    })(taskFilesDropzone));
     $(function () {
         $('#asign_start_date').datetimepicker({
             daysOfWeekDisabled: [0],

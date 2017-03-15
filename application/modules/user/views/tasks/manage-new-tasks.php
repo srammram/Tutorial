@@ -22,8 +22,8 @@
                         <th>S.No</th>
                         <th>Project Name</th>
                         <th>Task Title</th>
-                        <th>Description</th>
                         <th>Duration</th>
+                        <th>Used</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -66,11 +66,11 @@
                                 <td><?php echo $manage_tasks['project_name']; ?></td>
                             <?php endif; ?>
                             <td><?php echo $manage_tasks['task_title']; ?></td>
-                            <td><?php echo $manage_tasks['message']; ?></td>
                             <td><?php echo $manage_tasks['project_duration']; ?></td>
+                            <td><?php echo $manage_tasks['finished_duration_hours']; ?></td>
                             <td><label class="<?php echo $labelclass; ?>"><?php echo $status; ?></label></td>
                             <td>
-                                <a class="btn btn-primary" href="#EditTasks" data-toggle="modal" onclick="edittaskdetails(<?php echo $manage_tasks['id'] ?>);"><i class="fa fa-eye" ></i></a>
+                                <a class="btn btn-primary" href="<?php echo frontend_url() . 'tasks/manage_new_task_history/' . encode_value($manage_tasks['id']); ?>" ><i class="fa fa-eye" ></i></a>
                             </td>
                         </tr>
                         <?php
@@ -80,13 +80,7 @@
             </table>
         </div>
     </div>
-    <div id="EditTasks" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content" id="edit_new_task">
 
-            </div>
-        </div>
-    </div>
 </div>
 </div>
 <script type="text/javascript" charset="utf-8">

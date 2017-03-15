@@ -25,6 +25,7 @@ class Tasks extends CI_Controller {
         $this->task_history_table = 'task_history';
         $this->static_reasons_table = 'static_reasons';
         $this->assigned_tasks_table = 'assigned_tasks';
+        $this->tasks_table = 'tasks';
 
         $this->load->library('common');
         $this->load->helper('download');
@@ -37,6 +38,19 @@ class Tasks extends CI_Controller {
             'charset' => 'utf-8',
             'wordwrap' => TRUE
         );
+    }
+
+    function _remap($method, $args) {
+
+        if (method_exists($this, $method)) {
+            $this->$method($args);
+        } else {
+            if ($method !== 'manage_new_task_history') {
+                $this->index($method, $args);
+            } else if ($method == 'manage_new_task_history') {
+                $this->manage_new_task_history($method, $args);
+            }
+        }
     }
 
     public function index() {
@@ -65,7 +79,7 @@ class Tasks extends CI_Controller {
         elseif ($user_type_id == 5):
             $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t1.projects_id),t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id");
         elseif ($user_type_id == 6):
-            $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t1.projects_id),t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and t1.assigned_to=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t1.projects_id),t2.project_name from $this->tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and t1.to_user_id=$user_id");
         endif;
         $data['project_details'] = $getprojectdetails;
         $this->layout->display_frontend($this->folder . 'add-new-tasks', $data);
@@ -75,7 +89,7 @@ class Tasks extends CI_Controller {
         $project_id = $this->input->post('project_id');
         $user_id = $_SESSION['user_id'];
         if ($project_id != 'others'):
-            $gettask_details = $this->Mydb->custom_query("select t1.id,t1.task_name from $this->assigned_tasks_table t1 where  projects_id=$project_id and assigned_to=$user_id and t1.status<>5 and t1.status<>2");
+            $gettask_details = $this->Mydb->custom_query("select t1.id,t1.task_title as task_name from $this->tasks_table t1 where  projects_id=$project_id and to_user_id=$user_id and t1.status<>5 and t1.status<>2");
         else:
             $gettask_details = $this->Mydb->custom_query("select id,reason as task_name from $this->static_reasons_table where status=1");
         endif;
@@ -96,13 +110,15 @@ class Tasks extends CI_Controller {
         $add_duration_hours = $this->input->post('add_duration_hours');
         $task_status = $this->input->post('task_status');
         $assigned_task_id = $this->input->post('add_selected_task');
+        $delay_reason = $this->input->post('delay_reason') != '' ? $this->input->post('delay_reason') : '';
         if ($add_project != 'others'):
-            $gettaskdetails = $this->Mydb->custom_query("select task_name from $this->assigned_tasks_table where id=$add_selected_task");
+            $gettaskdetails = $this->Mydb->custom_query("select task_title from $this->tasks_table where id=$add_selected_task");
         else:
             $gettaskdetails = $this->Mydb->custom_query("select reason as task_name from $this->static_reasons_table where id=$add_selected_task");
         endif;
         $insert_array = array('projects_id' => $add_project,
-            'task_title' => $gettaskdetails[0]['task_name'],
+            'task_title' => $gettaskdetails[0]['task_title'],
+            'tasks_id' => $assigned_task_id,
             'project_duration' => $add_duration_hours,
             'message' => $add_message,
             'from_user_id' => $user_id,
@@ -115,6 +131,7 @@ class Tasks extends CI_Controller {
             'status' => $this->input->post('task_status'));
 
         $insert_id = $this->Mydb->insert($this->task_history_table, $insert_array);
+
         if ($task_status == 5):
             if ($add_project != 'others'):
                 $gethours_details = $this->Mydb->custom_query("select SUM(project_duration) as duration_hours from $this->task_history_table where projects_id=$add_project and from_user_id=$user_id and asigned_task_id=$assigned_task_id");
@@ -128,6 +145,14 @@ class Tasks extends CI_Controller {
             $finished_array = array('status' => $this->input->post('task_status'));
             $updateid = $this->Mydb->update($this->assigned_tasks_table, array('id' => $assigned_task_id), $finished_array);
         endif;
+        $getfinishedhours = $this->Mydb->custom_query("select finished_duration_hours from $this->tasks_table where id=$assigned_task_id");
+        $finished_duration_hours = $getfinishedhours[0]['finished_duration_hours'];
+
+        $tasks_array = array('finished_duration_hours' => $finished_duration_hours + $add_duration_hours,
+            'status' => $this->input->post('task_status'), 'employee_finished_message' => $delay_reason);
+
+        $updatetasks = $this->Mydb->update($this->tasks_table, array('id' => $assigned_task_id), $tasks_array);
+
         if ($task_status == '3'):
             $statusmessage = "In Progress";
         elseif ($task_status == '4'):
@@ -196,6 +221,25 @@ class Tasks extends CI_Controller {
         echo $body;
     }
 
+    public function upload_files() {
+        if (!empty($_FILES['file']['name']) && isset($_FILES ['file'] ['name'])) {
+//            $create_user_doc_name = url_title(substr($pro_title, 0, 10), '-', TRUE) . '-project-' . $_FILES['pro_file']['name'];
+            $doc_image = $this->common->upload_image('file', 'task/', '');
+            $image_arr = array(
+                'image_name' => $doc_image,
+                'created_at' => current_date(),
+                'status' => 1
+            );
+            $json['success'] = 1;
+            $json['success_message'] = "Image successfully uploaded";
+            $json['file'] = $doc_image;
+        } else {
+            $json['success'] = 0;
+            $json['success_message'] = "Image not uploaded";
+        }
+        echo json_encode($json);
+    }
+
     public function insert_asign_task() {
         $asign_project = $this->input->post('asign_project');
         $asign_usertype = $this->input->post('asign_usertype') != '' ? $this->input->post('asign_usertype') : '';
@@ -206,6 +250,7 @@ class Tasks extends CI_Controller {
         $asign_start_date = $this->input->post('asign_start_date');
         $asign_end_date = $this->input->post('asign_end_date');
         $asign_duration_hours = $this->input->post('asign_duration_hours');
+        $mediafiles = $this->input->post('mediaFiles');
         $insert_array = array('projects_id' => $asign_project,
             'task_name' => $asign_task_title,
             'assigned_from' => $_SESSION['user_id'],
@@ -216,13 +261,14 @@ class Tasks extends CI_Controller {
             'user_type_id' => $asign_usertype,
             'start_datetime' => date('Y-m-d H:i:s', strtotime($asign_start_date)),
             'end_datetime' => date('Y-m-d H:i:s', strtotime($asign_end_date)),
+            'task_file' => $mediafiles != '' ? implode('|*|', $mediafiles) : '',
             'created_at' => $_SESSION['user_id'],
             'created_ip' => ip2long(get_ip()),
             'status' => 1,
         );
 
         $insert_id = $this->Mydb->insert($this->assigned_tasks_table, $insert_array);
-        $insert_task_array = array('projects_id' => $asign_project,
+        $insert_tasks_array = array('projects_id' => $asign_project,
             'task_title' => $asign_task_title,
             'from_user_id' => $_SESSION['user_id'],
             'to_user_id' => $asign_user_details,
@@ -233,9 +279,28 @@ class Tasks extends CI_Controller {
             'end_datetime' => date('Y-m-d H:i:s', strtotime($asign_end_date)),
             'created_ip' => ip2long(get_ip()),
             'asigned_task_id' => $insert_id,
+            'task_file' => $mediafiles != '' ? implode('|*|', $mediafiles) : '',
             'status' => 1,
         );
+        $insert_task_id = $this->Mydb->insert($this->tasks_table, $insert_tasks_array);
+        $insert_task_array = array('projects_id' => $asign_project,
+            'task_title' => $asign_task_title,
+            'tasks_id' => $insert_task_id,
+            'from_user_id' => $_SESSION['user_id'],
+            'to_user_id' => $asign_user_details,
+            'message' => $asign_task_message,
+            'project_duration' => $asign_duration_hours,
+            'departments_id' => $asign_departments,
+            'start_datetime' => date('Y-m-d H:i:s', strtotime($asign_start_date)),
+            'end_datetime' => date('Y-m-d H:i:s', strtotime($asign_end_date)),
+            'created_ip' => ip2long(get_ip()),
+            'asigned_task_id' => $insert_id,
+            'task_file' => $mediafiles != '' ? implode('|*|', $mediafiles) : '',
+            'status' => 1,
+        );
+
         $insert_task_id = $this->Mydb->insert($this->task_history_table, $insert_task_array);
+
         if ($insert_id):
             if ($_SESSION['user_type_id'] >= 4):
                 $getreporter_details = $this->Mydb->custom_query("select user_type_id,user_reporter_id,user_name from $this->login_table where id=$asign_user_details");
@@ -338,6 +403,7 @@ class Tasks extends CI_Controller {
         $asign_start_date = $this->input->post('asign_start_date');
         $asign_end_date = $this->input->post('asign_end_date');
         $asign_duration_hours = $this->input->post('asign_duration_hours');
+        $mediafiles = $this->input->post('mediaFiles');
         $update_array = array('projects_id' => $asign_project,
             'task_name' => $asign_task_title,
             'assigned_from' => $_SESSION['user_id'],
@@ -348,11 +414,26 @@ class Tasks extends CI_Controller {
             'user_type_id' => $asign_usertype,
             'start_datetime' => date('Y-m-d H:i:s', strtotime($asign_start_date)),
             'end_datetime' => date('Y-m-d H:i:s', strtotime($asign_end_date)),
+            'task_file' => $mediafiles != '' ? implode('|*|', $mediafiles) : '',
             'created_at' => $_SESSION['user_id'],
             'created_ip' => ip2long(get_ip()),
         );
 
         $update_id = $this->Mydb->update($this->assigned_tasks_table, array('id' => $edit_id), $update_array);
+        $update_tasks_array = array('projects_id' => $asign_project,
+            'task_title' => $asign_task_title,
+            'from_user_id' => $_SESSION['user_id'],
+            'to_user_id' => $asign_user_details,
+            'message' => $asign_task_message,
+            'project_duration' => $asign_duration_hours,
+            'departments_id' => $asign_departments,
+            'start_datetime' => date('Y-m-d H:i:s', strtotime($asign_start_date)),
+            'end_datetime' => date('Y-m-d H:i:s', strtotime($asign_end_date)),
+            'task_file' => $mediafiles != '' ? implode('|*|', $mediafiles) : '',
+            'created_ip' => ip2long(get_ip()),
+            'asigned_task_id' => $edit_id,
+        );
+        $update_tasks_id = $this->Mydb->update($this->tasks, array('asigned_task_id' => $edit_id), $update_tasks_array);
         $update_task_array = array('projects_id' => $asign_project,
             'task_title' => $asign_task_title,
             'from_user_id' => $_SESSION['user_id'],
@@ -362,10 +443,12 @@ class Tasks extends CI_Controller {
             'departments_id' => $asign_departments,
             'start_datetime' => date('Y-m-d H:i:s', strtotime($asign_start_date)),
             'end_datetime' => date('Y-m-d H:i:s', strtotime($asign_end_date)),
+            'task_file' => $mediafiles != '' ? implode('|*|', $mediafiles) : '',
             'created_ip' => ip2long(get_ip()),
             'asigned_task_id' => $edit_id,
         );
-        $update_task_id = $this->Mydb->update($this->task_history_table, array('asigned_task_id' => $edit_id), $update_task_array);
+        $update_task_id = $this->Mydb->update($this->task_history_table, array('tasks_id' => $update_tasks_id), $update_task_array);
+
         if ($update_id):
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Asign Task has been successfully updated');
             $this->session->set_userdata($session_datas);
@@ -395,13 +478,27 @@ class Tasks extends CI_Controller {
         $user_id = $_SESSION['user_id'];
         $user_type_id = $_SESSION['user_type_id'];
         if ($user_type_id < 4):
-            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id,t3.assigned_hours,t3.finished_hours from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where t1.to_user_id=$user_id AND t1.status<>2");
+            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.finished_duration_hours,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id,t3.assigned_hours,t3.finished_hours from $this->tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where t1.to_user_id=$user_id AND t1.status<>2 group by asigned_task_id");
+        else:
+            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.finished_duration_hours,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id,t3.assigned_hours,t3.finished_hours from $this->tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where  t1.status<>2 group by asigned_task_id");
+        endif;
+
+        $data['records'] = $getdetails;
+        $this->layout->display_frontend($this->folder . 'manage-new-tasks', $data);
+    }
+
+    public function manage_new_task_history($method = null) {
+        $data = $this->load_module_info();
+        $user_id = $_SESSION['user_id'];
+        $user_type_id = $_SESSION['user_type_id'];
+        if ($user_type_id < 4):
+            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id,t3.assigned_hours,t3.finished_hours from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where t1.to_user_id=$user_id AND t1.status<>2 ");
         else:
             $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id,t3.assigned_hours,t3.finished_hours from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where  t1.status<>2");
         endif;
 
         $data['records'] = $getdetails;
-        $this->layout->display_frontend($this->folder . 'manage-new-tasks', $data);
+        $this->layout->display_frontend($this->folder . 'manage-new-tasks-history', $data);
     }
 
     public function edit_new_task() {
@@ -826,6 +923,32 @@ class Tasks extends CI_Controller {
             }
         }
         return 0;
+    }
+
+    public function download_files($fileName = NULL) {
+        if ($fileName) {
+            $file = FCPATH . 'media/task/' . $fileName;
+
+            // check file exists    
+            if (file_exists($file)) {
+                // get file content
+                $data = file_get_contents($file);
+                //force download
+                force_download($fileName, $data);
+            } else {
+                // Redirect to base url
+                redirect(frontend_url());
+            }
+        }
+    }
+
+    public function getfinished_hours() {
+        $task_id = $this->input->post('task_id');
+        $project_id = $this->input->post('project_id');
+        $getfinished_hours = $this->Mydb->custom_query("select finished_duration_hours,project_duration from $this->tasks_table where projects_id=$project_id and id=$task_id");
+        $response['finished_hours'] = $getfinished_hours[0]['finished_duration_hours'];
+        $response['project_duration'] = $getfinished_hours[0]['project_duration'];
+        echo json_encode($response);
     }
 
     private function load_module_info() {

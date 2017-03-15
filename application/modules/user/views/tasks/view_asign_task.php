@@ -134,6 +134,19 @@
                 </div>
             </div>
         </div>
+        <?php if ($records[0]['employee_finished_message'] != ''): ?>
+            <div class="clear" style="clear: both;height:1em"></div>
+            <div class="form-group">
+                <div class="col-xs-12">
+                    <div class="col-xs-4"><label>Delay Reason</label></div>
+                    <div class="col-xs-1"><label>:</label></div>
+                    <div class="col-xs-6">
+                        <label><?php echo $records[0]['employee_finished_message']; ?></label>
+                    </div>
+                </div>
+            </div>
+            <div class="clear" style="clear: both;height:1em"></div>
+        <?php endif; ?>
         <div class="clear" style="clear: both;height:1em"></div>
         <?php
         if ($status == 'In Time Completed'):
@@ -161,6 +174,31 @@
             </div>
         <?php endif; ?>
         <div class="clear" style="clear: both;height:1em"></div>
+        <?php
+        if ($records[0]['task_file'] != ''):
+            ?>
+            <div class="clear" style="clear: both;height:1em"></div>
+            <div class="form-group">
+                <label>Files</label>
+                <br>
+                <?php
+                $mediafiles = explode('|*|', $records[0]['task_file']);
+                ?>
+                <?php
+                $i = 1;
+                foreach ($mediafiles as $media):
+                    ?>
+
+
+                    <a href="<?php echo frontend_url() . 'tasks/download_files/' . $media; ?>" style="font-size:20px" class="btn btn-success" >Download File <?php echo $i; ?></a>
+                    <br/>   
+                    <br/>   
+                    <?php
+                    $i++;
+                endforeach;
+                ?>
+            </div>
+        <?php endif; ?>
         <div class="form-group">
             <input type="button" name="task_close" id="task_close" class="btn btn-danger" value="Close" style="float:right" data-dismiss="modal" aria-hidden="true"/>
         </div>

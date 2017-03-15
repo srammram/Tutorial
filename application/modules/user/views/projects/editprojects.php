@@ -6,7 +6,11 @@
     </div>
     <?php
     $project_team = explode(',', $records[0]['project_team']);
-    $mediafiles = explode('|*|', $records[0]['project_file']);
+    if ($records[0]['project_file'] != ''):
+        $mediafiles = explode('|*|', $records[0]['project_file']);
+    else:
+        $mediafiles = '';
+    endif;
     ?>
     <div class="modal-body" >
         <div class="form-group">
@@ -23,17 +27,17 @@
             <select name="pro_type" id="pro_type" class="form-control" required="" onchange="changereadonly(this.value, <?php echo $records[0]['project_type_status']; ?>)">
                 <option value="">-Select Type-</option>
                 <option value="1" <?php
-                if ($records[0]['project_type_status'] == 1):echo "selected";
-                endif;
-                ?>>Ongoing</option>
+    if ($records[0]['project_type_status'] == 1):echo "selected";
+    endif;
+    ?>>Ongoing</option>
                 <option value="2" <?php
                 if ($records[0]['project_type_status'] == 2):echo "selected";
                 endif;
-                ?>>Upcoming</option>
+    ?>>Upcoming</option>
                 <option value="3" <?php
                 if ($records[0]['project_type_status'] == 3):echo "selected";
                 endif;
-                ?>>Pipeline</option>
+    ?>>Pipeline</option>
             </select>
         </div>
         <!--        <div class="form-group">
@@ -53,7 +57,7 @@
                 <label>Duration Hours</label>
                 <input type="text" name="pro_duration" id="pro_duration" class="form-control" value="<?php echo $records[0]['project_during_hours']; ?>" readonly=""/>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="dropzonefiles">
                 <label>Select Files</label>
                 <div class="dropzone" id="projectsFiles" name="projectsFilesFileUploader"></div>
                 <div id="projectFilesHiddenContainer">
@@ -89,38 +93,43 @@
                             formData.append("news_type", news_type);
                         });
 <?php
-foreach ($mediafiles as $media) {
+if (count($mediafiles) != 0):
 
-    $filetype = explode('.', $media);
-    $fileurl = base_url() . 'media/project/' . $media;
+    foreach ($mediafiles as $media) {
+
+        $filetype = explode('.', $media);
+        $fileurl = base_url() . 'media/project/' . $media;
 //    $filesize = filesize($fileurl);
-    ?>
-                            var mockFile = {
-                                name: '<?php echo $media; ?>',
-                                accepted: true,
-                                url: '<?php echo $fileurl; ?>',
-                                status: Dropzone.SUCCESS,
-                                upload: {progress: 100}
-                            };
-                            this.files.push(mockFile);
-                            this.emit('addedfile', mockFile);
-                            mockFile.previewElement.classList.remove("dz-file-preview");
-                            _ref = mockFile.previewElement.querySelectorAll("[data-dz-thumbnail]");
-                            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-                                thumbnailElement = _ref[_i];
-                                thumbnailElement.src = mockFile.url;
-                                thumbnailElement.style.maxHeight = '100%';
-                            }
+        ?>
+                                var mockFile = {
+                                    name: '<?php echo $media; ?>',
+                                    accepted: true,
+                                    url: '<?php echo $fileurl; ?>',
+                                    status: Dropzone.SUCCESS,
+                                    upload: {progress: 100}
+                                };
+                                this.files.push(mockFile);
+                                this.emit('addedfile', mockFile);
+                                mockFile.previewElement.classList.remove("dz-file-preview");
+                                _ref = mockFile.previewElement.querySelectorAll("[data-dz-thumbnail]");
+                                for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                                    thumbnailElement = _ref[_i];
+                                    thumbnailElement.src = mockFile.url;
+                                    thumbnailElement.style.maxHeight = '100%';
+                                }
 
-                            var input = document.createElement("input");
-                            input.setAttribute("type", "hidden");
-                            input.setAttribute("name", "mediaFiles[]");
-                            input.value = '<?php echo $media; ?>';
-                            mockFile.previewElement.appendChild(input);
+                                var input = document.createElement("input");
+                                input.setAttribute("type", "hidden");
+                                input.setAttribute("name", "mediaFiles[]");
+                                input.value = '<?php echo $media; ?>';
+                                mockFile.previewElement.appendChild(input);
 
-                            this.emit('complete', mockFile);
-                            this._updateMaxFilesReachedClass();
-<?php } ?>
+                                this.emit('complete', mockFile);
+                                this._updateMaxFilesReachedClass();
+        <?php
+    }
+endif;
+?>
                     }
                 };
                 var projectsFilesDropzone = new Dropzone("div#projectsFiles", projectsFilesDropzoneOptions);
@@ -132,8 +141,8 @@ foreach ($mediafiles as $media) {
                     <option value="">-Select Team-</option>
                     <?php foreach ($team_details as $team): ?>
                         <option value="<?php echo $team['id']; ?>" <?php
-                        if (in_array($team['id'], $project_team)):echo "selected";
-                        endif;
+                    if (in_array($team['id'], $project_team)):echo "selected";
+                    endif;
                         ?>><?php echo $team['name']; ?></option>
                             <?php endforeach; ?>
                 </select>
@@ -161,40 +170,6 @@ foreach ($mediafiles as $media) {
 
     });
 
-    var projectsFilesDropzoneOptions = {
-        url: "<?php echo frontend_url(); ?>projects/upload_files",
-        maxFiles: 5,
-        addRemoveLinks: true,
-        acceptedFiles: 'image/*',
-        maxfilesexceeded: function (file) {
-            this.removeAllFiles();
-            this.addFile(file);
-        },
-        success: function (file, response, e) {
-            response = JSON.parse(response);
-            if (response.success == 0) {
-                this.defaultOptions.error(file, response.message);
-            } else {
-                var input = document.createElement("input");
-                input.setAttribute("type", "hidden");
-                input.setAttribute("name", "mediaFiles[]");
-                input.value = response.file;
-                file.name = response.file;
-                file.previewElement.appendChild(input);
-            }
-        },
-        init: function () {
-            this.on("sending", function (file, xhr, formData) {
-                var news_type = $('input:radio[name=news_type]:checked').val();
-                formData.append("news_type", news_type);
-            });
-        }
-    };
-    var projectsFilesDropzone = new Dropzone("div#projectsFiles", projectsFilesDropzoneOptions);
-    projectsFilesDropzone.on("removedfile", (function (_this) {
-        return function (file) {
-            document.getElementById("projectFileHidden").value = '';
-        };
-    })(projectsFilesDropzone));
+
 </script>
 

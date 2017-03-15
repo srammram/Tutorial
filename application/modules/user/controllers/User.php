@@ -375,14 +375,17 @@ class USER extends CI_Controller {
         $data = $this->load_module_info();
         $getnotificationcount = $this->Mydb->custom_query("SELECT id, (select count(id) from $this->projects_table where project_type_status=1 and status<>6 and status<>2 limit 1) as ongoing,(select count(id) from $this->projects_table where project_type_status=2 and status<>6 and status<>2 limit 1) as Upcoming,(select count(id) from $this->projects_table where status=6 and status<>2 limit 1) as completed,(select count(id) from $this->projects_table where project_type_status=3 and status<>6 and status<>2 limit 1) as Pipeline from $this->projects_table limit 1");
         $data['dashboard_count'] = $getnotificationcount;
-        $this->layout->display_frontend($this->folder . 'dashboard', $data);
+        $this->layout->display_frontend($this->folder . 'new_dashboard', $data);
     }
 
     public function getdashboard_details() {
         $id = $this->input->post('id');
-        $getdetails = $this->Mydb->custom_query("select *,(if(project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as projecttype_status,(if(status=0,'Pending',if(status=1,'Active','Finished'))) as project_status from $this->projects_table where project_type_status=$id and status<>2");
+        if ($id != 4):
+            $getdetails = $this->Mydb->custom_query("select *,(if(project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as projecttype_status,(if(status=0,'Pending',if(status=1,'Active','Finished'))) as project_status from $this->projects_table where project_type_status=$id and status<>2");
+        else:
+            $getdetails = $this->Mydb->custom_query("select *,(if(project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as projecttype_status,(if(status=0,'Pending',if(status=1,'Active','Finished'))) as project_status from $this->projects_table where status=6 and status<>2");
+        endif;
         $getteamdetails = $this->Mydb->custom_query("select project_team,id from $this->projects_table where project_type_status=$id and status<>2");
-
         $data['records'] = $getdetails;
         $body = $this->load->view($this->folder . 'dashboard_details', $data);
         echo $body;

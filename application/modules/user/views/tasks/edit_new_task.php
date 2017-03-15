@@ -104,6 +104,7 @@
                 </div>
             </div>
         </div>
+
         <?php if ($records[0]['status'] == 5): ?>
             <div class="clear" style="clear: both;height:1em"></div>
             <div class="form-group">
@@ -144,6 +145,31 @@
                     </div>
                 </div>
             <?php endif; ?>
+        <?php endif; ?>
+        <?php
+        if ($records[0]['task_file'] != ''):
+            ?>
+            <div class="clear" style="clear: both;height:1em"></div>
+            <div class="form-group">
+                <label>Files</label>
+                <br>
+                <?php
+                $mediafiles = explode('|*|', $records[0]['task_file']);
+                ?>
+                <?php
+                $i = 1;
+                foreach ($mediafiles as $media):
+                    ?>
+
+
+                    <a href="<?php echo frontend_url() . 'tasks/download_files/' . $media; ?>" style="font-size:20px" class="btn btn-success" >Download File <?php echo $i; ?></a>
+                    <br/>   
+                    <br/>   
+                    <?php
+                    $i++;
+                endforeach;
+                ?>
+            </div>
         <?php endif; ?>
         <div class="clear" style="clear: both;height:1em"></div>
         <div class="form-group">
