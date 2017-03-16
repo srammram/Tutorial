@@ -58,7 +58,18 @@ class USER extends CI_Controller {
             }
         }
     }
-
+	/*Notification Update*/
+	public function notyupdate(){
+		$noty_id = $this->input->post('id');
+		$user_id = get_session_value('user_id');
+		$update_array = array(
+			'created_on' => current_date(),
+			'created_ip' => get_ip(),
+			'status' => '0'
+		); 
+		$notification = $this->Mydb->update("notification", array('id'=> $noty_id, 'to_id' => $user_id), $update_array);
+		
+	}
     public function index() {
 
 
