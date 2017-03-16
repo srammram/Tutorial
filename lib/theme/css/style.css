@@ -791,9 +791,10 @@ body {
   position: absolute;
   top: 35px;
   transition: .2s;
-  opacity: 0;
+  display:none;
+  opacity: 1;
   left: -50px;
-  z-index:9999;
+  z-index:999999999999999999999999;
 }
 	.notification:before {
     content: '';
