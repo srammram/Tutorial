@@ -10,13 +10,17 @@
             <form name="asign_new_task" id="asign_new_task" method="post" action="<?php echo frontend_url() . 'tasks/insert_asign_task'; ?>" data-parsley-validate="">
                 <div class="form-group">
                     <label>Select Project <span style="color:red">*</span></label>
-                    <select name="asign_project" id="asign_project" class="form-control" required="" <?php if ($_SESSION['user_type_id'] == 5): ?> onchange="get_user_details(<?php echo $_SESSION['user_departments_id'] ?>);"<?php endif; ?>>
+                    <select name="asign_project" id="asign_project" class="form-control" required="" <?php if ($_SESSION['user_type_id'] == 5): ?> onchange="get_user_details(<?php echo $_SESSION['user_departments_id'] ?>);getavalablehours(this.value);"<?php else: ?> onchange="getavaliblehours(this.value)"<?php endif; ?>>
                         <option value="">-Select Project-</option>
                         <?php foreach ($project_details as $details): ?>
                             <option value="<?php echo $details['projects_id']; ?>"><?php echo $details['project_name']; ?></option>
                         <?php endforeach; ?>
 
                     </select>
+                </div>
+                <div class="form-group">
+                    <label>Available Hours</label>
+                    <input type="text" class="form-control" name="asign_availble_hours" readonly="" id="asign_available_hours"/>
                 </div>
                 <?php if ($_SESSION['user_type_id'] != 5): ?>
                     <div class="form-group">
@@ -62,7 +66,7 @@
                 </div>
                 <div class="form-group">
                     <label>Enter Duration Hours <span style="color:red">*</span></label>
-                    <input type="text" required="" name="asign_duration_hours" id="add_duration_hours" class="form-control" placeholder="Choose Duration Hours"/>
+                    <input type="text" required="" name="asign_duration_hours" id="add_duration_hours" class="form-control" placeholder="Choose Duration Hours" onblur="check_available_hours(this.value)"/>
                 </div>
 
                 <div class="form-group">

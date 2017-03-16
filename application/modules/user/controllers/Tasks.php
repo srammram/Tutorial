@@ -951,6 +951,18 @@ class Tasks extends CI_Controller {
         echo json_encode($response);
     }
 
+    public function getavailablehours() {
+        $project_id = $this->input->post('project_id');
+        $team_id = $_SESSION['user_departments_id'];
+        $getestimatehours = $this->Mydb->custom_query("select time_duration from $this->project_teams_table where projects_id=$project_id and team_departments_id=$team_id");
+        $estimated_hours = $getestimatehours[0]['time_duration'];
+        $getusedhours = $this->Mydb->custom_query("select SUM(project_duration) as used_hours  from $this->tasks_table where projects_id=$project_id and departments_id=$team_id and status<>2");
+        $teamasigned_hours = $getusedhours[0]['used_hours'];
+        $available_hours = $estimated_hours - $teamasigned_hours;
+        $response['available_hours'] = $available_hours;
+        echo json_encode($response);
+    }
+
     private function load_module_info() {
         $data = array();
         $data ['module_label'] = $this->module_label;
