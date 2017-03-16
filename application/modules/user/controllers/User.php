@@ -382,21 +382,6 @@ class USER extends CI_Controller {
         $data['dashboard_count'] = $getnotificationcount;
         $data['assigned_count'] = $getassignedcount;
         $data['my_tasks_count'] = $getmytaskscount;
-		
-		$result = $this->Mydb->custom_query("SELECT sum(tht.project_duration) AS time, DATE_FORMAT(tht.updatetime,'%W') AS datevalue, (CASE WHEN (sum(tht.project_duration) > 8 ) THEN 'Very Good'  WHEN (sum(tht.project_duration) = 8 ) THEN 'Good' WHEN (sum(tht.project_duration) < 8 ) THEN 'Poor' 				ELSE 'Very poor' END) AS status FROM $this->task_history_table AS tht WHERE tht.from_user_id = '".get_session_value('user_id')."' AND tht.updatetime > DATE_SUB(NOW(), INTERVAL 1 WEEK)  AND tht.status > 2 AND ((tht.projects_id='others' AND tht.tasks_id < 7) OR (tht.projects_id!='others'))  GROUP BY CAST(tht.updatetime AS DATE)");
-		
-		for($i=0; $i<count($result); $i++){
-			$random_color =  random_color();
-			$color[]=array ( 'color' => '#'.$random_color);
-			$performance[]  = array('performance' => 'Performance');
-			$timehours[] = array('hours' => 'Total Hours');
-		}
-		
-		foreach($result as $key => $value){
-			$chart_total[] = array_merge($color[$key], $performance[$key], $timehours[$key], $result[$key]);
-		}
-		$data['chart_total'] = $chart_total;
-		
         $this->layout->display_frontend($this->folder . 'new_dashboard', $data);
     }
 
@@ -1509,8 +1494,26 @@ class USER extends CI_Controller {
 
     public function reporting() {
         $data = $this->load_module_info();
-        $getdetails = $this->Mydb->custom_query("SELECT pro.id,(if(pro.project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as type_status,pro.project_name,pro.project_description, GROUP_CONCAT(dept.name ORDER BY dept.id) department_name FROM projects pro INNER JOIN departments dept  ON FIND_IN_SET(dept.id, pro.project_team) > 0 GROUP  BY pro.id");
+        $getdetails = $this->Mydb->custom_query("SELECT pro.id,pro.project_during_hours,(if(pro.status=1,'Active',if(pro.status=5,'Assigned',if(pro.status=6,'In Progress',if(pro.status=7,'Completed','Ignored'))))) as project_status,(if(pro.project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as type_status,pro.project_name,pro.project_description, GROUP_CONCAT(dept.name ORDER BY dept.id) department_name FROM projects pro LEFT JOIN departments dept  ON FIND_IN_SET(dept.id, pro.project_team) > 0 GROUP  BY pro.id");
+        foreach ($getdetails as $details):
+            $project_id = $details['id'];
+//            $getteamleaders = $this->Mydb->custom_query("select t1.team_tl_id,t2.user_name FROM $this->project_teams_table t1 INNER JOIN $this->login_table t2 ON t2.id=t1.team_tl_id where t1.projects_id=$project_id");
+            $getteamleaders = $this->Mydb->custom_query("select t1.team_tl_id,GROUP_CONCAT(DISTINCT(t3.to_user_id)) as user_id,t2.user_name FROM $this->project_teams_table t1 LEFT JOIN $this->login_table t2 ON t2.id=t1.team_tl_id LEFT JOIN $this->tasks_table t3 ON t3.projects_id=t1.projects_id and t3.departments_id=t1.team_departments_id where t1.projects_id=$project_id group by t1.team_tl_id");
+            foreach ($getteamleaders as $teamtl):
+                $teamleaders[$project_id][] = $teamtl['user_name'];
+                if ($teamtl['user_id'] != ''):
+                    $member_id = $teamtl['user_id'];
+                    $getmemberdetails = $this->Mydb->custom_query("select GROUP_CONCAT(user_name) as uname from $this->login_table where id IN($member_id)");
+                    $teammembers[$project_id][] = $getmemberdetails[0]['uname'];
+                else:
+                    $teammembers[$project_id][] = '';
+                endif;
+
+            endforeach;
+        endforeach;
         $data['records'] = $getdetails;
+        $data['team_leaders'] = $teamleaders;
+        $data['team_members'] = $teammembers;
         $this->layout->display_frontend($this->folder . 'reporting', $data);
     }
 

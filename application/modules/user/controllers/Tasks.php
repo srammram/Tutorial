@@ -240,7 +240,13 @@ class Tasks extends CI_Controller {
     public function insert_asign_task() {
         $asign_project = $this->input->post('asign_project');
         $asign_usertype = $this->input->post('asign_usertype') != '' ? $this->input->post('asign_usertype') : '';
+
         $asign_departments = $this->input->post('asign_departments') != '' ? $this->input->post('asign_departments') : '';
+        if ($asign_departments != '') {
+            $asign_departments = $asign_departments;
+        } else {
+            $asign_departments = $_SESSION['user_departments_id'];
+        }
         $asign_task_title = $this->input->post('asign_task_title');
         $asign_task_message = $this->input->post('asign_task_message');
         $asign_user_details = $this->input->post('asign_user_details');
@@ -394,6 +400,11 @@ class Tasks extends CI_Controller {
         $asign_project = $this->input->post('asign_project');
         $asign_usertype = $this->input->post('asign_usertype') != '' ? $this->input->post('asign_usertype') : '';
         $asign_departments = $this->input->post('asign_departments') != '' ? $this->input->post('asign_departments') : '';
+        if ($asign_departments != '') {
+            $asign_departments = $asign_departments;
+        } else {
+            $asign_departments = $_SESSION['user_departments_id'];
+        }
         $asign_task_title = $this->input->post('asign_task_title');
         $asign_task_message = $this->input->post('asign_task_message');
         $asign_user_details = $this->input->post('asign_user_details');
