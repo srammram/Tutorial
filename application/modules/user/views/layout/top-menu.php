@@ -18,10 +18,12 @@
                 <a href="javascript:void(0);" class="notificationicon on"><i class="fa fa-bell fa-2x" aria-hidden="true"></i><span>
                 <?php echo count($notification); ?>
                 </span></a>
-              
+              	<?php
+				if(!empty($notification)){
+				?>
                 <ul id="notificationMenu" class="notification">
                   
-                  <div class="notifbox">
+                  <div class="notifbox" id="myList">
                   <?php
 				  foreach($notification as $noty){
 				  ?>
@@ -45,11 +47,44 @@
                     <?php
 				  }
 					?>
+                    
+                    <div class="col-xs-12 text-center">
+                    	<div id="loadMore" class="btn btn-primary" style="font-size: 12px; padding: 4px 8px; margin:10px 0px;  border-radius: 0px;">Load More</div>
+                        <div id="showLess" class="btn btn-warning" style="font-size: 12px; padding: 4px 8px; margin:10px 0px;  border-radius: 0px;">Load less</div>
+                    </div>
                   </div>
                   
                 </ul>
+                <?php
+				}
+				?>
               </div>
             <?php endif; ?>
         </div>
     </div>
 </div>
+<script>
+$(document).ready(function () {
+$('#showLess').hide();
+size_li = $("#myList li").size();
+x=4;
+$('#myList li:lt('+x+')').show();
+$('#loadMore').click(function () {
+	x= (x+4 <= size_li) ? x+4 : size_li;
+	$('#myList li:lt('+x+')').show();
+	 $('#showLess').show();
+	if(x == size_li){
+		$('#loadMore').hide();
+	}
+});
+$('#showLess').click(function () {
+	x=(x-4<0) ? 4 : x-4;
+	$('#myList li').not(':lt('+x+')').hide();
+	$('#loadMore').show();
+	 $('#showLess').show();
+	if(x == 4){
+		$('#showLess').hide();
+	}
+});
+});
+</script>
