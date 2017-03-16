@@ -17,9 +17,13 @@
 </script>
 <script>
     $(document).ready(function () {
-        $(".notificationicon").click(function () {
-            $(this).toggleClass("open");
-            $("#notificationMenu").toggleClass("open");
+        $(".noteicon").click(function () {
+			$(".notificationfixed").show();
+            $("#notificationMenu").show();
+        });
+		$(".notificationfixed").click(function(e) {
+			$(".notificationfixed").hide();
+            $("#notificationMenu").hide();
         });
     });
 

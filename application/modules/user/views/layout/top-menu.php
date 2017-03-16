@@ -15,12 +15,13 @@
             	<?php
 				  $notification = get_notification_count();
 				  ?>
-                <a href="javascript:void(0);" class="notificationicon on"><i class="fa fa-bell fa-2x" aria-hidden="true"></i><span>
+                <a href="javascript:void(0);" class="notificationicon <?php if(!empty($notification)){ echo 'noteicon'; } ?>  on"><i class="fa fa-bell fa-2x" aria-hidden="true"></i><span>
                 <?php echo count($notification); ?>
                 </span></a>
               	<?php
 				if(!empty($notification)){
 				?>
+                <div class="notificationfixed" style=" width: 100%; height: 100%; position: fixed; top: 0px; left: 0px; cursor: pointer; z-index:99999999999999; display:none; "></div>
                 <ul id="notificationMenu" class="notification">
                   
                   <div class="notifbox" id="myList">
