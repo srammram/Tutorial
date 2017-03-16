@@ -380,42 +380,8 @@ class USER extends CI_Controller {
         $getassignedcount = $this->Mydb->custom_query("select count(id) as assigned_count from $this->assigned_tasks_table where assigned_from=$user_id and status<>2");
         $getmytaskscount = $this->Mydb->custom_query("select count(id) as my_tasks_count from $this->tasks_table where to_user_id=$user_id and status<>2");
         $data['dashboard_count'] = $getnotificationcount;
-        <<<<<<< .mine
         $data['assigned_count'] = $getassignedcount;
         $data['my_tasks_count'] = $getmytaskscount;
-        ||||||| .r134
-        ====== = $result = $this->Mydb->custom_query("SELECT sum(tht.project_duration) AS time, DATE_FORMAT(tht.updatetime,'%W') AS datevalue, (CASE WHEN (sum(tht.project_duration) > 8 ) THEN 'Very Good'  WHEN (sum(tht.project_duration) = 8 ) THEN 'Good' WHEN (sum(tht.project_duration) < 8 ) THEN 'Poor' 				ELSE 'Very poor' END) AS status FROM $this->task_history_table AS tht WHERE tht.from_user_id = '" . get_session_value('user_id') . "' AND tht.updatetime > DATE_SUB(NOW(), INTERVAL 1 WEEK)  AND tht.status > 2 AND ((tht.projects_id='others' AND tht.tasks_id < 7) OR (tht.projects_id!='others'))  GROUP BY CAST(tht.updatetime AS DATE)");
-
-        for ($i = 0; $i < count($result); $i++) {
-            $random_color = random_color();
-            $color[] = array('color' => '#' . $random_color);
-            $performance[] = array('performance' => 'Performance');
-            $timehours[] = array('hours' => 'Total Hours');
-        }
-
-        foreach ($result as $key => $value) {
-            $chart_total[] = array_merge($color[$key], $performance[$key], $timehours[$key], $result[$key]);
-        }
-        /* $date = current_date();
-          $ts = strtotime($date);
-          // Find the year and the current week
-          $year = date('o', $ts);
-          $week = date('W', $ts);
-          for($i = 1; $i <= 7; $i++) {
-          $ts = strtotime($year.'W'.$week.$i);
-          $days[]['dateweek'] =  date("y-m-d", $ts);
-          }
-
-          foreach($days as $key => $value){
-
-          }
-          echo '<pre>';
-          print_r($days);
-          print_r($chart_total);
-          die; */
-        $data['chart_total'] = $chart_total;
-
-        >>>>>>> .r138
         $this->layout->display_frontend($this->folder . 'new_dashboard', $data);
     }
 
@@ -1528,7 +1494,7 @@ class USER extends CI_Controller {
 
     public function reporting() {
         $data = $this->load_module_info();
-        $getdetails = $this->Mydb->custom_query("SELECT pro.id,(if(pro.status=1,'Active',if(pro.status=5,'Assigned',if(pro.status=6,'In Progress',if(pro.status=7,'Completed','Ignored'))))) as project_status,(if(pro.project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as type_status,pro.project_name,pro.project_description, GROUP_CONCAT(dept.name ORDER BY dept.id) department_name FROM projects pro INNER JOIN departments dept  ON FIND_IN_SET(dept.id, pro.project_team) > 0 GROUP  BY pro.id");
+        $getdetails = $this->Mydb->custom_query("SELECT pro.id,(if(pro.project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as type_status,pro.project_name,pro.project_description, GROUP_CONCAT(dept.name ORDER BY dept.id) department_name FROM projects pro INNER JOIN departments dept  ON FIND_IN_SET(dept.id, pro.project_team) > 0 GROUP  BY pro.id");
         $data['records'] = $getdetails;
         $this->layout->display_frontend($this->folder . 'reporting', $data);
     }
