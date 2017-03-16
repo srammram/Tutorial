@@ -375,6 +375,38 @@ class USER extends CI_Controller {
         $data = $this->load_module_info();
         $getnotificationcount = $this->Mydb->custom_query("SELECT id, (select count(id) from $this->projects_table where project_type_status=1 and status<>6 and status<>2 limit 1) as ongoing,(select count(id) from $this->projects_table where project_type_status=2 and status<>6 and status<>2 limit 1) as Upcoming,(select count(id) from $this->projects_table where status=6 and status<>2 limit 1) as completed,(select count(id) from $this->projects_table where project_type_status=3 and status<>6 and status<>2 limit 1) as Pipeline from $this->projects_table limit 1");
         $data['dashboard_count'] = $getnotificationcount;
+		
+		$result = $this->Mydb->custom_query("SELECT sum(tht.project_duration) AS time, DATE_FORMAT(tht.updatetime,'%W') AS datevalue, (CASE WHEN (sum(tht.project_duration) > 8 ) THEN 'Very Good'  WHEN (sum(tht.project_duration) = 8 ) THEN 'Good' WHEN (sum(tht.project_duration) < 8 ) THEN 'Poor' 				ELSE 'Very poor' END) AS status FROM $this->task_history_table AS tht WHERE tht.from_user_id = '".get_session_value('user_id')."' AND tht.updatetime > DATE_SUB(NOW(), INTERVAL 1 WEEK)   GROUP BY CAST(tht.updatetime AS DATE)");
+		
+		for($i=0; $i<count($result); $i++){
+			$random_color =  random_color();
+			$color[]=array ( 'color' => '#'.$random_color);
+			$performance[]  = array('performance' => 'Performance');
+			$timehours[] = array('hours' => 'Total Hours');
+		}
+		
+		foreach($result as $key => $value){
+			$chart_total[] = array_merge($color[$key], $performance[$key], $timehours[$key], $result[$key]);
+		}
+		/*$date = current_date();
+		$ts = strtotime($date);
+		// Find the year and the current week
+		$year = date('o', $ts);
+		$week = date('W', $ts);
+		for($i = 1; $i <= 7; $i++) { 
+		$ts = strtotime($year.'W'.$week.$i); 
+			$days[]['dateweek'] =  date("y-m-d", $ts); 
+		 }
+		
+		foreach($days as $key => $value){
+			
+		}
+		echo '<pre>';
+		print_r($days);
+		print_r($chart_total);
+		die;*/
+		$data['chart_total'] = $chart_total;
+		
         $this->layout->display_frontend($this->folder . 'new_dashboard', $data);
     }
 
