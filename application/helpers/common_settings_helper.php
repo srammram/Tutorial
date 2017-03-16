@@ -111,7 +111,7 @@ if(!function_exists('get_notification_count'))
 {
 	function get_notification_count(){
 		$CI =& get_instance();
-		$notification = $CI->Mydb->custom_query("SELECT n.message, n.from_id, n.to_id, n.notification_type, n.created_on FROM notification AS n WHERE n.to_id='".get_session_value('user_id')."'");
+		$notification = $CI->Mydb->custom_query("SELECT n.id, n.message, n.from_id, n.to_id, n.notification_type, n.created_on FROM notification AS n WHERE n.to_id='".get_session_value('user_id')."' AND n.status='1'");
 		return $notification;
 	}
 }
