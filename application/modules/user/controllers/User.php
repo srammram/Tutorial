@@ -33,6 +33,8 @@ class USER extends CI_Controller {
         $this->email_table = 'email_setting';
         $this->project_teams_table = 'project_teams';
         $this->task_history_table = 'task_history';
+        $this->assigned_tasks_table = 'assigned_tasks';
+        $this->tasks_table = 'tasks';
         $this->sms_table = 'sms_setting';
         $this->load->helper('smstemplate');
         $this->load->helper('emailtemplate');
@@ -373,77 +375,105 @@ class USER extends CI_Controller {
 
     public function dashboard() {
         $data = $this->load_module_info();
+        $user_id = $_SESSION['user_id'];
         $getnotificationcount = $this->Mydb->custom_query("SELECT id, (select count(id) from $this->projects_table where project_type_status=1 and status<>6 and status<>2 limit 1) as ongoing,(select count(id) from $this->projects_table where project_type_status=2 and status<>6 and status<>2 limit 1) as Upcoming,(select count(id) from $this->projects_table where status=6 and status<>2 limit 1) as completed,(select count(id) from $this->projects_table where project_type_status=3 and status<>6 and status<>2 limit 1) as Pipeline from $this->projects_table limit 1");
+        $getassignedcount = $this->Mydb->custom_query("select count(id) as assigned_count from $this->assigned_tasks_table where assigned_from=$user_id and status<>2");
+        $getmytaskscount = $this->Mydb->custom_query("select count(id) as my_tasks_count from $this->tasks_table where to_user_id=$user_id and status<>2");
         $data['dashboard_count'] = $getnotificationcount;
-		
-		$result = $this->Mydb->custom_query("SELECT sum(tht.project_duration) AS time, DATE_FORMAT(tht.updatetime,'%W') AS datevalue, (CASE WHEN (sum(tht.project_duration) > 8 ) THEN 'Very Good'  WHEN (sum(tht.project_duration) = 8 ) THEN 'Good' WHEN (sum(tht.project_duration) < 8 ) THEN 'Poor' 				ELSE 'Very poor' END) AS status FROM $this->task_history_table AS tht WHERE tht.from_user_id = '".get_session_value('user_id')."' AND tht.updatetime > DATE_SUB(NOW(), INTERVAL 1 WEEK)  AND tht.status > 2 AND ((tht.projects_id='others' AND tht.tasks_id < 7) OR (tht.projects_id!='others'))  GROUP BY CAST(tht.updatetime AS DATE)");
-		
-		for($i=0; $i<count($result); $i++){
-			$random_color =  random_color();
-			$color[]=array ( 'color' => '#'.$random_color);
-			$performance[]  = array('performance' => 'Performance');
-			$timehours[] = array('hours' => 'Total Hours');
-		}
-		
-		foreach($result as $key => $value){
-			$chart_total[] = array_merge($color[$key], $performance[$key], $timehours[$key], $result[$key]);
-		}
-		/*$date = current_date();
-		$ts = strtotime($date);
-		// Find the year and the current week
-		$year = date('o', $ts);
-		$week = date('W', $ts);
-		for($i = 1; $i <= 7; $i++) { 
-		$ts = strtotime($year.'W'.$week.$i); 
-			$days[]['dateweek'] =  date("y-m-d", $ts); 
-		 }
-		
-		foreach($days as $key => $value){
-			
-		}
-		echo '<pre>';
-		print_r($days);
-		print_r($chart_total);
-		die;*/
-		$data['chart_total'] = $chart_total;
-		
+        <<<<<<< .mine
+        $data['assigned_count'] = $getassignedcount;
+        $data['my_tasks_count'] = $getmytaskscount;
+        ||||||| .r134
+        ====== = $result = $this->Mydb->custom_query("SELECT sum(tht.project_duration) AS time, DATE_FORMAT(tht.updatetime,'%W') AS datevalue, (CASE WHEN (sum(tht.project_duration) > 8 ) THEN 'Very Good'  WHEN (sum(tht.project_duration) = 8 ) THEN 'Good' WHEN (sum(tht.project_duration) < 8 ) THEN 'Poor' 				ELSE 'Very poor' END) AS status FROM $this->task_history_table AS tht WHERE tht.from_user_id = '" . get_session_value('user_id') . "' AND tht.updatetime > DATE_SUB(NOW(), INTERVAL 1 WEEK)  AND tht.status > 2 AND ((tht.projects_id='others' AND tht.tasks_id < 7) OR (tht.projects_id!='others'))  GROUP BY CAST(tht.updatetime AS DATE)");
+
+        for ($i = 0; $i < count($result); $i++) {
+            $random_color = random_color();
+            $color[] = array('color' => '#' . $random_color);
+            $performance[] = array('performance' => 'Performance');
+            $timehours[] = array('hours' => 'Total Hours');
+        }
+
+        foreach ($result as $key => $value) {
+            $chart_total[] = array_merge($color[$key], $performance[$key], $timehours[$key], $result[$key]);
+        }
+        /* $date = current_date();
+          $ts = strtotime($date);
+          // Find the year and the current week
+          $year = date('o', $ts);
+          $week = date('W', $ts);
+          for($i = 1; $i <= 7; $i++) {
+          $ts = strtotime($year.'W'.$week.$i);
+          $days[]['dateweek'] =  date("y-m-d", $ts);
+          }
+
+          foreach($days as $key => $value){
+
+          }
+          echo '<pre>';
+          print_r($days);
+          print_r($chart_total);
+          die; */
+        $data['chart_total'] = $chart_total;
+
+        >>>>>>> .r138
         $this->layout->display_frontend($this->folder . 'new_dashboard', $data);
     }
 
     public function getdashboard_details() {
         $id = $this->input->post('id');
-        if ($id != 4):
+        $user_id = $_SESSION['user_id'];
+        if ($id < 4):
             $getdetails = $this->Mydb->custom_query("select *,(if(project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as projecttype_status,(if(status=0,'Pending',if(status=1,'Active','Finished'))) as project_status from $this->projects_table where project_type_status=$id and status<>2");
-        else:
+        elseif ($id == 4):
             $getdetails = $this->Mydb->custom_query("select *,(if(project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as projecttype_status,(if(status=0,'Pending',if(status=1,'Active','Finished'))) as project_status from $this->projects_table where status=6 and status<>2");
+        elseif ($id == 5):
+            $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name as project_name,(if(t1.status=0,'Pending',if(t1.status=1,'Active','Finished'))) as project_status from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and t1.assigned_from=$user_id");
+        elseif ($id == 6):
+            $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name as project_name,(if(t1.status=0,'Pending',if(t1.status=1,'Active','Finished'))) as project_status from $this->tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and t1.to_user_id=$user_id");
         endif;
         $getteamdetails = $this->Mydb->custom_query("select project_team,id from $this->projects_table where project_type_status=$id and status<>2");
         $data['records'] = $getdetails;
+        $data['record_id'] = $id;
         $body = $this->load->view($this->folder . 'dashboard_details', $data);
         echo $body;
     }
 
     public function get_project_details() {
         $project_id = $this->input->post('project_id');
-        $getdetails = $this->Mydb->custom_query("select *,(if(project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as projecttype_status,(if(status=0,'Pending',if(status=1,'Active','Finished'))) as project_status from $this->projects_table where id=$project_id and status<>2");
-        $project_team = explode(',', $getdetails[0]['project_team']);
-        for ($i = 0; $i < count($project_team); $i++):
-
-            $getteamdetails = $this->Mydb->custom_query("select t1.name,t1.id,t2.time_duration,t2.finished_hours,t2.status as team_status from $this->departments_table t1 LEFT JOIN $this->project_teams_table t2 ON t2.team_departments_id=t1.id and t2.projects_id=$project_id where t1.id=$project_team[$i]");
-            $getused_hours = $this->Mydb->custom_query("select SUM(project_duration) as duration_hours from $this->task_history_table where projects_id=$project_id and departments_id=$project_team[$i] and status<>2 and status<>1");
-            $team_name[] = $getteamdetails[0]['name'];
-            $time_duration[] = $getteamdetails[0]['time_duration'];
-            $finished_hours[] = $getteamdetails[0]['finished_hours'];
-            $team_status[] = $getteamdetails[0]['team_status'];
-            $team_used_hours[] = $getused_hours[0]['duration_hours'];
-        endfor;
-        $data['team_details'] = $team_name;
-        $data['time_duration'] = $time_duration;
-        $data['finished_hours'] = $finished_hours;
-        $data['team_status'] = $team_status;
-        $data['team_used_hours'] = $team_used_hours;
-        $data['records'] = $getdetails;
-        $body = $this->load->view($this->folder . 'dashboard_modal_details', $data);
+        $record_id = $this->input->post('record_id');
+        if ($record_id <= 4):
+            $getdetails = $this->Mydb->custom_query("select *,(if(project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as projecttype_status,(if(status=0,'Pending',if(status=1,'Active','Finished'))) as project_status from $this->projects_table where id=$project_id and status<>2");
+            $project_team = explode(',', $getdetails[0]['project_team']);
+            for ($i = 0; $i < count($project_team); $i++):
+                $getteamdetails = $this->Mydb->custom_query("select t1.name,t1.id,t2.time_duration,t2.finished_hours,t2.status as team_status from $this->departments_table t1 LEFT JOIN $this->project_teams_table t2 ON t2.team_departments_id=t1.id and t2.projects_id=$project_id where t1.id=$project_team[$i]");
+                $getused_hours = $this->Mydb->custom_query("select SUM(project_duration) as duration_hours from $this->task_history_table where projects_id=$project_id and departments_id=$project_team[$i] and status<>2 and status<>1");
+                $team_name[] = $getteamdetails[0]['name'];
+                $time_duration[] = $getteamdetails[0]['time_duration'];
+                $finished_hours[] = $getteamdetails[0]['finished_hours'];
+                $team_status[] = $getteamdetails[0]['team_status'];
+                $team_used_hours[] = $getused_hours[0]['duration_hours'];
+            endfor;
+            $data['team_details'] = $team_name;
+            $data['time_duration'] = $time_duration;
+            $data['finished_hours'] = $finished_hours;
+            $data['team_status'] = $team_status;
+            $data['team_used_hours'] = $team_used_hours;
+            $data['records'] = $getdetails;
+            $body = $this->load->view($this->folder . 'dashboard_modal_details', $data);
+        elseif ($record_id == 5):
+            $user_id = $_SESSION['user_id'];
+            $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name as project_name,t2.project_description as description,t3.user_name as user_name,(if(t1.status=0,'Pending',if(t1.status=1,'Active',if(t1.status=3,'In Progress',if(t1.status=4,'In Completed',if(t1.status=5,'Completed','Ignored')))))) as project_status from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->login_table t3 ON t3.id=t1.assigned_to where t1.id=$project_id and t1.status<>2");
+            $getusedhours = $this->Mydb->custom_query("select SUM(project_duration) as used_hours from $this->tasks_table where projects_id=$project_id and status<>1 and status<>2");
+            $data['records'] = $getdetails;
+            $data['used_hours'] = $getusedhours[0]['used_hours'];
+            $body = $this->load->view($this->folder . 'assigned_dashboard_modal_details', $data);
+        elseif ($record_id == 6):
+            $getdetails = $this->Mydb->custom_query("select t1.*,t2.project_name as project_name,t2.project_description as description,t3.user_name as user_name,(if(t1.status=0,'Pending',if(t1.status=1,'Active',if(t1.status=3,'In Progress',if(t1.status=4,'In Completed',if(t1.status=5,'Completed','Ignored')))))) as project_status from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->login_table t3 ON t3.id=t1.assigned_from where t1.id=$project_id and t1.status<>2");
+            $getusedhours = $this->Mydb->custom_query("select SUM(project_duration) as used_hours from $this->tasks_table where projects_id=$project_id and status<>1 and status<>2");
+            $data['records'] = $getdetails;
+            $data['used_hours'] = $getusedhours[0]['used_hours'];
+            $body = $this->load->view($this->folder . 'tasks_dashboard_modal_details', $data);
+        endif;
         echo $body;
     }
 
@@ -1494,6 +1524,13 @@ class USER extends CI_Controller {
             $data['records'] = $getemaildetails;
             $this->layout->display_frontend($this->folder . 'emailsetting', $data);
         }
+    }
+
+    public function reporting() {
+        $data = $this->load_module_info();
+        $getdetails = $this->Mydb->custom_query("SELECT pro.id,(if(pro.status=1,'Active',if(pro.status=5,'Assigned',if(pro.status=6,'In Progress',if(pro.status=7,'Completed','Ignored'))))) as project_status,(if(pro.project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as type_status,pro.project_name,pro.project_description, GROUP_CONCAT(dept.name ORDER BY dept.id) department_name FROM projects pro INNER JOIN departments dept  ON FIND_IN_SET(dept.id, pro.project_team) > 0 GROUP  BY pro.id");
+        $data['records'] = $getdetails;
+        $this->layout->display_frontend($this->folder . 'reporting', $data);
     }
 
     private function load_module_info() {

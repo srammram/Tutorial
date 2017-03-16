@@ -131,27 +131,24 @@ class Tasks extends CI_Controller {
             'status' => $this->input->post('task_status'));
 
         $insert_id = $this->Mydb->insert($this->task_history_table, $insert_array);
-
-        if ($task_status == 5):
-            if ($add_project != 'others'):
-                $gethours_details = $this->Mydb->custom_query("select SUM(project_duration) as duration_hours from $this->task_history_table where projects_id=$add_project and from_user_id=$user_id and asigned_task_id=$assigned_task_id");
-                $finished_array = array('finished_datetime' => current_date(),
-                    'finished_message' => $add_message,
-                    'finished_hours' => $gethours_details[0]['duration_hours'],
-                    'status' => $this->input->post('task_status'));
-                $updateid = $this->Mydb->update($this->assigned_tasks_table, array('id' => $assigned_task_id), $finished_array);
-            endif;
-        else:
-            $finished_array = array('status' => $this->input->post('task_status'));
-            $updateid = $this->Mydb->update($this->assigned_tasks_table, array('id' => $assigned_task_id), $finished_array);
-        endif;
         $getfinishedhours = $this->Mydb->custom_query("select finished_duration_hours from $this->tasks_table where id=$assigned_task_id");
         $finished_duration_hours = $getfinishedhours[0]['finished_duration_hours'];
 
-        $tasks_array = array('finished_duration_hours' => $finished_duration_hours + $add_duration_hours,
-            'status' => $this->input->post('task_status'), 'employee_finished_message' => $delay_reason);
 
-        $updatetasks = $this->Mydb->update($this->tasks_table, array('id' => $assigned_task_id), $tasks_array);
+        if ($add_project != 'others'):
+            $gethours_details = $this->Mydb->custom_query("select SUM(project_duration) as duration_hours from $this->task_history_table where projects_id=$add_project and from_user_id=$user_id and asigned_task_id=$assigned_task_id");
+            $finishedarray = array('finished_datetime' => current_date(),
+                'finished_message' => $add_message,
+                'finished_hours' => $gethours_details[0]['duration_hours'],
+                'status' => $this->input->post('task_status'));
+            $updateid = $this->Mydb->update($this->assigned_tasks_table, array('id' => $assigned_task_id), $finishedarray);
+
+            $tasks_array = array('finished_duration_hours' => $finished_duration_hours + $add_duration_hours,
+                'status' => $this->input->post('task_status'), 'employee_finished_message' => $delay_reason);
+            $updatetasks = $this->Mydb->update($this->tasks_table, array('id' => $assigned_task_id), $tasks_array);
+
+        endif;
+
 
         if ($task_status == '3'):
             $statusmessage = "In Progress";
