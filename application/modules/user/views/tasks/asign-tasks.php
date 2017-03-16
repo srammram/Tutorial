@@ -10,7 +10,7 @@
             <form name="asign_new_task" id="asign_new_task" method="post" action="<?php echo frontend_url() . 'tasks/insert_asign_task'; ?>" data-parsley-validate="">
                 <div class="form-group">
                     <label>Select Project <span style="color:red">*</span></label>
-                    <select name="asign_project" id="asign_project" class="form-control" required="" <?php if ($_SESSION['user_type_id'] == 5): ?> onchange="get_user_details(<?php echo $_SESSION['user_departments_id'] ?>);getavalablehours(this.value);"<?php else: ?> onchange="getavaliblehours(this.value)"<?php endif; ?>>
+                    <select name="asign_project" id="asign_project" class="form-control" required="" <?php if ($_SESSION['user_type_id'] == 5): ?> onchange="get_user_details(<?php echo $_SESSION['user_departments_id'] ?>);getavalablehours(this.value);"<?php else: ?> onchange="getavalablehours(this.value)"<?php endif; ?>>
                         <option value="">-Select Project-</option>
                         <?php foreach ($project_details as $details): ?>
                             <option value="<?php echo $details['projects_id']; ?>"><?php echo $details['project_name']; ?></option>

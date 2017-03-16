@@ -24,8 +24,8 @@
                         <th>Task Title</th>
                         <th>From</th>
                         <th>To</th>
-                        <th>Message</th>
                         <th>Duration</th>
+                        <th>Used</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -65,8 +65,8 @@
                             <td><?php echo $manage_tasks['task_name']; ?></td>
                             <td><?php echo $manage_tasks['from_name']; ?></td>
                             <td><?php echo $manage_tasks['to_name']; ?></td>
-                            <td><?php echo $manage_tasks['asigned_message']; ?></td>
                             <td><?php echo $manage_tasks['assigned_hours']; ?></td>
+                            <td><?php echo $manage_tasks['finished_hours']; ?></td>
                             <td><label class="<?php echo $labelclass; ?>"><?php echo $status; ?></label></td>
                             <td>
                                 <?php if ($manage_tasks['status'] != 5): ?>

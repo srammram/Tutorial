@@ -19,7 +19,7 @@
 
                     <li class="active open">
                         <a href="<?php echo frontend_url() . 'dashboard'; ?>">
-                            <i class="fa fa-dashboard fa-lg"></i> Dashboard
+                            <i class="fa fa-dashboard"></i> Dashboard
                         </a>
                     </li>
                     <?php
@@ -193,6 +193,12 @@
                             </li>
                         <?php endif; ?>
                     <?php endif; ?>
+                    <li class="">
+                        <a href="<?php echo frontend_url() . 'reporting'; ?>">
+                            <span class="menu-icon pull-right hidden-xs showopacity glyphicon material-icons"><i class="fa fa-bar-chart"></i></span>
+                            Reporting
+                        </a>
+                    </li>
                 </ul>
 
             </div>

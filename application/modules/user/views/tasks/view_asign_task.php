@@ -134,18 +134,18 @@
                 </div>
             </div>
         </div>
-        <?php if ($records[0]['employee_finished_message'] != ''): ?>
+        <?php if ($records[0]['finished_message'] != ''): ?>
             <div class="clear" style="clear: both;height:1em"></div>
             <div class="form-group">
                 <div class="col-xs-12">
                     <div class="col-xs-4"><label>Delay Reason</label></div>
                     <div class="col-xs-1"><label>:</label></div>
                     <div class="col-xs-6">
-                        <label><?php echo $records[0]['employee_finished_message']; ?></label>
+                        <label><?php echo $records[0]['finished_message']; ?></label>
                     </div>
                 </div>
             </div>
-            <div class="clear" style="clear: both;height:1em"></div>
+
         <?php endif; ?>
         <div class="clear" style="clear: both;height:1em"></div>
         <?php

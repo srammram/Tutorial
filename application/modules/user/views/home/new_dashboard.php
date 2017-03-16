@@ -1,3 +1,4 @@
+
 <?php echo $this->load->view('layout/left-menu'); ?>
 
 
@@ -218,7 +219,7 @@
 
         </div>
     <?php elseif ($_SESSION['user_type_id'] == 6): ?>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red six accord" onclick="accord(6)" title="six" >
+        <div class="col-xs-offset-3 col-xs-6 circle_red six accord" onclick="accord(6)" title="six" >
             <div class="panel panel-green">
                 <div class="panel-heading">
                     <div class="row">

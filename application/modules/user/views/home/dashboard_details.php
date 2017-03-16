@@ -7,7 +7,7 @@
             ?>
 
             <div class="col-xs-3"  >
-                <a href="#" onclick="get_project_details(<?php echo $det['id']; ?>)" data-toggle="modal" data-target="#DashboradModal">
+                <a href="#" onclick="get_project_details(<?php echo $det['id']; ?>,<?php echo $record_id; ?>)" data-toggle="modal" data-target="#DashboradModal">
                     <div class="boxTile">
                         <div class="square info easeAni">
                             <div class="text">
