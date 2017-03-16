@@ -19,8 +19,8 @@
                         <option value="others">Others</option>
                     </select>
                 </div>
-                <input type="text" name="finisehd_hours" id="finished_hours" value=""/>
-                <input type="text" name="estimated_hours" id="estimated_hours" value=""/>
+                <input type="hidden" name="finisehd_hours" id="finished_hours" value=""/>
+                <input type="hidden" name="estimated_hours" id="estimated_hours" value=""/>
                 <div class="form-group">
                     <label>Select Task</label>
                     <select name="add_selected_task" id="add_selected_task" class="form-control" onchange="getfinished_hours(this.value);">
