@@ -818,11 +818,14 @@ body {
  
  
   .notifbox {
-  max-height: 300px;
-  overflow: auto;
+  max-height: 450px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
+  .notif{ display:none;}
   .notifbox li {
   color: #666;
+  margin-top: -10px;
   }
   .notifbox li a { color: #666;}
  
@@ -835,18 +838,19 @@ body {
   border-bottom: none;
   }
   .imageblock {
-  width: 70px;
-  position: absolute;
-  left: 5px;
+     width: auto;
+    position: relative;
+    left: 10px;
+    bottom: -35px;
   }
   .notifimage {
   height: 60px;
   }
   .messageblock {
   width: 200px;
-  position: relative;
-  left: 70px;
-  font-size: 12px;
+    position: relative;
+    left: 55px;
+    font-size: 12px;
   }
   .message {
   
