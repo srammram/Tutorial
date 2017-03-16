@@ -60,3 +60,26 @@
             htmlbodyHeightUpdate();
         });
     });</script>
+   <script>
+$('.update_notification').click(function(e){
+
+    var id = $(this).attr('id'); 
+	var type = $(this).attr('data-title');
+    $.ajax({
+		type: "POST",
+        url: BASE_URL + 'user/notyupdate',
+        data: {id : id},
+        success: function(data){
+            if(type==1){
+				window.location.href = BASE_URL+'user/projects';
+			}else if(type==2){
+				window.location.href = BASE_URL+'user/tasks/manage_asign_task';
+			}else if(type==3){
+				window.location.href = BASE_URL+'user/tasks/manage_new_task';
+			}else if(type==4){
+				window.location.href = BASE_URL+'user/tasks/manage_new_task';
+			}
+        }
+    });
+});
+</script>

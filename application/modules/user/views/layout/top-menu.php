@@ -29,7 +29,7 @@
 				  foreach($notification as $noty){
 				  ?>
                     <li class="notif">
-                      <a href="#">
+                      <a href="javascript:void(0);" class="update_notification" id="<?php echo $noty['id']; ?>" data-title="<?php echo $noty['notification_type']; ?>">
                         <div class="imageblock"> 
                           	<i class="fa fa-bell fa-2x" aria-hidden="true"></i>
                         </div> 
