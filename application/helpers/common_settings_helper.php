@@ -127,7 +127,7 @@ if(!function_exists('create_notification'))
 			'to_id' => $notiy_to,
 			'notification_type' => $notiy_type,
 			'created_on' => current_date(),
-			'created_ip' => get_ip(),
+			'created_ip' => ip2long(get_ip()),
 			'status' => '1'
 		); 
 		$notification = $CI->Mydb->insert("notification", $insert_array);
@@ -142,7 +142,7 @@ if(!function_exists('update_notification'))
 		$CI =& get_instance();
 		$update_array = array(
 			'created_on' => current_date(),
-			'created_ip' => get_ip(),
+			'created_ip' => ip2long(get_ip()),
 			'status' => '0'
 		); 
 		$notification = $CI->Mydb->update("notification", array('id'=> $notiy_id, 'to_id' => $notiy_to), $update_array);
@@ -367,6 +367,21 @@ if (!function_exists('random_color')) {
     }
 
 }
-
+/* Get Log History Insert */
+if(!function_exists('log_history'))
+{
+	function log_history($log_msg, $log_from, $log_to){
+		$CI =& get_instance();
+		$insert_array = array(
+			'message' => $log_msg,
+			'from_user' => $log_from,
+			'to_user' => $log_to,
+			'created_ip' => ip2long(get_ip()),
+			'status' => '1'
+		); 
+		$history = $CI->Mydb->insert("log_history", $insert_array);
+		return $history;
+	}
+}
 
 
