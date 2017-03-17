@@ -318,6 +318,11 @@ class USER extends CI_Controller {
                             'created_on' => current_date(),
                         );
                         $holidays = $this->Mydb->insert($this->srm_holidays_table, $insert_array);
+						
+						$log_msg = 'Holiday Added by '.get_session_value('user_name');
+						$log_from = get_session_value('user_id');
+						$log_to = get_session_value('user_id');
+						log_history($log_msg, $log_from, $log_to);
 
                         if (!empty($holidays)) {
                             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Holidays has been successfully added.. ');
@@ -348,6 +353,11 @@ class USER extends CI_Controller {
 
 
                 $check = $this->Mydb->get_record('*', $this->srm_holidays_table, array('holiday_date' => $holiday_date, 'id!=' => $edit_id));
+				
+				$log_msg = 'Holiday Edited by '.get_session_value('user_name');
+				$log_from = get_session_value('user_id');
+				$log_to = get_session_value('user_id');
+				log_history($log_msg, $log_from, $log_to);
 
                 if (!empty($check)) {
                     $response['message'] = "<div class='alert alert-danger'>Your date already exit.</div>";
@@ -393,6 +403,21 @@ class USER extends CI_Controller {
         $data['dashboard_count'] = $getnotificationcount;
         $data['assigned_count'] = $getassignedcount;
         $data['my_tasks_count'] = $getmytaskscount;
+		
+		$result = $this->Mydb->custom_query("SELECT sum(tht.project_duration) AS time, DATE_FORMAT(tht.updatetime,'%W') AS datevalue, (CASE WHEN (sum(tht.project_duration) > 8 ) THEN 'Very Good'  WHEN (sum(tht.project_duration) = 8 ) THEN 'Good' WHEN (sum(tht.project_duration) < 8 ) THEN 'Poor' 				ELSE 'Very poor' END) AS status FROM $this->task_history_table AS tht WHERE tht.from_user_id = '".get_session_value('user_id')."' AND tht.updatetime > DATE_SUB(NOW(), INTERVAL 1 WEEK)  AND tht.status > 2 AND ((tht.projects_id='others' AND tht.tasks_id < 7) OR (tht.projects_id!='others'))  GROUP BY CAST(tht.updatetime AS DATE)");
+		
+		for($i=0; $i<count($result); $i++){
+			$random_color =  random_color();
+			$color[]=array ( 'color' => '#'.$random_color);
+			$performance[]  = array('performance' => 'Performance');
+			$timehours[] = array('hours' => 'Total Hours');
+		}
+		
+		foreach($result as $key => $value){
+			$chart_total[] = array_merge($color[$key], $performance[$key], $timehours[$key], $result[$key]);
+		}
+		$data['chart_total'] = $chart_total;
+		
         $this->layout->display_frontend($this->folder . 'new_dashboard', $data);
     }
 
@@ -478,6 +503,10 @@ class USER extends CI_Controller {
                     }
                     $insertarray = array('type_name' => $use_type_name, 'type_slug' => $typeslug, 'status' => $type_status, 'created_at' => current_date(), 'created_ip' => ip2long(get_ip()));
                     $usertypeinsertid = $this->Mydb->insert($this->user_type_table, $insertarray);
+					$log_msg = 'User Type Added by '.get_session_value('user_name');
+					$log_from = get_session_value('user_id');
+					$log_to = get_session_value('user_id');
+					log_history($log_msg, $log_from, $log_to);
                     if (!empty($usertypeinsertid)) {
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'User type has been successfully added..');
                         $this->session->set_userdata($session_datas);
@@ -498,6 +527,10 @@ class USER extends CI_Controller {
                 $edit_type_status = $this->input->post('edit_type_status');
                 $update_array = array('type_name' => $edittype_name, 'status' => $edit_type_status);
                 $updatedetails = $this->Mydb->update($this->user_type_table, array('id' => $edit_id), $update_array);
+				$log_msg = 'User Type Edited by '.get_session_value('user_name');
+				$log_from = get_session_value('user_id');
+				$log_to = get_session_value('user_id');
+				log_history($log_msg, $log_from, $log_to);
                 if ($updatedetails) {
                     $response['message'] = "<div class='alert alert-success'>Your details has been successfully updated.</div>";
                 } else {
@@ -535,6 +568,10 @@ class USER extends CI_Controller {
                     endif;
                     $insertarray = array('name' => $department_name, 'slug' => $typeslug, 'status' => $department_status, 'created_on' => current_date(), 'created_ip' => ip2long(get_ip()));
                     $usertypeinsertid = $this->Mydb->insert($this->departments_table, $insertarray);
+					$log_msg = 'Department Added by '.get_session_value('user_name');
+					$log_from = get_session_value('user_id');
+					$log_to = get_session_value('user_id');
+					log_history($log_msg, $log_from, $log_to);
                     if (!empty($usertypeinsertid)):
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Department has been successfully added..');
                         $this->session->set_userdata($session_datas);
@@ -555,6 +592,10 @@ class USER extends CI_Controller {
                 $edit_depart_status = $this->input->post('edit_depart_status');
                 $update_array = array('name' => $editdepart_name, 'status' => $edit_depart_status);
                 $updatedetails = $this->Mydb->update($this->departments_table, array('id' => $edit_id), $update_array);
+				$log_msg = 'Department Edited by '.get_session_value('user_name');
+				$log_from = get_session_value('user_id');
+				$log_to = get_session_value('user_id');
+				log_history($log_msg, $log_from, $log_to);
                 if ($updatedetails) {
                     $response['message'] = "<div class='alert alert-success'>Your details has been successfully updated.</div>";
                 } else {
@@ -672,11 +713,14 @@ class USER extends CI_Controller {
                                 'created_on' => current_date(),
                             );
                             $insert_id = $this->Mydb->insert($this->login_table, $insert_array);
+							$log_msg = 'Empolyee Added by '.get_session_value('user_name');
+							$log_from = get_session_value('user_id');
+							$log_to = get_session_value('user_id');
+							log_history($log_msg, $log_from, $log_to);
                             if ($insert_id) {
                                 $num = $insert_id;
                                 $user_emp_code = 'SRAM' . sprintf("%'.05d\n", $num);
                                 $this->Mydb->update($this->login_table, array('id' => $insert_id), array('user_emp_code' => $user_emp_code));
-
 
                                 $name = $this->input->post('employee_name');
                                 $password = $this->input->post('employee_pass');
@@ -684,14 +728,12 @@ class USER extends CI_Controller {
                                 $to_email = $this->input->post('employee_email');
                                 $response_email = $this->send_welcome_email($name, $to_email, $username, $password);
 
-
                                 $sms_name = $this->input->post('employee_name');
                                 $sms_username = $this->input->post('employee_email');
                                 $sms_password = $this->input->post('employee_pass');
                                 $sms_sitelink = frontend_url();
                                 $sms_phone = $this->input->post('emp_mobile');
                                 $sms_country_code = $this->input->post('emp_country');
-
 
                                 $response_sms = $this->sms_add_employee($sms_name, $sms_username, $sms_password, $sms_sitelink, $sms_phone, $sms_country_code);
 
@@ -778,6 +820,10 @@ class USER extends CI_Controller {
                             'created_on' => current_date(),
                         );
                         $update_id = $this->Mydb->update($this->login_table, array('id' => $employee_id), $update_array);
+						$log_msg = 'Empolyee Edited by '.get_session_value('user_name');
+						$log_from = get_session_value('user_id');
+						$log_to = get_session_value('user_id');
+						log_history($log_msg, $log_from, $log_to);
                         if ($update_id) {
                             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Employee details has been successfully inserted');
                             $this->session->set_userdata($session_datas);
@@ -945,6 +991,10 @@ class USER extends CI_Controller {
                     redirect(frontend_url() . 'changepassword');
                 } else {
                     $this->Mydb->update($this->login_table, array('id' => $id), array('user_pass' => $new_password));
+					$log_msg = 'Change Password by '.get_session_value('user_name');
+					$log_from = get_session_value('user_id');
+					$log_to = get_session_value('user_id');
+					log_history($log_msg, $log_from, $log_to);
                     $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Your passowrd has been changed success. Please login again');
                     $this->session->sess_destroy();
                     redirect(BASE_URL());
@@ -1017,6 +1067,10 @@ class USER extends CI_Controller {
                             'status' => '0'
                         );
                         $this->Mydb->update($this->account_history_table, array('id' => $check['id'], 'user_id' => $id, 'status' => '0'), $email_array);
+						$log_msg = 'Change Email by '.get_session_value('user_name');
+						$log_from = get_session_value('user_id');
+						$log_to = get_session_value('user_id');
+						log_history($log_msg, $log_from, $log_to);
                         $email_check = $this->Mydb->custom_query("SELECT h.new_one, h.activation_key, u.user_name FROM $this->account_history_table AS h
 						JOIN $this->login_table AS u ON u.id = h.user_id
 						WHERE h.old_one = '" . $old_email . "' AND h.user_id = '" . get_session_value('user_id') . "' AND  h.change_type = '1' AND h.status='0'");
@@ -1153,6 +1207,10 @@ class USER extends CI_Controller {
                             'status' => '0'
                         );
                         $this->Mydb->update($this->account_history_table, array('id' => $check['id'], 'user_id' => $id, 'status' => '0'), $mobile_array);
+						$log_msg = 'Change Mobile by '.get_session_value('user_name');
+						$log_from = get_session_value('user_id');
+						$log_to = get_session_value('user_id');
+						log_history($log_msg, $log_from, $log_to);
                         $mobile_check = $this->Mydb->custom_query("SELECT h.new_one, h.activation_key, u.user_country, c.phonecode FROM $this->account_history_table AS h
 						JOIN $this->login_table AS u ON u.id = h.user_id
 						JOIN $this->countries AS c ON c.id = u.user_country
@@ -1180,6 +1238,10 @@ class USER extends CI_Controller {
                             'status' => '0'
                         );
                         $this->Mydb->insert($this->account_history_table, $mobile_array);
+						$log_msg = 'Change Mobile by '.get_session_value('user_name');
+						$log_from = get_session_value('user_id');
+						$log_to = get_session_value('user_id');
+						log_history($log_msg, $log_from, $log_to);
                         $mobile_check = $this->Mydb->custom_query("SELECT h.new_one, h.activation_key, u.user_country, c.phonecode FROM $this->account_history_table AS h
 						JOIN $this->login_table AS u ON u.id = h.user_id
 						JOIN $this->countries AS c ON c.id = u.user_country
@@ -1365,6 +1427,10 @@ class USER extends CI_Controller {
 
                     $insertarray = array('name' => $sms_name, 'slug' => $typeslug, 'sms_content' => $sms_template, 'sms_variable' => $sms_variable, 'status' => $sms_status, 'created_on' => current_date());
                     $smsinsertid = $this->Mydb->insert($this->sms_table, $insertarray);
+					$log_msg = 'SMS Setting Added by '.get_session_value('user_name');
+					$log_from = get_session_value('user_id');
+					$log_to = get_session_value('user_id');
+					log_history($log_msg, $log_from, $log_to);
                     if (!empty($smsinsertid)) {
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Sms has been successfully added..');
                         $this->session->set_userdata($session_datas);
@@ -1388,6 +1454,10 @@ class USER extends CI_Controller {
                 $sms_variable = $this->input->post('sms_variable');
                 if ($this->form_validation->run($this) == TRUE) {
                     $update_id = $this->Mydb->update($this->sms_table, array('id' => $sms_id), array('sms_content' => $sms_template, 'sms_variable' => $sms_variable));
+					$log_msg = 'SMS Setting Edited by '.get_session_value('user_name');
+					$log_from = get_session_value('user_id');
+					$log_to = get_session_value('user_id');
+					log_history($log_msg, $log_from, $log_to);
                     if ($update_id) {
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Sms Setting has been successfully updated');
                         $this->session->set_userdata($session_datas);
@@ -1446,6 +1516,10 @@ class USER extends CI_Controller {
 
                     $insertarray = array('name' => $email_name, 'slug' => $typeslug, 'from_email' => $email_from, 'reply_to' => $email_to, 'email_content' => $email_template, 'email_variables' => $email_variable, 'status' => $email_status, 'created_on' => current_date());
                     $emailinsertid = $this->Mydb->insert($this->sms_table, $insertarray);
+					$log_msg = 'Email Setting Added by '.get_session_value('user_name');
+					$log_from = get_session_value('user_id');
+					$log_to = get_session_value('user_id');
+					log_history($log_msg, $log_from, $log_to);
                     if (!empty($emailinsertid)) {
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Email has been successfully added..');
                         $this->session->set_userdata($session_datas);
@@ -1475,6 +1549,10 @@ class USER extends CI_Controller {
                 $email_variable = $this->input->post('email_variable');
                 if ($this->form_validation->run($this) == TRUE) {
                     $update_id = $this->Mydb->update($this->email_table, array('id' => $email_id), array('email_content' => $email_template, 'from_email' => $email_from, 'reply_to' => $email_to, 'email_variables' => $email_variable));
+					$log_msg = 'Email Setting Edited by '.get_session_value('user_name');
+					$log_from = get_session_value('user_id');
+					$log_to = get_session_value('user_id');
+					log_history($log_msg, $log_from, $log_to);
                     if ($update_id) {
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Email Setting has been successfully updated');
                         $this->session->set_userdata($session_datas);
@@ -1541,6 +1619,10 @@ class USER extends CI_Controller {
         $delete_table = $this->input->post('delete_table');
         $update_array = array('status' => 3);
         $update_details = $this->Mydb->update($delete_table, array('id' => $delete_id), $update_array);
+		$log_msg = 'This '.$delete_id.' - ID is deleted on the '.$delete_table.' by '.get_session_value('user_name');
+		$log_from = get_session_value('user_id');
+		$log_to = get_session_value('user_id');
+		log_history($log_msg, $log_from, $log_to);
         if ($update_details) {
             $respose['message'] = "The data has been successfully deleted";
         } else {
