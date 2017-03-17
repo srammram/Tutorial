@@ -44,10 +44,10 @@
                         elseif ($prodet['status'] == 4):
                             $lableclass = "label label-warning";
                             $status = 'In Complete';
-                        elseif ($prodet['status'] == 6):
+                        elseif ($prodet['status'] == 5):
                             $lableclass = "label label-success";
                             $status = 'Assigned';
-                        else:
+                        elseif ($prodet['status'] == 6):
                             $lableclass = "label label-primary";
                             $status = 'Completed';
                         endif;
@@ -57,6 +57,12 @@
                             $protype = 'Upcoming';
                         elseif ($prodet['project_type_status'] == 3):
                             $protype = 'Pipeline';
+                        endif;
+                        if ($prodet['project_type_status'] == 2 || $prodet['project_type_status'] == 3):
+                            $lableclass = "label label-warning";
+                            $status = "Yet to start";
+                        elseif ($prodet['status'] == 6):
+                            $protype = 'Completed';
                         endif;
                         ?>
                         <tr>

@@ -35,7 +35,7 @@
 
                 <div class="form-group">
                     <label>Departments <span style="color:red">*</span></label>
-                    <select name="emp_departments" id="emp_departments" class="form-control" required="">
+                    <select name="emp_departments" id="emp_departments"  class="form-control" required="">
                         <option value="">-Select Department-</option>
                         <?php foreach ($departments as $dept): ?>
                             <option value="<?= $dept['id'] ?>" <?php
@@ -48,6 +48,7 @@
                                     <?php
                                 endforeach;
                                 ?>
+                        <a href="<?php echo frontend_url(); ?>" class="btn btn-success"> <option>Add</option></a>
                     </select>
                 </div>
                 <div class="form-group">

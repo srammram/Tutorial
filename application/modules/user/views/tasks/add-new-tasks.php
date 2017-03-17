@@ -31,6 +31,21 @@
                     <label>Message <span style="color:red">*</span></label>
                     <textarea placeholder="Enter Message" name="add_message" id="add_message" class="form-control" rows="5" style="resize:none" required="" data-parsley-minlength="5" maxlength="1000"></textarea>
                 </div>
+                <div class="form-group" id="assigneddiv">
+                    <div class="col-xs-4">
+                        <label>Assigned Start Date</label>
+                        <input type="text" name="assginestartdate" id="assginestartdate" class="form-control" readonly=""/>
+                    </div>
+                    <div class="col-xs-4">
+                        <label>Assigned End Date</label>
+                        <input type="text" name="assgineenddate" id="assgineenddate" class="form-control" readonly=""/>
+                    </div>
+                    <div class="col-xs-4">
+                        <label>Assigned Hours</label>
+                        <input type="text" name="assginehours" id="assginehours" class="form-control" readonly=""/>
+                    </div>
+                </div>
+                <div class="clear" style="clear: both;height:0.5em"></div>
                 <div class="form-group">
                     <label>Start Date <span style="color:red">*</span></label>
                     <input type="text" required="" name="add_start_date" id="add_start_date" class="form-control" placeholder="Choose Start Date"/>
