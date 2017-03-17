@@ -416,7 +416,15 @@ class USER extends CI_Controller {
 		foreach($result as $key => $value){
 			$chart_total[] = array_merge($color[$key], $performance[$key], $timehours[$key], $result[$key]);
 		}
-		$data['chart_total'] = $chart_total;
+		
+		if(!empty($chart_total)){
+			$barchart = $chart_total;
+		}else{
+			$barchart[] = array('color' => '#4078c6', 'performance' => 'Performance', 'hours' => 'Time Hours', 'time' => '0', 'datevalue' => 'Weekly Reporting',
+			'status' => 'Status');
+		}
+		
+		$data['chart_total'] = $barchart;
 		
         $this->layout->display_frontend($this->folder . 'new_dashboard', $data);
     }
