@@ -68,6 +68,9 @@
 $(document).ready(function () {
 $('#showLess').hide();
 size_li = $("#myList li").size();
+if(size_li <= 4){
+	$('#loadMore').hide();	
+}
 x=4;
 $('#myList li:lt('+x+')').show();
 $('#loadMore').click(function () {
