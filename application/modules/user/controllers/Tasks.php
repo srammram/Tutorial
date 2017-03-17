@@ -131,6 +131,10 @@ class Tasks extends CI_Controller {
             'status' => $this->input->post('task_status'));
 
         $insert_id = $this->Mydb->insert($this->task_history_table, $insert_array);
+		$log_msg = 'Task Added by '.get_session_value('user_name');
+		$log_from = get_session_value('user_id');
+		$log_to = $user_reporter_id;
+		log_history($log_msg, $log_from, $log_to);
         $getfinishedhours = $this->Mydb->custom_query("select finished_duration_hours from $this->tasks_table where id=$assigned_task_id");
         $finished_duration_hours = $getfinishedhours[0]['finished_duration_hours'];
 
@@ -271,6 +275,10 @@ class Tasks extends CI_Controller {
         );
 
         $insert_id = $this->Mydb->insert($this->assigned_tasks_table, $insert_array);
+		$log_msg = 'Task Assign Added by '.get_session_value('user_name');
+		$log_from = get_session_value('user_id');
+		$log_to = $asign_user_details;
+		log_history($log_msg, $log_from, $log_to);
         $insert_tasks_array = array('projects_id' => $asign_project,
             'task_title' => $asign_task_title,
             'from_user_id' => $_SESSION['user_id'],
@@ -428,6 +436,10 @@ class Tasks extends CI_Controller {
         );
 
         $update_id = $this->Mydb->update($this->assigned_tasks_table, array('id' => $edit_id), $update_array);
+		$log_msg = 'Task Assign Edit by '.get_session_value('user_name');
+		$log_from = get_session_value('user_id');
+		$log_to = $asign_user_details;
+		log_history($log_msg, $log_from, $log_to);
         $update_tasks_array = array('projects_id' => $asign_project,
             'task_title' => $asign_task_title,
             'from_user_id' => $_SESSION['user_id'],
@@ -649,6 +661,10 @@ class Tasks extends CI_Controller {
                     'created_ip' => ip2long(get_ip()),
                     'status' => $task_status);
                 $insert_id = $this->Mydb->update($this->task_history_table, array('id' => $edit_id), $update_array);
+				$log_msg = 'Task Edited by '.get_session_value('user_name');
+				$log_from = get_session_value('user_id');
+				$log_to = $task_employee;
+				log_history($log_msg, $log_from, $log_to);
                 if ($insert_id):
                     $session_datas = array('pms_err' => '0', 'pms_err_message' => 'New Task has been successfully updated');
                     $this->session->set_userdata($session_datas);
@@ -734,6 +750,10 @@ class Tasks extends CI_Controller {
                 'created_ip' => ip2long(get_ip()),
                 'status' => $task_status);
             $insert_id = $this->Mydb->insert($this->task_history_table, $insert_array);
+			$log_msg = 'Task Addedd by '.get_session_value('user_name');
+			$log_from = get_session_value('user_id');
+			$log_to = $task_employee;
+			log_history($log_msg, $log_from, $log_to);
             if ($_SESSION['user_type_id'] != 6):
                 $notiy_msg = stripslashes($task_title) . ' Task has been asigned by ' . $_SESSION['user_name'];
                 $notiy_from = $_SESSION['user_id'];
@@ -816,6 +836,10 @@ class Tasks extends CI_Controller {
             'created_ip' => ip2long(get_ip()),
             'status' => $task_status);
         $insert_id = $this->Mydb->insert($this->task_history_table, $insert_array);
+		$log_msg = 'Task Added by '.get_session_value('user_name');
+		$log_from = get_session_value('user_id');
+		$log_to = $task_employee;
+		log_history($log_msg, $log_from, $log_to);
         if ($_SESSION['user_type_id'] != 6):
             $notiy_msg = stripslashes($task_title) . ' Task has been asigned by ' . $_SESSION['user_name'];
             $notiy_from = $_SESSION['user_id'];

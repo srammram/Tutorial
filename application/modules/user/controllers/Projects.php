@@ -107,6 +107,10 @@ class Projects extends CI_Controller {
 
 
             $insert_id = $this->Mydb->insert($this->projects_table, $insert_array);
+			$log_msg = 'Project Added by '.get_session_value('user_name');
+			$log_from = get_session_value('user_id');
+			$log_to = get_session_value('user_id');
+			log_history($log_msg, $log_from, $log_to);
             if ($insert_id):
                 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'New Project has been successfully added');
                 $this->session->set_userdata($session_datas);
@@ -192,6 +196,10 @@ class Projects extends CI_Controller {
         );
 
         $update_id = $this->Mydb->update($this->projects_table, array('id' => $edit_id), $update_array);
+		$log_msg = 'Project Edited by '.get_session_value('user_name');
+		$log_from = get_session_value('user_id');
+		$log_to = get_session_value('user_id');
+		log_history($log_msg, $log_from, $log_to);
         if ($update_id) {
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Project has been successfully updated');
             $this->session->set_userdata($session_datas);
@@ -247,6 +255,10 @@ class Projects extends CI_Controller {
         $finished_hours = $this->input->post('finished_hours') != '' ? $this->input->post('finished_hours') : 0;
         $update_array = array('status' => $this->input->post('change_status'));
         $update_id = $this->Mydb->update($this->project_teams_table, array('id' => $edit_id), $update_array);
+		$log_msg = 'Project Status Change by '.get_session_value('user_name');
+		$log_from = get_session_value('user_id');
+		$log_to = get_session_value('user_id');
+		log_history($log_msg, $log_from, $log_to);
         if ($update_id) {
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Project Status has been successfully added');
             $this->session->set_userdata($session_datas);
@@ -330,6 +342,10 @@ class Projects extends CI_Controller {
                 'created_ip' => ip2long(get_ip()),
                 'status' => 1);
             $insert_id = $this->Mydb->insert($this->project_teams_table, $insert_array);
+			$log_msg = 'Assign Team to Project by '.get_session_value('user_name');
+			$log_from = get_session_value('user_id');
+			$log_to = get_session_value('user_id');
+			log_history($log_msg, $log_from, $log_to);
 
             $notiy_msg = stripslashes($getprojectdetails[0]['project_title']) . ' Project has been asigned your team';
             $notiy_from = $_SESSION['user_id'];
