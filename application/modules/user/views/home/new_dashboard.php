@@ -5,6 +5,8 @@
 <div class="clear" style="clear: both;height:3em"></div>
 <div class="common col-lg-12 col-md-6 col-md-offset-2 col-sm-12 col-xs-12">
     <div class="col-xs-offset-2  col-xs-8 text-center">
+    	<h4>Current Weelkly Report</h4>
+    	<?php $workchart = json_encode($chart_total); ?>
         <div id="chartdiv" style="height:300px"></div>
         <h5 class="text-center">Project status</h5>
     </div>
@@ -544,7 +546,48 @@
     </div>
 
 </div>
+<script>
+	var chartData = <?php echo $workchart; ?>;
+    var chart = AmCharts.makeChart("chartdiv", {
+        "type": "serial",
+        "theme": "light",
+        "marginRight": 70,
+        "dataProvider": chartData,
+        "valueAxes": [{
+                "axisAlpha": 1,
+                "position": "left",
+                "title": "Time Durations"
+            }],
+        "startDuration": 1,
+        "graphs": [{
+                "balloonText": "<b>[[hours]]: [[value]]</b><br>[[performance]]:<b>[[status]]</b>",
+                "fillColorsField": "color",
+                "fillAlphas": 0.9,
+                "lineAlpha": 0.2,
+                "type": "column",
+                "valueField": "time",
+				"valueField2" : "status",
+				"valueField3" : "status",
+            }],
+        "chartCursor": {
+            "categoryBalloonEnabled": false,
+            "cursorAlpha": 0,
+            "zoomable": false
+        },
+        "categoryField": "datevalue",
+		"categoryField2": "performance",
+		"categoryField3": "hours",
+		
+        "categoryAxis": {
+            "gridPosition": "start",
+            "labelRotation": 0
+        },
+        "export": {
+            "enabled": true
+        }
 
+    });
+</script>
 <div class="row">
     <!-- bar chart -->
 
