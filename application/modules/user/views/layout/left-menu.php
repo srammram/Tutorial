@@ -167,6 +167,21 @@
                             ?>
                             <li class="">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <span class="menu-icon pull-right hidden-xs showopacity glyphicon material-icons"><i class="fa fa-bar-chart"></i></span>
+                                    Menus <span class="caret"></span>
+                                </a>
+                                <ul class="dropdown-menu forAnimate" role="menu">
+                                    <li><a href="<?php echo frontend_url() . 'menus/add'; ?>">Add Menus</a></li>
+                                    <li><a href="<?php echo frontend_url() . 'menus'; ?>">Manage Menus</a></li>
+
+                                </ul>
+                            </li>
+                        <?php endif; ?>
+                        <?php
+                        if (isset($_SESSION['user_access_menus_id']) && (in_array('Edit Profile', $menu_name) || $_SESSION['user_departments_id'] == 9999)):
+                            ?>
+                            <li class="">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <span class="menu-icon pull-right hidden-xs showopacity glyphicon material-icons"><i class="fa fa-envelope"></i></span>
                                     Email Settings <span class="caret"></span>
                                 </a>
