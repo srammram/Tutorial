@@ -13,9 +13,20 @@
         
         <div class="form-group">
             <label >Name <span style="color:red">*</span></label>
-            <input type="text" name="menus" id="menus" tabindex="1" class="form-control" placeholder="Enter holiday reason" required="" value="<?php echo $menus; ?>" data-parsley-minlength="3" maxlength="250">
+            <input type="text" name="menus" id="menus" tabindex="1" class="form-control" placeholder="Enter Name" required="" value="<?php echo $menus; ?>" data-parsley-minlength="3" maxlength="250">
         </div>
-        
+        <div class="form-group">
+            <label >Link <span style="color:red">*</span></label>
+            <input type="text" name="menulink" id="menulink" tabindex="1" class="form-control" placeholder="Enter Link" required="" value="<?php echo $menulink; ?>" data-parsley-minlength="3">
+        </div>
+        <div class="form-group">
+            <label >Order <span style="color:red">*</span></label>
+            <input type="text" name="menusort" id="menusort" tabindex="1" class="form-control" placeholder="Enter Order"  value="<?php echo $menusort; ?>" required="" data-parsley-type="number">
+        </div>
+        <div class="form-group">
+            <label >Icon <span style="color:red">*</span></label>
+            <input type="text" name="menuicon" id="menuicon" tabindex="1" class="form-control" placeholder="Enter Icon" required="" value="<?php echo $menuicon; ?>" >
+        </div>
         
         <div class="form-group">
             <label >Status <span style="color:red">*</span></label>

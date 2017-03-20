@@ -15,6 +15,14 @@
                     <input type="text" name="menus" id="menus" tabindex="1" class="form-control" placeholder="Enter Menus Name" required="" data-parsley-minlength="3" maxlength="250">
                 </div>
                 <div class="form-group">
+                    <label >Link <span style="color:red">*</span></label>
+                    <input type="text" name="menulink" id="menulink" tabindex="1" class="form-control" placeholder="Enter Link" required="" data-parsley-minlength="3">
+                </div>
+                <div class="form-group">
+                    <label >Order <span style="color:red">*</span></label>
+                    <input type="text" name="menusort" id="menusort" tabindex="1" class="form-control" placeholder="Enter Order" required="" data-parsley-type="number">
+                </div>
+                <div class="form-group">
                     <label >Status <span style="color:red">*</span></label>
                     <select name="status" id="status" class="form-control" required>
                         <option value="">-Select Status-</option>
