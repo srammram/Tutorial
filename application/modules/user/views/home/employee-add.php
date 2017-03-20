@@ -35,7 +35,7 @@
 
                 <div class="form-group">
                     <label>Departments <span style="color:red">*</span></label>
-                    <select name="emp_departments[]" id="emp_departments" multiple=""  class="form-control" required="">
+                    <select name="emp_departments[]" id="emp_departments" multiple=""  class="form-control" required>
                         <option value="">-Select Department-</option>
                         <?php foreach ($departments as $dept): ?>
                             <option value="<?= $dept['id'] ?>" <?php
@@ -53,7 +53,7 @@
                 </div>
                 <div class="form-group">
                     <label>User Type <span style="color:red">*</span></label>
-                    <select name="user_type" id="user_type" class="form-control" required="" onchange="get_reporting_person(this.value)">
+                    <select name="user_type" id="user_type" class="form-control" required onchange="get_reporting_person(this.value)">
                         <option value="">-Select User Type-</option>
                         <?php foreach ($usertype as $utype): ?>
                             <option value="<?= $utype['id'] ?>" <?php
@@ -70,7 +70,7 @@
                 </div>
                 <div class="form-group">
                     <label>Reporting Person</label>
-                    <select name="reporting_person" id="reporting_person" class="form-control" required="">
+                    <select name="reporting_person" id="reporting_person" class="form-control" required>
                         <option value="">-Select Person-</option>
                     </select>
                 </div>
@@ -81,7 +81,7 @@
                 </div>
                 <div class="form-group">
                     <label>Country <span style="color:red">*</span></label>
-                    <select name="emp_country" id="emp_country" class="form-control" required="" onchange="get_state_by_country_id(this.value)">
+                    <select name="emp_country" id="emp_country" class="form-control" required onchange="get_state_by_country_id(this.value)">
                         <option value="">-Select Country-</option>
                         <?php foreach ($countries as $coun): ?>
                             <option value="<?= $coun['id'] ?>" <?php
@@ -98,24 +98,27 @@
                 </div>
                 <div class="form-group">
                     <label>Select State <span style="color:red">*</span></label>
-                    <select name="emp_state" id="emp_state" class="form-control" required="" onchange="get_city_by_state_id(this.value)">
+                    <select name="emp_state" id="emp_state" class="form-control" required onchange="get_city_by_state_id(this.value)">
                         <option value="">-Select State-</option>
 
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Select City <span style="color:red">*</span></label>
-                    <select name="emp_city" id="emp_city" class="form-control" required="">
+                    <select name="emp_city" id="emp_city" class="form-control" required>
                         <option value="">-Select City-</option>
 
                     </select>
                 </div>
+                <?php
+				$empmain = left_menus();
+				?>
                 <div class="form-group">
                     <label>Select Option <span style="color:red">*</span></label>
-                    <select name="emp_accessmenu[]" multiple="multiple" id="emp_accessmenu" class="form-control" required="">
+                    <select name="emp_accessmenu[]" multiple="multiple" id="emp_accessmenu" class="form-control" required>
 
-                        <?php foreach ($leftmenus as $menus): ?>
-                            <option value="<?php echo $menus['id']; ?>"><?php echo $menus['menu_name']; ?></option>
+                        <?php foreach ($empmain['menus'] as $accessmenus): ?>
+                            <option value="<?php echo $accessmenus['id']; ?>"><?php echo $accessmenus['name']; ?></option>
                             <?php
                         endforeach;
                         ?>
