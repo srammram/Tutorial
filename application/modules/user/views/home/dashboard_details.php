@@ -7,15 +7,22 @@
             ?>
 
             <div class="col-xs-3"  >
-                <a href="#" onclick="get_project_details(<?php echo $det['id']; ?>,<?php echo $record_id; ?>)" data-toggle="modal" data-target="#DashboradModal">
-                    <div class="boxTile">
-                        <div class="square info easeAni">
-                            <div class="text">
-                                <h2><?php echo $det['project_name']; ?></h2>
+            	 <a href="#" onclick="get_project_details(<?php echo $det['id']; ?>,<?php echo $record_id; ?>)" data-toggle="modal" data-target="#DashboradModal">
+            	<div class="card-base">
+                            <div class="card-icon">
+                                <div  title="Widgets" id="widgetCardIcon" class="imagecard"><span class="fa fa-globe"></span></div>
+                                <div class="card-data widgetCardData">
+                                    <h2 class="box-title" style="color: #337AB7;"><?php echo $det['project_name']; ?></h2>
+                                    <hr>
+                                    <p class="card-block text-center"><?php echo $det['project_description']; ?></p>
+                                    <hr>
+                                    <div class="btn btn-default" style="background: #337AB7; border: #337AB7; color: #fff;">More</div>
+                                  </div>
                             </div>
-                        </div>
-                    </div>
-                </a>
+                    <div class="space"></div>
+                </div>
+            	</a>
+                
             </div>
             <?php if (($i % 4 == 0)): ?>
                 <div class="clear" style="clear: both;height:1em"></div>
