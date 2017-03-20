@@ -1813,8 +1813,12 @@ class USER extends CI_Controller {
 			}elseif ($method[0] == 'subinsert'){
 				$this->form_validation->set_rules('menus', 'Menus Name', 'required');
                 $this->form_validation->set_rules('status', 'Status', 'required');
+				$this->form_validation->set_rules('menusort', 'Order', 'required');
+				$this->form_validation->set_rules('menulink', 'Link', 'required');
 
                 $menus = $this->input->post('menus');
+				$menulink = $this->input->post('menulink');
+				$menusort = $this->input->post('menusort');
                 $status = $this->input->post('status');
 				$parent_id = $this->input->post('parent_id');
 
@@ -1829,6 +1833,8 @@ class USER extends CI_Controller {
                             'name' => $menus,
                             'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
                             'status' => $status,
+							'menulink' => $menulink,
+							'menusort' => $menusort,
 							'parent_id' => $parent_id,
                             'created_by' => get_session_value('user_id'),
 							'created_ip' => ip2long(get_ip()),
@@ -1858,12 +1864,16 @@ class USER extends CI_Controller {
 			}elseif ($method[0] == 'subupdate'){
 				 $edit_id = $this->input->post('edit_id');
                 $menus = $this->input->post('menus');
+				$menulink = $this->input->post('menulink');
+				$menusort = $this->input->post('menusort');
 				$parent_id = $this->input->post('parent_id');
                 $edit_status = $this->input->post('edit_status');
                 $update_array = array('name' => $menus,
                     'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
                     'status' => $edit_status,
 					'parent_id' => $parent_id,
+					'menusort' => $menusort,
+					'menulink' => $menulink,
                     'created_by' => get_session_value('user_id'),
                     'created_ip' => ip2long(get_ip()));
 
@@ -1893,9 +1903,15 @@ class USER extends CI_Controller {
 
                 $this->form_validation->set_rules('menus', 'Menus Name', 'required');
                 $this->form_validation->set_rules('status', 'Status', 'required');
+				$this->form_validation->set_rules('menulink', 'Menu Link', 'required');
+				$this->form_validation->set_rules('menusort', 'Order', 'required');
+				$this->form_validation->set_rules('menuicon', 'Icon', 'required');
 
                 $menus = $this->input->post('menus');
                 $status = $this->input->post('status');
+				$menulink = $this->input->post('menulink');
+				$menusort = $this->input->post('menusort');
+				$menuicon = $this->input->post('menuicon');
 
                 if ($this->form_validation->run($this) == TRUE) {
                     $check = $this->Mydb->get_record('*', $this->menus_table, array('name' => $menus));
@@ -1908,6 +1924,9 @@ class USER extends CI_Controller {
                             'name' => $menus,
                             'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
                             'status' => $status,
+							'menulink' => $menulink,
+							'menusort' => $menusort,
+							'menuicon' => $menuicon,
 							'parent_id' => '0',
                             'created_by' => get_session_value('user_id'),
 							'created_ip' => ip2long(get_ip()),
@@ -1938,13 +1957,18 @@ class USER extends CI_Controller {
 
                 $edit_id = $this->input->post('edit_id');
                 $menus = $this->input->post('menus');
+				$menulink = $this->input->post('menulink');
+				$menusort = $this->input->post('menusort');
+				$menuicon = $this->input->post('menuicon');
                 $edit_status = $this->input->post('edit_status');
                 $update_array = array('name' => $menus,
                     'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
                     'status' => $edit_status,
+					'menulink' => $menulink,
+					'menusort' => $menusort,
+					'menuicon' => $menuicon,
                     'created_by' => get_session_value('user_id'),
                     'created_ip' => ip2long(get_ip()));
-
 
                 $check = $this->Mydb->get_record('*', $this->menus_table, array('name' => $menus, 'id!=' => $edit_id));
 				
@@ -1979,9 +2003,12 @@ class USER extends CI_Controller {
 
     public function editmenus() {
         $editid = $this->input->post('edit_id');
-        $getmenudetails = $this->Mydb->custom_query("select name, status from $this->menus_table where id=$editid");
+        $getmenudetails = $this->Mydb->custom_query("select name, menulink, menuicon, menusort, status from $this->menus_table where id=$editid");
         $data['menus'] = $getmenudetails[0]['name'];
         $data['status'] = $getmenudetails[0]['status'];
+		$data['menulink'] = $getmenudetails[0]['menulink'];
+		$data['menusort'] = $getmenudetails[0]['menusort'];
+		$data['menuicon'] = $getmenudetails[0]['menuicon'];
         $data['edit_id'] = $editid;
         $body = $this->load->view($this->folder . 'editmenus', $data);
         echo $body;
@@ -1991,15 +2018,19 @@ class USER extends CI_Controller {
 
     public function editsubmenus() {
         $editid = $this->input->post('edit_id');
-        $getmenudetails = $this->Mydb->custom_query("select name, parent_id, status from $this->menus_table where id=$editid");
+        $getmenudetails = $this->Mydb->custom_query("select name, menulink, menusort, parent_id, status from $this->menus_table where id=$editid");
         $data['menus'] = $getmenudetails[0]['name'];
 		$data['parent_id'] = $getmenudetails[0]['parent_id'];
         $data['status'] = $getmenudetails[0]['status'];
+		$data['menulink'] = $getmenudetails[0]['menulink'];
+		$data['menusort'] = $getmenudetails[0]['menusort'];
         $data['edit_id'] = $editid;
         $body = $this->load->view($this->folder . 'editsubmenus', $data);
         echo $body;
     }
-
+	
+	
+	
     public function get_state_by_country_id() {
         $country_id = $this->input->post('country_id');
         $getcountries = $this->Mydb->custom_query("select name,id from $this->states_table where is_active=1 and country_id=$country_id");
