@@ -5,8 +5,8 @@
 <div class="clear" style="clear: both;height:3em"></div>
 <div class="common col-lg-12 col-md-6 col-md-offset-2 col-sm-12 col-xs-12">
     <div class="col-xs-offset-2  col-xs-8 text-center">
-    	<h4>Current Weelkly Report</h4>
-    	<?php $workchart = json_encode($chart_total); ?>
+        <h4>Current Weelkly Report</h4>
+        <?php $workchart = json_encode($chart_total); ?>
         <div id="chartdiv" style="height:300px"></div>
         <h5 class="text-center">Project status</h5>
     </div>
@@ -174,6 +174,29 @@
 
         </div>
     <?php elseif ($_SESSION['user_type_id'] == 5): ?>
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red seven accord active" onclick="accord(7)" title="seven" >
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-cubes fa-4x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge"><?php echo count($asigned_project_count) != '0' ? $asigned_project_count[0]['asigned_project_count'] : '0'; ?></div>
+                            <div>Assigned Projects</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left"></span>
+                        <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+
+        </div>
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red five accord" onclick="accord(5)" title="five" >
             <div class="panel panel-yellow">
                 <div class="panel-heading">
@@ -221,7 +244,7 @@
 
         </div>
     <?php elseif ($_SESSION['user_type_id'] == 6): ?>
-        <div class="col-xs-offset-3 col-xs-6 circle_red six accord" onclick="accord(6)" title="six" >
+        <div class="col-xs-offset-3 col-xs-6 circle_red six accord active" onclick="accord(6)" title="six" >
             <div class="panel panel-green">
                 <div class="panel-heading">
                     <div class="row">
@@ -248,8 +271,6 @@
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 section_accord">
     <div class="accord_box" id="one">
-
-
 
     </div>
     <div class="accord_box" id="two" style="display:none;">
@@ -544,10 +565,15 @@
 
 
     </div>
+    <div class="accord_box" id="seven">
+
+
+
+    </div>
 
 </div>
 <script>
-	var chartData = <?php echo $workchart; ?>;
+    var chartData = <?php echo $workchart; ?>;
     var chart = AmCharts.makeChart("chartdiv", {
         "type": "serial",
         "theme": "light",
@@ -566,8 +592,8 @@
                 "lineAlpha": 0.2,
                 "type": "column",
                 "valueField": "time",
-				"valueField2" : "status",
-				"valueField3" : "status",
+                "valueField2": "status",
+                "valueField3": "status",
             }],
         "chartCursor": {
             "categoryBalloonEnabled": false,
@@ -575,9 +601,8 @@
             "zoomable": false
         },
         "categoryField": "datevalue",
-		"categoryField2": "performance",
-		"categoryField3": "hours",
-		
+        "categoryField2": "performance",
+        "categoryField3": "hours",
         "categoryAxis": {
             "gridPosition": "start",
             "labelRotation": 0

@@ -34,6 +34,7 @@
                 <label><?php echo $project_team_name[$i]; ?> Team <span style="color:red">*</span></label>
                 <br>
                 <input type="text" name="team_duration_hours[]" class="form-control" placeholder="Enter Duration Hours" required="" data-parsley-type="number" />
+                <input type="hidden" name="team_department_name[]" id="team_department_name" class="form-control" value="<?php echo $project_team_name[$i] ?>"/>
                 <div class="clear" style="clear: both;height:1em"></div>
                 <select style="width:100%" name="select_team_tl[]" id="select_team_tl" class="form-control" required="">
                     <option value="">-Select Team TL-</option>

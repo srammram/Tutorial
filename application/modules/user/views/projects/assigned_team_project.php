@@ -14,6 +14,7 @@
                         <th>S.No</th>
                         <th>Project Title</th>
                         <th>Project Description</th>
+                        <th>Project Team</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -47,6 +48,7 @@
                                 <td><?= ($prodet['id']); ?></td>
                                 <td><?= stripslashes($prodet['project_name']); ?></td>
                                 <td><?= stripslashes($prodet['project_description']); ?></td>
+                                <td><?= stripslashes($prodet['department_name']); ?></td>
                                 <td><label class="<?php echo $lableclass; ?>" style="font-size:12px"><?php echo $status; ?></label></td>
                                 <td>
                                     <a href="#ViewAsignedProject" data-toggle="modal" class="btn btn-primary" onclick="getassignedproject_details(<?php echo $prodet['id']; ?>)"><i class="fa fa-eye"></i></a>

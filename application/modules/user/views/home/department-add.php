@@ -13,7 +13,7 @@
                 </div>
                 <div class="form-group">
                     <label >Status <span style="color:red">*</span></label>
-                    <select name="department_status" id="department_status" class="form-control" >
+                    <select name="department_status" id="department_status" class="form-control" required="">
                         <option value="">-Select Status-</option>
                         <option value="0">Pending</option>
                         <option value="1">Active</option>

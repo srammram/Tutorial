@@ -77,7 +77,7 @@
                                 <a href="javascript:void(0)" class="btn btn-danger" onclick="delete_actions(<?php echo $prodet['id']; ?>, 'projects')"><i class="fa fa-trash"></i></a>
                                 <?php if ($prodet['project_type_status'] == 1): ?>                                   
                                     <?php
-                                    if ($prodet['status'] != 6):
+                                    if ($prodet['status'] != 5 && $prodet['status'] != 6):
                                         ?>
                                         <a  class="btn btn-warning" title="Assign Team for this project" href="#AssignProject" data-toggle="modal" onclick="asign_projects(<?php echo $prodet['id']; ?>)"><i class="fa fa-tasks"></i></a>
                                     <?php else:
