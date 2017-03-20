@@ -167,7 +167,7 @@ if ($status == 'In Time Completed'):
 $percentagehours = round(($used_hours * 100) / $records[0]['assigned_hours']);
 ?>
 <a href="javascript:void(0)" class="btn btn-success" id="reminder_div" data-toggle="modal" data-target="#SampleModal" style="display: none">Add</a>
-<div class="modal fade" id="SampleModal" role="dialog">
+<div class="modal fade" id="AlertModal" role="dialog">
     <div class="modal-dialog modal-lg">
 
         <!-- Modal content-->
@@ -183,7 +183,7 @@ $percentagehours = round(($used_hours * 100) / $records[0]['assigned_hours']);
                 </div>
                 <div class="form-group" id="reminderbut">
                     <input type="button" name="say_no" id="say_no" class="btn btn-danger" value="No" onclick="$('#reason_for_delay_hide').show();$('#reminderbut').hide();"/>
-                    <input type="button" name="say_yes" id="say_yes" class="btn btn-success" value="Yes"/>
+                    <input type="button" name="say_yes" id="say_yes" class="btn btn-success" value="Yes" onclick="$('#AlertModal').modal('hide');"/>
                 </div>
                 <div id="reason_for_delay_hide" style="display:none">
                     <div class="form-group" >
@@ -192,12 +192,12 @@ $percentagehours = round(($used_hours * 100) / $records[0]['assigned_hours']);
                     </div>
                     <div class="form-group" >
                         <input type="button" name="say_ncancel" id="say_ncancel" class="btn btn-danger" value="Cancel" onclick="$('#reason_for_delay_hide').hide();$('#reminderbut').show();"/>
-                        <input type="button" name="say_reason" id="say_reason" class="btn btn-success" value="Procced" onclick="delay_reason_by_project()"/>
+                        <input type="button" name="say_reason" id="say_reason" class="btn btn-success" value="Procced" onclick="delay_reason_by_project(<?php echo $project_id ?>,<?php echo $department_id; ?>)"/>
                     </div>
                 </div>
             </div>
             <div class="modal-footer" style="border-top:0px">
-                <button type="button" class="btn btn-default" onclick="modalhide('SampleModal')">Close</button>
+                <button type="button" class="btn btn-default" onclick="modalhide('AlertModal')">Close</button>
             </div>
         </div>
 
@@ -205,12 +205,13 @@ $percentagehours = round(($used_hours * 100) / $records[0]['assigned_hours']);
 </div>
 <script type="text/javascript">
 <?php
-if ($percentagehours < 75 && $maildetails[0]['id'] == '') {
+if ($percentagehours > 75 && $maildetails[0]['id'] == '') {
     ?>
-        $('#SampleModal').modal('show');
+        $('#AlertModal').modal('show');
 <?php } ?>
     function modalhide(modalname) {
         $('#' + modalname).modal('hide');
     }
+
 </script>
 
