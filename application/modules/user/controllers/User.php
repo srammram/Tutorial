@@ -1818,106 +1818,98 @@ class USER extends CI_Controller {
 
     public function menus($method = null, $args = array()) {
         $data = $this->load_module_info();
-
+				
         if (!empty($method)) {
             if ($method[0] == 'add') {
                 $data = $this->load_module_info();
                 $this->layout->display_frontend($this->folder . 'menus-add', $data);
-            } elseif ($method[0] == 'view') {
-                $data = $this->load_module_info();
-                $parent_id = decode_value($method[1]);
-                $data['menurecord'] = $this->Mydb->custom_query("SELECT * FROM $this->menus_table WHERE id='" . $parent_id . "'");
-                $data['subrecord'] = $this->Mydb->custom_query("SELECT * FROM $this->menus_table WHERE parent_id='" . $parent_id . "'");
+            }elseif ($method[0] == 'view') { 
+				$data = $this->load_module_info();
+				$parent_id = decode_value($method[1]);
+				$data['menurecord'] = $this->Mydb->custom_query("SELECT * FROM $this->menus_table WHERE id='".$parent_id."'");
+				$data['subrecord'] = $this->Mydb->custom_query("SELECT * FROM $this->menus_table WHERE parent_id='".$parent_id."'");
                 $this->layout->display_frontend($this->folder . 'menus-view', $data);
-            } elseif ($method[0] == 'submenusadd') {
-                $data = $this->load_module_info();
-                $parent_id = decode_value($method[1]);
-                $data['menurecord'] = $this->Mydb->custom_query("SELECT * FROM $this->menus_table WHERE id='" . $parent_id . "'");
+				
+			}elseif($method[0] == 'submenusadd'){
+				$data = $this->load_module_info();
+				$parent_id = decode_value($method[1]);
+				$data['menurecord'] = $this->Mydb->custom_query("SELECT * FROM $this->menus_table WHERE id='".$parent_id."'");
                 $this->layout->display_frontend($this->folder . 'submenus-add', $data);
-            } elseif ($method[0] == 'subinsert') {
-                $this->form_validation->set_rules('menus', 'Menus Name', 'required');
+				
+			}elseif ($method[0] == 'subinsert'){
+				$this->form_validation->set_rules('menus', 'Menus Name', 'required');
                 $this->form_validation->set_rules('status', 'Status', 'required');
-                $this->form_validation->set_rules('menusort', 'Order', 'required');
-                $this->form_validation->set_rules('menulink', 'Link', 'required');
+				$this->form_validation->set_rules('menusort', 'Order', 'required');
+				$this->form_validation->set_rules('menulink', 'Link', 'required');
 
                 $menus = $this->input->post('menus');
-                $menulink = $this->input->post('menulink');
-                $menusort = $this->input->post('menusort');
+				$menulink = $this->input->post('menulink');
+				$menusort = $this->input->post('menusort');
                 $status = $this->input->post('status');
-                $parent_id = $this->input->post('parent_id');
+				$parent_id = $this->input->post('parent_id');
 
                 if ($this->form_validation->run($this) == TRUE) {
                     $check = $this->Mydb->get_record('*', $this->menus_table, array('name' => $menus, 'parent_id' => $parent_id));
                     if (!empty($check)) {
                         $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Menus is already exit. please change data');
                         $this->session->set_userdata($session_datas);
-                        redirect(frontend_url() . 'menus/submenusadd/' . encode_value($parent_id));
+                        redirect(frontend_url() . 'menus/submenusadd/'.encode_value($parent_id));
                     } else {
                         $insert_array = array(
-                        'name' => $menus,
-                        'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
-                        'status' => $status,
-                        <<<<<<< .mine
-                        'parent_id' => $parent_id,
-                        ||||||| .r168
-                        'parent_id' => $parent_id,
-                        ====== = 'menulink' => $menulink,
-                        'menusort' => $menusort,
-                        'parent_id' => $parent_id,
-                        >>>>>>> .r178
-                        'created_by' => get_session_value('user_id'),
-                        'created_ip' => ip2long(get_ip()),
+                            'name' => $menus,
+                            'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
+                            'status' => $status,
+							'menulink' => $menulink,
+							'menusort' => $menusort,
+							'parent_id' => $parent_id,
+                            'created_by' => get_session_value('user_id'),
+							'created_ip' => ip2long(get_ip()),
                         );
                         $menusdetails = $this->Mydb->insert($this->menus_table, $insert_array);
-
-                        $log_msg = 'Menus Added by ' . get_session_value('user_name');
-                        $log_from = get_session_value('user_id');
-                        $log_to = get_session_value('user_id');
-                        log_history($log_msg, $log_from, $log_to);
+						
+						$log_msg = 'Menus Added by '.get_session_value('user_name');
+						$log_from = get_session_value('user_id');
+						$log_to = get_session_value('user_id');
+						log_history($log_msg, $log_from, $log_to);
 
                         if (!empty($menusdetails)) {
                             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Menus has been successfully added.. ');
                             $this->session->set_userdata($session_datas);
-                            redirect(frontend_url() . 'menus/submenusadd/' . encode_value($parent_id));
+                            redirect(frontend_url() . 'menus/submenusadd/'.encode_value($parent_id));
                         } else {
                             $session_datas = array('pms_err' => '1', 'pms_err_message' => 'menus cannot be added. Please try again');
                             $this->session->set_userdata($session_datas);
-                            redirect(frontend_url() . 'menus/submenusadd/' . encode_value($parent_id));
+                            redirect(frontend_url() . 'menus/submenusadd/'.encode_value($parent_id));
                         }
                     }
                 } else {
                     $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
                     $this->session->set_userdata($session_datas);
-                    redirect(frontend_url() . 'menus/submenusadd/' . encode_value($parent_id));
+                    redirect(frontend_url() . 'menus/submenusadd/'.encode_value($parent_id));
                 }
-            } elseif ($method[0] == 'subupdate') {
-                $edit_id = $this->input->post('edit_id');
+			}elseif ($method[0] == 'subupdate'){
+				 $edit_id = $this->input->post('edit_id');
                 $menus = $this->input->post('menus');
-                <<<<<<< .mine
-                $parent_id = $this->input->post('parent_id');
-                ||||||| .r168
-                $parent_id = $this->input->post('parent_id');
-                ====== = $menulink = $this->input->post('menulink');
-                $menusort = $this->input->post('menusort');
-                $parent_id = $this->input->post('parent_id');
-                >>>>>>> .r178
+				$menulink = $this->input->post('menulink');
+				$menusort = $this->input->post('menusort');
+				$parent_id = $this->input->post('parent_id');
                 $edit_status = $this->input->post('edit_status');
                 $update_array = array('name' => $menus,
                     'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
                     'status' => $edit_status,
-                    'parent_id' => $parent_id,
-                    'menusort' => $menusort,
-                    'menulink' => $menulink,
+					'parent_id' => $parent_id,
+					'menusort' => $menusort,
+					'menulink' => $menulink,
                     'created_by' => get_session_value('user_id'),
                     'created_ip' => ip2long(get_ip()));
 
 
                 $check = $this->Mydb->get_record('*', $this->menus_table, array('name' => $menus, 'id!=' => $edit_id, 'parent_id' => $parent_id));
-
-                $log_msg = 'Menus Edited by ' . get_session_value('user_name');
-                $log_from = get_session_value('user_id');
-                $log_to = get_session_value('user_id');
-                log_history($log_msg, $log_from, $log_to);
+				
+				$log_msg = 'Menus Edited by '.get_session_value('user_name');
+				$log_from = get_session_value('user_id');
+				$log_to = get_session_value('user_id');
+				log_history($log_msg, $log_from, $log_to);
 
                 if (!empty($check)) {
                     $response['message'] = "<div class='alert alert-danger'>Your sub menus already exit.</div>";
@@ -1932,19 +1924,20 @@ class USER extends CI_Controller {
                 }
 
                 echo json_encode($response);
-            } elseif ($method[0] == 'insert') {
+				
+			}elseif ($method[0] == 'insert') {
 
                 $this->form_validation->set_rules('menus', 'Menus Name', 'required');
                 $this->form_validation->set_rules('status', 'Status', 'required');
-                $this->form_validation->set_rules('menulink', 'Menu Link', 'required');
-                $this->form_validation->set_rules('menusort', 'Order', 'required');
-                $this->form_validation->set_rules('menuicon', 'Icon', 'required');
+				$this->form_validation->set_rules('menulink', 'Menu Link', 'required');
+				$this->form_validation->set_rules('menusort', 'Order', 'required');
+				$this->form_validation->set_rules('menuicon', 'Icon', 'required');
 
                 $menus = $this->input->post('menus');
                 $status = $this->input->post('status');
-                $menulink = $this->input->post('menulink');
-                $menusort = $this->input->post('menusort');
-                $menuicon = $this->input->post('menuicon');
+				$menulink = $this->input->post('menulink');
+				$menusort = $this->input->post('menusort');
+				$menuicon = $this->input->post('menuicon');
 
                 if ($this->form_validation->run($this) == TRUE) {
                     $check = $this->Mydb->get_record('*', $this->menus_table, array('name' => $menus));
@@ -1954,27 +1947,22 @@ class USER extends CI_Controller {
                         redirect(frontend_url() . 'menus/add');
                     } else {
                         $insert_array = array(
-                        'name' => $menus,
-                        'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
-                        'status' => $status,
-                        <<<<<<< .mine
-                        'parent_id' => '0',
-                        ||||||| .r168
-                        'parent_id' => '0',
-                        ====== = 'menulink' => $menulink,
-                        'menusort' => $menusort,
-                        'menuicon' => $menuicon,
-                        'parent_id' => '0',
-                        >>>>>>> .r178
-                        'created_by' => get_session_value('user_id'),
-                        'created_ip' => ip2long(get_ip()),
+                            'name' => $menus,
+                            'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
+                            'status' => $status,
+							'menulink' => $menulink,
+							'menusort' => $menusort,
+							'menuicon' => $menuicon,
+							'parent_id' => '0',
+                            'created_by' => get_session_value('user_id'),
+							'created_ip' => ip2long(get_ip()),
                         );
                         $menusdetails = $this->Mydb->insert($this->menus_table, $insert_array);
-
-                        $log_msg = 'Menus Added by ' . get_session_value('user_name');
-                        $log_from = get_session_value('user_id');
-                        $log_to = get_session_value('user_id');
-                        log_history($log_msg, $log_from, $log_to);
+						
+						$log_msg = 'Menus Added by '.get_session_value('user_name');
+						$log_from = get_session_value('user_id');
+						$log_to = get_session_value('user_id');
+						log_history($log_msg, $log_from, $log_to);
 
                         if (!empty($menusdetails)) {
                             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Menus has been successfully added.. ');
@@ -1995,25 +1983,25 @@ class USER extends CI_Controller {
 
                 $edit_id = $this->input->post('edit_id');
                 $menus = $this->input->post('menus');
-                $menulink = $this->input->post('menulink');
-                $menusort = $this->input->post('menusort');
-                $menuicon = $this->input->post('menuicon');
+				$menulink = $this->input->post('menulink');
+				$menusort = $this->input->post('menusort');
+				$menuicon = $this->input->post('menuicon');
                 $edit_status = $this->input->post('edit_status');
                 $update_array = array('name' => $menus,
                     'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
                     'status' => $edit_status,
-                    'menulink' => $menulink,
-                    'menusort' => $menusort,
-                    'menuicon' => $menuicon,
+					'menulink' => $menulink,
+					'menusort' => $menusort,
+					'menuicon' => $menuicon,
                     'created_by' => get_session_value('user_id'),
                     'created_ip' => ip2long(get_ip()));
 
                 $check = $this->Mydb->get_record('*', $this->menus_table, array('name' => $menus, 'id!=' => $edit_id));
-
-                $log_msg = 'Menus Edited by ' . get_session_value('user_name');
-                $log_from = get_session_value('user_id');
-                $log_to = get_session_value('user_id');
-                log_history($log_msg, $log_from, $log_to);
+				
+				$log_msg = 'Menus Edited by '.get_session_value('user_name');
+				$log_from = get_session_value('user_id');
+				$log_to = get_session_value('user_id');
+				log_history($log_msg, $log_from, $log_to);
 
                 if (!empty($check)) {
                     $response['message'] = "<div class='alert alert-danger'>Your menus already exit.</div>";
@@ -2044,24 +2032,24 @@ class USER extends CI_Controller {
         $getmenudetails = $this->Mydb->custom_query("select name, menulink, menuicon, menusort, status from $this->menus_table where id=$editid");
         $data['menus'] = $getmenudetails[0]['name'];
         $data['status'] = $getmenudetails[0]['status'];
-        $data['menulink'] = $getmenudetails[0]['menulink'];
-        $data['menusort'] = $getmenudetails[0]['menusort'];
-        $data['menuicon'] = $getmenudetails[0]['menuicon'];
+		$data['menulink'] = $getmenudetails[0]['menulink'];
+		$data['menusort'] = $getmenudetails[0]['menusort'];
+		$data['menuicon'] = $getmenudetails[0]['menuicon'];
         $data['edit_id'] = $editid;
         $body = $this->load->view($this->folder . 'editmenus', $data);
         echo $body;
     }
-
-    ########### Sub Menus Edit ... ###########
+	
+	 ########### Sub Menus Edit ... ###########
 
     public function editsubmenus() {
         $editid = $this->input->post('edit_id');
         $getmenudetails = $this->Mydb->custom_query("select name, menulink, menusort, parent_id, status from $this->menus_table where id=$editid");
         $data['menus'] = $getmenudetails[0]['name'];
-        $data['parent_id'] = $getmenudetails[0]['parent_id'];
+		$data['parent_id'] = $getmenudetails[0]['parent_id'];
         $data['status'] = $getmenudetails[0]['status'];
-        $data['menulink'] = $getmenudetails[0]['menulink'];
-        $data['menusort'] = $getmenudetails[0]['menusort'];
+		$data['menulink'] = $getmenudetails[0]['menulink'];
+		$data['menusort'] = $getmenudetails[0]['menusort'];
         $data['edit_id'] = $editid;
         $body = $this->load->view($this->folder . 'editsubmenus', $data);
         echo $body;
