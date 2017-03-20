@@ -106,6 +106,28 @@ if(!function_exists('get_random_key'))
 	}
 }
 
+/*Get left Menus*/
+if(!function_exists('left_menus')){
+	function left_menus(){
+		$CI =& get_instance();
+		$menus = $CI->Mydb->custom_query("SELECT id, name, slug, menulink, menusort, menuicon, parent_id FROM menus WHERE parent_id='0' AND status='1' ORDER BY menusort ASC");
+		
+		$submenus = array();
+		foreach($menus as $sub){
+			$parent_id = $sub['id'];
+			$submenus = $CI->Mydb->custom_query("SELECT id, name, slug, menulink, menuicon, menusort, parent_id FROM menus WHERE parent_id='".$parent_id."' AND status='1' ORDER BY parent_id ASC");
+			foreach($submenus as $sub){
+				$manimenu[$parent_id][] = $sub;
+			}
+			
+		}
+		
+		$result['menus'] = $menus;
+		$result['submenus'] = $manimenu;
+		
+		return $result;	
+	}
+}
 /* Get Notification Count */
 if(!function_exists('get_notification_count'))
 {
@@ -115,6 +137,7 @@ if(!function_exists('get_notification_count'))
 		return $notification;
 	}
 }
+
 
 /* Get Notification Insert */
 if(!function_exists('create_notification'))
@@ -367,6 +390,10 @@ if (!function_exists('random_color')) {
     }
 
 }
+
+/* Left Menus*/
+
+
 /* Get Log History Insert */
 if(!function_exists('log_history'))
 {
