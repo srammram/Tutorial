@@ -17,35 +17,54 @@
             <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
                 <ul class="nav navbar-nav left_menu1">
 					<?php
+					
 					$main = left_menus();
-					for($i=0; $i<count($main['menus']); $i++){
-					?>
-                   <li class="">
-                   		<a href="<?php if($main['menus'][$i]['menulink'] == 'none'){ ?>javascript:void(0); <?php }else{ echo frontend_url().$main['menus'][$i]['menulink']; } ?>" <?php if(!empty($main['submenus'][$i])){ ?> class="dropdown-toggle" data-toggle="dropdown" <?php } ?>> 
-                            <span class="menu-icon pull-right hidden-xs showopacity glyphicon material-icons"><i class="fa <?php echo $main['menus'][$i]['menuicon'];  ?>"></i></span> 
-                            <?php echo $main['menus'][$i]['name']; ?> 
-                            <?php if(!empty($main['submenus'][$i])){ ?><span class="caret"></span><?php } ?>
-                        </a> 
-                        
-                        <?php if(!empty($main['submenus'][$i])){ ?>
-                        <ul class="dropdown-menu forAnimate" role="menu">
-                        	<?php
-							for($j=0; $j<count($main['submenus'][$i]); $j++){
-							?>
-                            <li class="">
-                            	<a href="<?php echo frontend_url().$main['submenus'][$i][$j]['menulink']; ?>">
-									<?php echo $main['submenus'][$i][$j]['name']; ?>
-                                </a>
-                             </li>
-                            <?php
-							}
-							?>
-                        </ul>
-                        <?php
+					if(!empty($_SESSION['user_access_menus_id'])){
+						$access = explode(',', '35,'.$_SESSION['user_access_menus_id']);	
+					}else{
+						foreach($main['menus'] as $m)
+						{
+							$main_left[] = $m['id'];
 						}
-						?>
-                   </li>
+						$access = $main_left;	
+					}
+				
+					for($i=0; $i<count($main['menus']); $i++){
+						
+						
+							if(in_array($main['menus'][$i]['id'], $access)){
+							
+					?>
+                   				<li class="">
+                                    <a href="<?php if($main['menus'][$i]['menulink'] == 'none'){ ?>javascript:void(0); <?php }else{ echo frontend_url().$main['menus'][$i]['menulink']; } ?>" <?php if(!empty($main['submenus'][$i])){ ?> class="dropdown-toggle" data-toggle="dropdown" <?php } ?>> 
+                                        <span class="menu-icon pull-right hidden-xs showopacity glyphicon material-icons"><i class="fa <?php echo $main['menus'][$i]['menuicon'];  ?>"></i></span> 
+                                        <?php echo $main['menus'][$i]['name']; ?> 
+                                        <?php if(!empty($main['submenus'][$i])){ ?><span class="caret"></span><?php } ?>
+                                    </a> 
+                        
+									<?php if(!empty($main['submenus'][$i])){ ?>
+                                    <ul class="dropdown-menu forAnimate" role="menu">
+                                        <?php
+                                        for($j=0; $j<count($main['submenus'][$i]); $j++){
+											
+                                        ?>
+                                        <li class="">
+                                            <a href="<?php echo frontend_url().$main['submenus'][$i][$j]['menulink']; ?>">
+                                                <?php echo $main['submenus'][$i][$j]['name']; ?>
+                                            </a>
+                                         </li>
+                                        <?php
+												
+                                        }
+                                        ?>
+                                    </ul>
+                                    <?php
+                                    }
+                                    ?>
+                               </li>
                    <?php
+				   
+						}
 					}
 				   ?>
                 </ul>
