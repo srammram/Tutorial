@@ -107,10 +107,10 @@ class Projects extends CI_Controller {
 
 
             $insert_id = $this->Mydb->insert($this->projects_table, $insert_array);
-			$log_msg = 'Project Added by '.get_session_value('user_name');
-			$log_from = get_session_value('user_id');
-			$log_to = get_session_value('user_id');
-			log_history($log_msg, $log_from, $log_to);
+            $log_msg = 'Project Added by ' . get_session_value('user_name');
+            $log_from = get_session_value('user_id');
+            $log_to = get_session_value('user_id');
+            log_history($log_msg, $log_from, $log_to);
             if ($insert_id):
                 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'New Project has been successfully added');
                 $this->session->set_userdata($session_datas);
@@ -196,10 +196,10 @@ class Projects extends CI_Controller {
         );
 
         $update_id = $this->Mydb->update($this->projects_table, array('id' => $edit_id), $update_array);
-		$log_msg = 'Project Edited by '.get_session_value('user_name');
-		$log_from = get_session_value('user_id');
-		$log_to = get_session_value('user_id');
-		log_history($log_msg, $log_from, $log_to);
+        $log_msg = 'Project Edited by ' . get_session_value('user_name');
+        $log_from = get_session_value('user_id');
+        $log_to = get_session_value('user_id');
+        log_history($log_msg, $log_from, $log_to);
         if ($update_id) {
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Project has been successfully updated');
             $this->session->set_userdata($session_datas);
@@ -255,10 +255,10 @@ class Projects extends CI_Controller {
         $finished_hours = $this->input->post('finished_hours') != '' ? $this->input->post('finished_hours') : 0;
         $update_array = array('status' => $this->input->post('change_status'));
         $update_id = $this->Mydb->update($this->project_teams_table, array('id' => $edit_id), $update_array);
-		$log_msg = 'Project Status Change by '.get_session_value('user_name');
-		$log_from = get_session_value('user_id');
-		$log_to = get_session_value('user_id');
-		log_history($log_msg, $log_from, $log_to);
+        $log_msg = 'Project Status Change by ' . get_session_value('user_name');
+        $log_from = get_session_value('user_id');
+        $log_to = get_session_value('user_id');
+        log_history($log_msg, $log_from, $log_to);
         if ($update_id) {
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Project Status has been successfully added');
             $this->session->set_userdata($session_datas);
@@ -280,7 +280,7 @@ class Projects extends CI_Controller {
             $getteamname = $this->Mydb->custom_query("select name,id,slug from $this->departments_table where id=$proteam");
             $project_team_name[] = $getteamname[0]['name'];
             $departemnt_id = $getteamname[0]['id'];
-            $gettldetails = $this->Mydb->custom_query("select user_name,id from $this->login_table where user_type_id=5 and user_departments_id=$departemnt_id and status=1");
+            $gettldetails = $this->Mydb->custom_query("select user_name,id from $this->login_table where user_type_id=5 and FIND_IN_SET($departemnt_id,user_departments_id) and status=1");
             $tl_details[] = $gettldetails;
         endforeach;
         $getdepartments = $this->Mydb->custom_query("select name,id,slug from $this->departments_table where status=1");
@@ -301,7 +301,7 @@ class Projects extends CI_Controller {
             $getteamname = $this->Mydb->custom_query("select name,id,slug from $this->departments_table where id=$proteam");
             $project_team_name[] = $getteamname[0]['name'];
             $departemnt_id = $getteamname[0]['id'];
-            $gettldetails = $this->Mydb->custom_query("select user_name,id from $this->login_table where user_type_id=5 and user_departments_id=$departemnt_id and status=1");
+            $gettldetails = $this->Mydb->custom_query("select user_name,id from $this->login_table where user_type_id=5 and FIND_IN_SET($departemnt_id,user_departments_id) and status=1");
             $tl_details[] = $gettldetails;
         endforeach;
         $getdepartments = $this->Mydb->custom_query("select name,id,slug from $this->departments_table where status=1");
@@ -317,7 +317,7 @@ class Projects extends CI_Controller {
     public function assigned_teamprojects() {
         $data = $this->load_module_info();
         $user_id = $_SESSION['user_id'];
-        $getprojectdetails = $this->Mydb->custom_query("select t1.*,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.team_tl_id=$user_id and t1.status<>2");
+        $getprojectdetails = $this->Mydb->custom_query("select t1.*,t3.name as department_name,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->departments_table t3 ON t3.id=t1.team_departments_id where t1.team_tl_id=$user_id and t1.status<>2");
 
         $data['get_assigned_project_details'] = $getprojectdetails;
         $this->layout->display_frontend($this->folder . 'assigned_team_project', $data);
@@ -327,14 +327,16 @@ class Projects extends CI_Controller {
         $project_id = $this->input->post('project_id');
         $team_duration_hours = $this->input->post('team_duration_hours');
         $select_team_tl = $this->input->post('select_team_tl');
+        $team_department_name = $this->input->post('team_department_name');
         $countteamtl = count($select_team_tl);
         $getprojectdetails = $this->Mydb->custom_query("select project_name from $this->projects_table where id=$project_id");
         for ($i = 0; $i < $countteamtl; $i++) {
             $tlid = $select_team_tl[$i];
             $duration_hours = $team_duration_hours[$i];
+            $getdepartmentdetails = $this->Mydb->custom_query("select id from $this->departments_table where name='$team_department_name[$i]'");
             $getdepartment = $this->Mydb->custom_query("select user_departments_id from $this->login_table where id=$tlid");
             $insert_array = array('team_tl_id' => $tlid,
-                'team_departments_id' => $getdepartment[0]['user_departments_id'],
+                'team_departments_id' => $getdepartmentdetails[0]['id'],
                 'projects_id' => $project_id,
                 'time_duration' => $duration_hours,
                 'created_by' => $_SESSION['user_id'],
@@ -342,12 +344,12 @@ class Projects extends CI_Controller {
                 'created_ip' => ip2long(get_ip()),
                 'status' => 1);
             $insert_id = $this->Mydb->insert($this->project_teams_table, $insert_array);
-			$log_msg = 'Assign Team to Project by '.get_session_value('user_name');
-			$log_from = get_session_value('user_id');
-			$log_to = get_session_value('user_id');
-			log_history($log_msg, $log_from, $log_to);
+            $log_msg = 'Assign Team to Project by ' . get_session_value('user_name');
+            $log_from = get_session_value('user_id');
+            $log_to = get_session_value('user_id');
+            log_history($log_msg, $log_from, $log_to);
 
-            $notiy_msg = stripslashes($getprojectdetails[0]['project_title']) . ' Project has been asigned your team';
+            $notiy_msg = stripslashes($getprojectdetails[0]['project_name']) . ' Project has been asigned your team';
             $notiy_from = $_SESSION['user_id'];
             $notiy_to = $tlid;
             $notiy_type = 2;
@@ -561,14 +563,15 @@ class Projects extends CI_Controller {
     }
 
     public function download_files($fileName = NULL) {
-        if ($fileName) {
-            $file = FCPATH . 'media/project/' . $fileName;
+        if ($fileName[0]) {
+            $file = FCPATH . 'media/project/' . $fileName[0];
+
             // check file exists    
             if (file_exists($file)) {
                 // get file content
                 $data = file_get_contents($file);
                 //force download
-                force_download($fileName, $data);
+                force_download($fileName[0], $data);
             } else {
                 // Redirect to base url
                 redirect(frontend_url() . 'projects/assigned_teamprojects');
