@@ -22,11 +22,11 @@
                 </div>
                 <div class="form-group">
                     <label >Email Address <span style="color:red">*</span></label>
-                    <input type="email" name="employee_email" id="employee_email" tabindex="1" class="form-control" placeholder="Enter Email" value="<?php echo $records[0]['user_email']; ?>" readonly="">
+                    <input type="email" name="employee_email" id="employee_email" tabindex="1" class="form-control" placeholder="Enter Email" value="<?php echo $records[0]['user_email']; ?>" readonly>
                 </div>
                 <div class="form-group">
                     <label >Mobile Number <span style="color:red">*</span></label>
-                    <input type="number" name="emp_mobile" id="emp_mobile" tabindex="1" class="form-control" placeholder="Enter Mobile" value="<?php echo $records[0]['user_mobile']; ?>" readonly="">
+                    <input type="number" name="emp_mobile" id="emp_mobile" tabindex="1" class="form-control" placeholder="Enter Mobile" value="<?php echo $records[0]['user_mobile']; ?>" readonly>
                 </div>
                 <div class="form-group">
                     <label >Address <span style="color:red">*</span></label>
@@ -36,7 +36,7 @@
 
                 <div class="form-group">
                     <label>User Type <span style="color:red">*</span></label>
-                    <select name="user_type" id="user_type" class="form-control" required="">
+                    <select name="user_type" id="user_type" class="form-control" required>
                         <option value="">-Select User Type-</option>
                         <?php foreach ($usertype_details as $utype): ?>
                             <option value="<?= $utype['id'] ?>" <?php
@@ -53,7 +53,7 @@
                 </div>
                 <div class="form-group">
                     <label>Departments <span style="color:red">*</span></label>
-                    <select name="emp_departments" id="emp_departments" class="form-control" required="">
+                    <select name="emp_departments" id="emp_departments" class="form-control" required>
                         <option value="">-Select Department-</option>
                         <?php foreach ($department_details as $dept): ?>
                             <option value="<?= $dept['id'] ?>" <?php
@@ -74,7 +74,7 @@
                 </div>
                 <div class="form-group">
                     <label>Country <span style="color:red">*</span></label>
-                    <select name="emp_country" id="emp_country" class="form-control" required="" onchange="get_state_by_country_id(this.value)">
+                    <select name="emp_country" id="emp_country" class="form-control" required onchange="get_state_by_country_id(this.value)">
                         <option value="">-Select Country-</option>
                         <?php foreach ($country_details as $coun): ?>
                             <option value="<?= $coun['id'] ?>" <?php
@@ -91,7 +91,7 @@
                 </div>
                 <div class="form-group">
                     <label>Select State <span style="color:red">*</span></label>
-                    <select name="emp_state" id="emp_state" class="form-control" required="" onchange="get_city_by_state_id(this.value)">
+                    <select name="emp_state" id="emp_state" class="form-control" required onchange="get_city_by_state_id(this.value)">
                         <option value="">-Select State-</option>
                         <?php foreach ($state_details as $state): ?>
                             <option value="<?php echo $state['id']; ?>" <?php
@@ -108,7 +108,7 @@
                 </div>
                 <div class="form-group">
                     <label>Select City <span style="color:red">*</span></label>
-                    <select name="emp_city" id="emp_city" class="form-control" required="">
+                    <select name="emp_city" id="emp_city" class="form-control" required>
                         <option value="">-Select City-</option>
                         <?php foreach ($city_details as $city): ?>
                             <option value="<?php echo $city['id']; ?>" <?php
@@ -123,23 +123,29 @@
                                 ?>
                     </select>
                 </div>
+                
+                <?php
+				$empmain = left_menus();
+				?>
                 <div class="form-group">
                     <label>Select Option <span style="color:red">*</span></label>
-                    <select name="emp_accessmenu[]" multiple="multiple" id="emp_accessmenu" class="form-control" required="">
+                    <select name="emp_accessmenu[]" multiple="multiple" id="emp_accessmenu" class="form-control" required>
 
-                        <?php
-                        $menudetails = explode(',', $records[0]['user_access_menus_id']);
-                        foreach ($menu_details as $menus):
-                            ?>
-                            <option value="<?php echo $menus['id']; ?>" <?php
-                            if (in_array($menus['id'], $menudetails)): echo "selected";
+                        <?php 
+						$menudetails = explode(',', $records[0]['user_access_menus_id']);
+						foreach ($empmain['menus'] as $accessmenus): ?>
+                        
+                            <option value="<?php echo $accessmenus['id']; ?>" <?php
+                            if (in_array($accessmenus['id'], $menudetails)): echo "selected";
                             endif;
-                            ?>><?php echo $menus['menu_name']; ?></option>
-                                    <?php
-                                endforeach;
-                                ?>
+                            ?>><?php echo $accessmenus['name']; ?></option>
+                            
+                            <?php
+                        endforeach;
+                        ?>
                     </select>
                 </div>
+                
                 <div class="form-group">
                     <div class="row">
                         <div class="col-sm-3 col-sm-offset-3">
