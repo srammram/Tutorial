@@ -17,8 +17,9 @@
             <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
                 <ul class="nav navbar-nav left_menu1">
 					<?php
-					
+					//echo $filepath = str_replace('/pms/trunk/user/', '', $_SERVER["REQUEST_URI"]);
 					$main = left_menus();
+					$menu_active = menus_active();
 					if(!empty($_SESSION['user_access_menus_id'])){
 						$access = explode(',', '35,'.$_SESSION['user_access_menus_id']);	
 					}else{
@@ -28,14 +29,16 @@
 						}
 						$access = $main_left;	
 					}
-				
+					
 					for($i=0; $i<count($main['menus']); $i++){
-						
 						
 							if(in_array($main['menus'][$i]['id'], $access)){
 							
+							
 					?>
-                   				<li class="">
+                   				<li class="<?php if($menu_active[0]['menusids'] == $main['menus'][$i]['id']){ ?>active <?php } ?>">
+                                
+                                
                                     <a href="<?php if($main['menus'][$i]['menulink'] == 'none'){ ?>javascript:void(0); <?php }else{ echo frontend_url().$main['menus'][$i]['menulink']; } ?>" <?php if(!empty($main['submenus'][$i])){ ?> class="dropdown-toggle" data-toggle="dropdown" <?php } ?>> 
                                         <span class="menu-icon pull-right hidden-xs showopacity glyphicon material-icons"><i class="fa <?php echo $main['menus'][$i]['menuicon'];  ?>"></i></span> 
                                         <?php echo $main['menus'][$i]['name']; ?> 
@@ -46,7 +49,9 @@
                                     <ul class="dropdown-menu forAnimate" role="menu">
                                         <?php
                                         for($j=0; $j<count($main['submenus'][$i]); $j++){
-											
+											if($filepath == frontend_url().$main['submenus'][$i][$j]['menulink']){
+												$substatus = $main['submenus'][$i][$j]['parent_id'];
+											}
                                         ?>
                                         <li class="">
                                             <a href="<?php echo frontend_url().$main['submenus'][$i][$j]['menulink']; ?>">
