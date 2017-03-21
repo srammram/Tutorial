@@ -128,12 +128,25 @@ if(!function_exists('left_menus')){
 		return $result;	
 	}
 }
+
+/*Get Today Note List*/
+if(!function_exists('note_list')){
+	function note_list(){
+		$CI =& get_instance();
+		
+		$note = $CI->Mydb->custom_query("SELECT id, message, color FROM note WHERE date(created_on) = '".date('Y-m-d')."' AND status='1' ORDER BY id ASC");
+		return $note;	
+	}
+}
+
+
 /* Get Notification Count */
 if(!function_exists('get_notification_count'))
 {
 	function get_notification_count(){
 		$CI =& get_instance();
 		$notification = $CI->Mydb->custom_query("SELECT n.id, n.message, n.from_id, n.to_id, n.notification_type, n.created_on FROM notification AS n WHERE n.to_id='".get_session_value('user_id')."' AND n.status='1'");
+		
 		return $notification;
 	}
 }
