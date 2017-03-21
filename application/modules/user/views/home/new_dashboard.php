@@ -10,7 +10,9 @@
         <div id="chartdiv" style="height:300px"></div>
         <h5 class="text-center">Project status</h5>
     </div>
+    
     <?php if ($_SESSION['user_type_id'] == 1): ?>
+    	<input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '1'; ?>">
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 circle_red one accord active" onclick="accord(1)" title="one" >
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -104,6 +106,7 @@
         <?php
     elseif ($_SESSION['user_type_id'] == 4):
         ?>
+        <input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '1'; ?>">
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red one accord active" onclick="accord(1)" title="one" >
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -174,6 +177,7 @@
 
         </div>
     <?php elseif ($_SESSION['user_type_id'] == 5): ?>
+    <input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '7'; ?>">
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red seven accord active" onclick="accord(7)" title="seven" >
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -244,6 +248,7 @@
 
         </div>
     <?php elseif ($_SESSION['user_type_id'] == 6): ?>
+    <input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '6'; ?>">
         <div class="col-xs-offset-3 col-xs-6 circle_red six accord active" onclick="accord(6)" title="six" >
             <div class="panel panel-green">
                 <div class="panel-heading">
@@ -619,3 +624,17 @@
 </div>
 <div class="clearfix"></div>
 </div>
+<script>
+$(window).load(function() {
+	var title = $("#project_user_type").val();
+    $.ajax({
+        url: FRONTEND_URL + 'getdashboard_details',
+        data: {id: title},
+        dataType: 'html',
+        type: 'post',
+        success: function (output) {
+            $('#one').html(output);
+        }
+    })
+});
+</script>
