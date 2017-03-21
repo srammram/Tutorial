@@ -4,6 +4,13 @@
             <div class="logo">
                 <a href="#" style="color: white;font-size:20px;font-weight: bold">PMS</a>
             </div>
+            <div class="btn btn-warning pull-right" data-toggle="modal" data-target="#myNote">
+            	Note 
+            </div>
+			<?php
+            $note_list = note_list();
+            ?>
+
             <?php if (isset($_SESSION['user_id'])): ?>
                 <div class="user-name">
                     <p>Welcome <?php echo get_session_value('user_name'); ?></p>
@@ -64,6 +71,34 @@
         </div>
     </div>
 </div>
+
+
+<?php
+
+if(!empty($note_list)){
+	$i=1;
+	foreach($note_list as $note_value){
+		
+?>
+<div class="draggable " onchange="javascript:position(this)" style="position:absolute; left: 1100px; top: 65px; z-index:99;  cursor: move;">
+	<img class="pin" src="<?php echo media_url().'pin.png'; ?>" alt="pin" />
+    <blockquote class="quote-box" style="background-color:<?php echo $note_value['color']; ?>">
+    	<p class="quote-text" id="content-1">
+        	<?php echo $note_value['message']; ?>
+      	</p>
+      <hr>
+      <center>
+      	<a class="btn btn-success" href="#Editnote" data-toggle="modal" onclick="editnote(<?php echo $note_value['id']; ?>)"><i class="fa fa-edit"></i></a>
+      	<div class="btn btn-danger" onClick="note_detele(<?php echo $note_value['id']; ?>)"><i class="fa fa-trash-o"></i></div>
+      </center>
+    </blockquote>
+</div>
+<?php
+	$i++;
+	}
+}
+?>
+
 <script>
 $(document).ready(function () {
 $('#showLess').hide();

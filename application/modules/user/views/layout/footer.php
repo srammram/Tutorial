@@ -11,6 +11,7 @@
         $week_days[] = date("D", mktime(0, 0, 0, date("m"), $day_start + $x, date("y")));
     ?>
 </div>
+
 <div class="modal fade" id="Add_Department" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -28,7 +29,7 @@
                     </div>
                     <div class="form-group">
                         <label >Status <span style="color:red">*</span></label>
-                        <select name="department_status" id="department_status" class="form-control" required="">
+                        <select name="department_status" id="department_status" class="form-control" required>
                             <option value="">-Select Status-</option>
                             <option value="0">Pending</option>
                             <option value="1">Active</option>
@@ -49,6 +50,68 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="myNote" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" area-hidden="true">&times;</button>
+                <h4 class="modal-title">Add Notes</h4>
+            </div>
+            <div class="modal-body">
+            	<div class="col-xs-12" id="err_message"></div>
+                <form name="note_form" id="note_form" method="post"  data-parsley-validate="">
+                   
+                    <div class="form-group">
+                        <label >Notes <span style="color:red">*</span></label>
+                        <textarea name="message" id="message" rows="5" class="form-control" placeholder="Note (Maximum 250 charater only)" data-parsley-minlength="15" maxlength="250" required=""></textarea>
+                        
+                    </div>
+                    <div class="form-group">
+                    	<label >Color <span style="color:red">*</span></label>
+                        <div class="clearfix"></div>
+                    	<div class="col-xs-4">
+                        	<input type="radio" name="color" checked value="#FDFB8C">
+                            <div style="width:100%; min-height:100px; background:#FDFB8C; margin-bottom:15px;"></div>
+                        </div>
+                        <div class="col-xs-4">
+                        	<input type="radio" name="color" value="#A6E3FC">
+                            <div style="width:100%; min-height:100px; background:#A6E3FC; margin-bottom:15px;"></div>
+                        </div>
+                        <div class="col-xs-4">
+                        	<input type="radio" name="color" value="#A5F88B">
+                            <div style="width:100%; min-height:100px; background:#A5F88B; margin-bottom:15px;"></div>
+                        </div>
+                        
+                    </div>
+                    
+                    <div class="form-group">
+                    	
+                        <div class="row">
+                            <div class="col-sm-3 col-sm-offset-3">
+                                <input type="submit" name="note_submit" id="note_submit" tabindex="4" class="form-control btn btn-primary" value="Add">
+                            </div>
+                            <div class="col-sm-3 ">
+                                <input type="reset" name="note_reset" id="note_reset" tabindex="4" class="form-control btn btn-danger" value="Clear">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="Editnote" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content" id="noteedit">
+
+        </div>
+    </div>
+</div>
+
+
+
 <script type="text/javascript">
     var BASE_URL = '<?php echo BASE_URL; ?>';
     var FRONTEND_URL = '<?php echo frontend_url(); ?>';
@@ -120,4 +183,18 @@
             }
         });
     });
+</script>
+<script type="text/javascript">
+    var $form = $('#note_form');
+    $('#note_submit').click(function () {
+        if ($form.parsley().validate()) {
+            note_add();
+        }
+    });
+</script>
+
+<script>
+  $(function() {
+    $( ".draggable" ).draggable();
+  });
 </script>
