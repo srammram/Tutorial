@@ -40,6 +40,7 @@ class USER extends CI_Controller {
         $this->load->helper('smstemplate');
         $this->load->helper('emailtemplate');
         $this->menus_table = 'menus';
+		$this->note_table = 'note';
         $config = Array(
             'mailtype' => 'html',
             'charset' => 'utf-8',
@@ -2060,6 +2061,96 @@ class USER extends CI_Controller {
         $this->Mydb->insert($this->login_history_table, array('	logout_time' => current_date(), 'login_ip' => ip2long(get_ip()), 'user_id' => $user_id));
         $this->session->sess_destroy();
         redirect(frontend_url());
+    }
+	
+	############## Strick Note ###########################
+	
+	public function note($method = null, $args = array()){
+		if(!empty($method)){
+			if ($method[0] == 'insert') {
+				$user_id = get_session_value('user_id');
+				$this->form_validation->set_rules('message');	
+				$this->form_validation->set_rules('color');	
+				
+				$message = $this->input->post('message');
+				$color = $this->input->post('color');
+				
+				$insert_array = array(
+					'message' => $message,
+					'color' => $color,
+					'created_by' => $user_id,
+					'created_on' => current_date(),
+					'status' => '1' 
+				);
+				
+				$insert = $this->Mydb->insert($this->note_table, $insert_array);
+
+				if ($insert) 
+				{
+					$response['status'] = 'success';
+				} else {
+					$response['status'] = 'error';
+				}
+                echo json_encode($response);
+				exit;
+			}elseif($method[0] == 'update'){
+				$user_id = get_session_value('user_id');
+				$edit_id = $this->input->post('edit_id');
+				
+				$this->form_validation->set_rules('message');	
+				$this->form_validation->set_rules('color');	
+				
+				$message = $this->input->post('message');
+				$color = $this->input->post('color');
+				$note_id = $this->input->post('note_id');
+				
+				$update_array = array(
+					'message' => $message,
+					'color' => $color,
+					'created_on' => current_date(),
+				);
+				$update = $this->Mydb->update($this->note_table, array('id' => $edit_id, 'created_by' => $user_id), $update_array);
+				if ($update) 
+				{
+					$response['status'] = 'success';
+				} else {
+					$response['status'] = 'error';
+				}
+                echo json_encode($response);
+				exit;
+					
+			}elseif($method[0] == 'trash'){
+				$user_id = get_session_value('user_id');
+				$note_id = $this->input->post('note_id');
+				
+				$update_array = array(
+					'created_on' => current_date(),
+					'status' => '2' 
+				);
+				$update = $this->Mydb->update($this->note_table, array('id' => $note_id, 'created_by' => $user_id), $update_array);
+				
+				if ($update) 
+				{
+					$response['status'] = 'success';
+				} else {
+					$response['status'] = 'error';
+				}
+				
+                echo json_encode($response);
+				exit;
+			}
+		}
+	}
+	########### Note Edit ... ###########
+
+    public function editnote() {
+        $editid = $this->input->post('edit_id');
+        $getnotedetails = $this->Mydb->custom_query("select message, color from $this->note_table where id=$editid");
+        $data['message'] = $getnotedetails[0]['message'];
+        $data['color'] = $getnotedetails[0]['color'];
+        $data['edit_id'] = $editid;
+        $body = $this->load->view($this->folder . 'editnote', $data);
+        echo $body;
     }
 
 }
