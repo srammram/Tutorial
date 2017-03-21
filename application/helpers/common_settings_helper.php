@@ -128,7 +128,17 @@ if(!function_exists('left_menus')){
 		return $result;	
 	}
 }
-
+/*Menus Active*/
+if(!function_exists('menus_active')){
+	function menus_active(){
+		$CI =& get_instance();
+		$filepath = str_replace('/pms/trunk/user/', '', $_SERVER["REQUEST_URI"]);
+		$menusactive = $CI->Mydb->custom_query("SELECT CASE WHEN parent_id = 0 THEN id ELSE parent_id END AS menusids FROM menus WHERE menulink = '".$filepath."' ");
+		
+		return $menusactive;
+	
+	}
+}
 /*Get Today Note List*/
 if(!function_exists('note_list')){
 	function note_list(){
