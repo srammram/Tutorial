@@ -982,4 +982,29 @@ right: -20px;
 	}
 }
 
+/*Strick Note*/
+.note-1 {
+    background: #FDFB8C;
+    border: 1px solid #DEDC65;
+}
+
+.quote-box {
+    overflow: hidden;
+    border-radius: 17px;
+    margin-top: 25px;
+    width: 200px;
+    box-shadow: 2px 2px 2px 2px #E0E0E0;
+    color: #333;
+	font-size:15px;
+}
+.quote-box hr
+{
+	border-top: 1px solid #333;
+}
+.draggable img.pin {
+    margin-top: 7px;
+    position: absolute;
+    cursor: move;
+	left:80px;
+}
 
