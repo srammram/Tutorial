@@ -18,6 +18,10 @@
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib() ?>theme/css/dropzone.css">
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib() ?>theme/css/icon.css">
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib() ?>theme/css/export.css">
+
+
+
+
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/jquery-2.2.0.min.js"></script>
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/bootstrap_min.js"></script>
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/datatables.min.js"></script>
