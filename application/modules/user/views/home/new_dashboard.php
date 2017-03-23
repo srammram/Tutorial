@@ -1,6 +1,6 @@
 
 <?php echo $this->load->view('layout/left-menu'); ?>
-
+ <?php $calender_remainder = json_encode($remainder); ?>
 
 
 <link rel="stylesheet" href="<?php echo load_lib() ?>theme/css/monthly.css">
@@ -12,11 +12,6 @@
         <?php $workchart = json_encode($chart_total); ?>
         <div id="chartdiv" style="height:300px"></div>
         <h5 class="text-center">Project status</h5>
-    </div>
-    
-    <div class="col-xs-offset-2  col-xs-8 text-center">
-    	<h4>Reminder</h4>
-        <?php $calender_remainder = json_encode($remainder); ?>
     </div>
     
     
@@ -633,7 +628,7 @@
 </div>
 <div class="clearfix"></div>
 <div class="col-xs-12">
-	<div class="monthly" id="mycalendar"></div>
+	<div class="monthly" id="mycalendar" style="display:none;"></div>
 </div>
 <div class="clear" style="clear: both;height:3em"></div>
 </div>
