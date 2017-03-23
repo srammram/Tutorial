@@ -94,7 +94,7 @@
 </div>
 <script type="text/javascript">
     $('#user_dob').datepicker({
-        format: 'yyyy-mm-dd',
+        dateFormat: 'yy-mm-dd',
         autoclose: true,
     });
 </script>

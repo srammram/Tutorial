@@ -42,7 +42,7 @@
 </form>
 <script type="text/javascript">
     $('#holiday_date').datepicker({
-        format: 'yyyy-mm-dd',
+        dateFormat: 'yy-mm-dd',
         autoclose: true,
     });
 </script>

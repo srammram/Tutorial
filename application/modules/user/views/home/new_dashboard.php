@@ -2,6 +2,9 @@
 <?php echo $this->load->view('layout/left-menu'); ?>
 
 
+
+<link rel="stylesheet" href="<?php echo load_lib() ?>theme/css/monthly.css">
+
 <div class="clear" style="clear: both;height:3em"></div>
 <div class="common col-lg-12 col-md-6 col-md-offset-2 col-sm-12 col-xs-12">
     <div class="col-xs-offset-2  col-xs-8 text-center">
@@ -10,6 +13,12 @@
         <div id="chartdiv" style="height:300px"></div>
         <h5 class="text-center">Project status</h5>
     </div>
+    
+    <div class="col-xs-offset-2  col-xs-8 text-center">
+    	<h4>Reminder</h4>
+        <?php $calender_remainder = json_encode($remainder); ?>
+    </div>
+    
     
     <?php if ($_SESSION['user_type_id'] == 1): ?>
     	<input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '1'; ?>">
@@ -623,6 +632,10 @@
 
 </div>
 <div class="clearfix"></div>
+<div class="col-xs-12">
+	<div class="monthly" id="mycalendar"></div>
+</div>
+<div class="clear" style="clear: both;height:3em"></div>
 </div>
 <script>
 $(window).load(function() {
@@ -638,3 +651,19 @@ $(window).load(function() {
     })
 });
 </script>
+<script type="text/javascript" src="<?php echo load_lib() ?>theme/js/monthly.js"></script>
+<script type="text/javascript">
+	var remainder = <?php echo $calender_remainder; ?>;
+	var sampleEvents = {
+	"monthly": remainder
+	};
+
+	$(window).load( function() {
+		$('#mycalendar').monthly({
+			mode: 'event',
+			dataType: 'json',
+			events: sampleEvents
+		});
+	});
+</script>
+

@@ -141,7 +141,7 @@
 </div>
 <script type="text/javascript">
     $('#employee_dob').datepicker({
-        format: 'yyyy-mm-dd',
+        dateFormat: 'yy-mm-dd',
         autoclose: true,
     });
 </script>
