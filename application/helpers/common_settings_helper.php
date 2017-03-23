@@ -124,7 +124,7 @@ if(!function_exists('left_menus')){
 		
 		$result['menus'] = $menus;
 		$result['submenus'] = $manimenu;
-		
+				
 		return $result;	
 	}
 }
