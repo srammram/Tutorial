@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 23, 2017 at 01:34 PM
+-- Generation Time: Mar 23, 2017 at 01:33 PM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 5.6.28
 
@@ -23,15 +23,15 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `note`
+-- Table structure for table `remainder`
 --
 
-CREATE TABLE `note` (
+CREATE TABLE `remainder` (
   `id` int(11) NOT NULL,
-  `message` text NOT NULL,
-  `color` varchar(25) NOT NULL,
+  `title` varchar(250) NOT NULL,
+  `remain_date` datetime NOT NULL,
   `created_by` bigint(20) NOT NULL,
-  `created_on` datetime NOT NULL,
+  `created_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `status` tinyint(4) NOT NULL COMMENT '0-Pending, 1-Active, 2-Ignore'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -40,9 +40,9 @@ CREATE TABLE `note` (
 --
 
 --
--- Indexes for table `note`
+-- Indexes for table `remainder`
 --
-ALTER TABLE `note`
+ALTER TABLE `remainder`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -50,9 +50,9 @@ ALTER TABLE `note`
 --
 
 --
--- AUTO_INCREMENT for table `note`
+-- AUTO_INCREMENT for table `remainder`
 --
-ALTER TABLE `note`
+ALTER TABLE `remainder`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 20, 2017 at 10:59 AM
+-- Generation Time: Mar 23, 2017 at 01:33 PM
 -- Server version: 10.1.19-MariaDB
 -- PHP Version: 5.6.28
 
@@ -81,7 +81,13 @@ INSERT INTO `menus` (`id`, `name`, `slug`, `menuicon`, `menulink`, `menusort`, `
 (34, 'Manage Reporting', 'manage-reporting', '', 'reporting', 0, 10, 1, 0, '2017-03-20 06:15:21', 1),
 (35, 'Dashboard', 'dashboard', 'fa-gavel', 'dashboard', 1, 0, 1, 0, '2017-03-20 09:52:49', 1),
 (36, 'Add Menus', 'add-menus', '', 'menus/add', 0, 11, 1, 0, '2017-03-20 09:25:54', 1),
-(37, 'Manage Menus', 'manage-menus', '', 'menus', 0, 11, 1, 0, '2017-03-20 09:26:16', 1);
+(37, 'Manage Menus', 'manage-menus', '', 'menus', 0, 11, 1, 0, '2017-03-20 09:26:16', 1),
+(38, 'Remainder', 'remainder', 'fa-bell', 'none', 13, 0, 1, 0, '2017-03-23 06:18:13', 1),
+(39, 'Add Remainder', 'add-remainder', '', 'remainder/add', 0, 38, 1, 0, '2017-03-23 06:15:01', 1),
+(40, 'Manage Remainder', 'manage-remainder', '', 'remainder', 0, 38, 1, 0, '2017-03-23 06:15:08', 1),
+(41, 'gdgdf dfg dg', 'gdgdf-dfg-dg', 'fa-bell', 'none', 22, 0, 1, 0, '2017-03-23 10:04:29', 3),
+(42, 'df ff fdgfd', 'df-ff-fdgfd', '', 'dsdsfsdf', 1, 41, 1, 0, '2017-03-23 10:01:30', 1),
+(43, 'Dgdg', 'dgdg', '', 'gdsfsf', 2, 41, 1, 0, '2017-03-23 10:02:03', 3);
 
 --
 -- Indexes for dumped tables
@@ -101,7 +107,7 @@ ALTER TABLE `menus`
 -- AUTO_INCREMENT for table `menus`
 --
 ALTER TABLE `menus`
-  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
