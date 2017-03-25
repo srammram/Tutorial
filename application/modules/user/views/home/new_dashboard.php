@@ -30,7 +30,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
@@ -54,7 +54,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
@@ -76,7 +76,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
@@ -98,7 +98,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
@@ -124,7 +124,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
@@ -147,7 +147,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
@@ -170,7 +170,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
@@ -195,7 +195,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
@@ -218,7 +218,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
@@ -241,7 +241,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
@@ -266,7 +266,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="#">
+                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
@@ -286,7 +286,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 project_list">
             <div class="row">
                 <div class="col-xs-3" data-toggle="modal" data-target="#myModal" >
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -324,7 +324,7 @@
                     </div>
                 </div>
                 <div class="col-xs-3">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -335,7 +335,7 @@
                     </a>
                 </div>
                 <div class="col-xs-3">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -346,7 +346,7 @@
                     </a>
                 </div>
                 <div class="col-xs-3">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -360,7 +360,7 @@
             <div class="clear" style="clear: both;height:3em"></div>
             <div class="row">
                 <div class="col-xs-3">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -371,7 +371,7 @@
                     </a>
                 </div>
                 <div class="col-xs-3">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -388,7 +388,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 project_list">
             <div class="row">
                 <div class="col-xs-3" data-toggle="modal" data-target="#myModal" >
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -426,7 +426,7 @@
                     </div>
                 </div>
                 <div class="col-xs-3">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -437,7 +437,7 @@
                     </a>
                 </div>
                 <div class="col-xs-3">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -448,7 +448,7 @@
                     </a>
                 </div>
                 <div class="col-xs-3">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -478,7 +478,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 project_list">
             <div class="row">
                 <div class="col-xs-3" data-toggle="modal" data-target="#myModal" >
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -516,7 +516,7 @@
                     </div>
                 </div>
                 <div class="col-xs-3">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -527,7 +527,7 @@
                     </a>
                 </div>
                 <div class="col-xs-3">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">
@@ -538,7 +538,7 @@
                     </a>
                 </div>
                 <div class="col-xs-3">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <div class="boxTile">
                             <div class="square info easeAni">
                                 <div class="text">

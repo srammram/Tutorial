@@ -26,6 +26,7 @@ class Tasks extends CI_Controller {
         $this->static_reasons_table = 'static_reasons';
         $this->assigned_tasks_table = 'assigned_tasks';
         $this->tasks_table = 'tasks';
+        $this->task_dependendy_table = 'task_dependendy';
 
         $this->load->library('common');
         $this->load->helper('download');
@@ -198,6 +199,151 @@ class Tasks extends CI_Controller {
         $data['department_details'] = $getdepartments;
         $data['usertype_details'] = $getusertypes;
         $this->layout->display_frontend($this->folder . 'asign-tasks', $data);
+    }
+
+    public function add_dependency() {
+        $data = $this->load_module_info();
+        $user_id = $_SESSION['user_id'];
+        $getproject_details = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where team_tl_id=$user_id and t1.status<>2 and t1.status<>5");
+        $data['project_details'] = $getproject_details;
+        $this->layout->display_frontend($this->folder . 'add-dependency', $data);
+    }
+
+    public function get_dependency_task_details() {
+        $user_id = $_SESSION['user_id'];
+        $project_id = $this->input->post('project_id');
+        $user_departments_id = $_SESSION['user_departments_id'];
+        $get_task_details = $this->Mydb->custom_query("select id,task_title,project_duration,message from $this->tasks_table where projects_id=$project_id and from_user_id=$user_id and status<>2 and status<>6");
+        $get_department_details = $this->Mydb->custom_query("select t1.team_departments_id as id,t2.name as name from $this->project_teams_table t1 LEFT JOIN $this->departments_table t2 ON t2.id=t1.team_departments_id where t1.status<>2 and t1.projects_id=$project_id and t1.team_departments_id NOT IN ($user_departments_id)");
+        $data['task_details'] = $get_task_details;
+        $data['department_details'] = $get_department_details;
+        $body = $this->load->view($this->folder . 'get-ajax-task-list', $data);
+        echo $body;
+    }
+
+    public function selectend_datetime() {
+        $departemtns_id = explode(',', $this->input->post('departemtns_id'));
+        $department_name = array();
+        $department_id = array();
+        foreach ($departemtns_id as $ids):
+            $department_id = $ids;
+            $getdepartmentdetails = $this->Mydb->custom_query("select id,name from $this->departments_table where id=$department_id");
+            $getdepartmentdetails[0]['name'];
+
+            $departments_name[] = $getdepartmentdetails[0]['name'];
+            $departments_id[] = $getdepartmentdetails[0]['id'];
+
+        endforeach;
+        $data['department_name'] = $departments_name;
+        $data['department_id'] = $departments_id;
+        $body = $this->load->view($this->folder . 'dependency-end-datetime', $data);
+        echo $body;
+    }
+
+    public function insert_dependency() {
+        $project_id = $this->input->post('select_project');
+        $task_id = $this->input->post('select_task');
+        $department_id = $this->input->post('select_department');
+        $dependancy_endtime = $this->input->post('dependancy_endtime');
+        $user_id = $_SESSION['user_id'];
+//        task_dependendy_table
+        $i = 0;
+        foreach ($department_id as $ids):
+            $gettlid = $this->Mydb->custom_query("select team_tl_id from $this->project_teams_table where team_departments_id=$ids and projects_id=$project_id");
+            $insert_array = array('task_id' => $task_id,
+                'projects_id' => $project_id,
+                'set_datetime' => date('Y-m-d H:i:s', strtotime($dependancy_endtime[$i])),
+                'departments_id' => $ids,
+                'to_user_id' => $gettlid[0]['team_tl_id'],
+                'created_at' => $user_id,
+                'updated_on' => current_date(),
+                'created_ip' => ip2long(get_ip()),
+                'status' => 3);
+            $insert_id = $this->Mydb->insert($this->task_dependendy_table, $insert_array);
+            $i++;
+        endforeach;
+        if ($insert_id):
+            $session_datas = array('pms_err' => '0', 'pms_err_message' => 'New Task Dependency has been successfully added');
+            $this->session->set_userdata($session_datas);
+            redirect(frontend_url() . 'tasks/add_dependency');
+        else:
+            $session_datas = array('pms_err' => '0', 'pms_err_message' => 'New Task Dependency cant be added');
+            $this->session->set_userdata($session_datas);
+            redirect(frontend_url() . 'tasks/add_dependency');
+        endif;
+    }
+
+    public function manage_dependency() {
+        $user_id = $_SESSION['user_id'];
+        $user_departments_id = $_SESSION['user_departments_id'];
+        $getdependency_details = $this->Mydb->custom_query("select t1.*,(if(t1.status=1,'Active',if(t1.status=3,'Set',if(t1.status=4,'Unset','Ignored'))))as dependency_status,t2.project_name,t3.task_title,t4.name as department_name from $this->task_dependendy_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->tasks_table t3 ON t3.id=t1.task_id LEFT JOIN $this->departments_table t4 ON t4.id=t1.departments_id where (t1.to_user_id=$user_id OR t1.created_at=$user_id) AND t1.status<>2");
+        $data['records'] = $getdependency_details;
+        $this->layout->display_frontend($this->folder . 'manage-dependency', $data);
+    }
+
+    public function view_dependency() {
+        $dependency_id = $this->input->post('dependency_id');
+        $getdependency_details = $this->Mydb->custom_query("select t1.*,(if(t1.status=1,'Active',if(t1.status=3,'Set',if(t1.status=4,'Unset','Ignored'))))as dependency_status,t2.project_name,t3.task_title,t4.name as department_name from $this->task_dependendy_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->tasks_table t3 ON t3.id=t1.task_id LEFT JOIN $this->departments_table t4 ON t4.id=t1.departments_id where t1.id=$dependency_id");
+        $data['records'] = $getdependency_details;
+        $body = $this->load->view($this->folder . 'view-dependency', $data);
+        echo $body;
+    }
+
+    public function edit_dependency() {
+        $dependency_id = $this->input->post('dependency_id');
+        $getdependency_details = $this->Mydb->custom_query("select t1.*,(if(t1.status=1,'Active',if(t1.status=3,'Set',if(t1.status=4,'Unset','Ignored'))))as dependency_status,t2.project_name,t3.task_title,t4.name as department_name from $this->task_dependendy_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->tasks_table t3 ON t3.id=t1.task_id LEFT JOIN $this->departments_table t4 ON t4.id=t1.departments_id where t1.id=$dependency_id");
+        $data['records'] = $getdependency_details;
+        $body = $this->load->view($this->folder . 'edit-dependency', $data);
+        echo $body;
+    }
+
+    public function reasign_dependency() {
+        $dependency_id = $this->input->post('dependency_id');
+        $getdependency_details = $this->Mydb->custom_query("select t1.*,(if(t1.status=1,'Active',if(t1.status=3,'Set',if(t1.status=4,'Unset','Ignored'))))as dependency_status,t2.project_name,t3.task_title,t4.name as department_name from $this->task_dependendy_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->tasks_table t3 ON t3.id=t1.task_id LEFT JOIN $this->departments_table t4 ON t4.id=t1.departments_id where t1.id=$dependency_id");
+        $data['records'] = $getdependency_details;
+        $body = $this->load->view($this->folder . 'reasign-dependency', $data);
+        echo $body;
+    }
+
+    public function update_reasign_dependency() {
+        $dependency_id = $this->input->post('dependency_id');
+        $set_datetime = date('Y-m-d H:i:s', strtotime($this->input->post('set_datetime')));
+        $change_status = $this->input->post('change_status');
+        $reassign_message = $this->input->post('reassign_message');
+        $getreasign_count = $this->Mydb->custom_query("select reasign_count from $this->task_dependendy_table where id=$dependency_id");
+        $reasign_count = $getreasign_count[0]['reasign_count'];
+        $update_array = array('unset_datetime' => $set_datetime,
+            'status' => $change_status,
+            'reasign_message' => $reassign_message,
+            'reasign_count' => $reasign_count + 1);
+        $update_id = $this->Mydb->update($this->task_dependendy_table, array('id' => $dependency_id), $update_array);
+        if ($update_id):
+            $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Task Dependency has been successfully updated');
+            $this->session->set_userdata($session_datas);
+            redirect(frontend_url() . 'tasks/manage_dependency');
+        else:
+            $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Task Dependency cant be updated');
+            $this->session->set_userdata($session_datas);
+            redirect(frontend_url() . 'tasks/manage_dependency');
+        endif;
+    }
+
+    public function update_dependency() {
+        $dependency_id = $this->input->post('dependency_id');
+        $unset_datetime = date('Y-m-d H:i:s', strtotime($this->input->post('unset_datetime')));
+        $change_status = $this->input->post('change_status');
+        $update_array = array('unset_datetime' => $unset_datetime,
+            'status' => $change_status);
+        $update_id = $this->Mydb->update($this->task_dependendy_table, array('id' => $dependency_id), $update_array);
+        if ($update_id):
+            $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Task Dependency has been successfully updated');
+            $this->session->set_userdata($session_datas);
+            redirect(frontend_url() . 'tasks/manage_dependency');
+        else:
+            $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Task Dependency cant be updated');
+            $this->session->set_userdata($session_datas);
+            redirect(frontend_url() . 'tasks/manage_dependency');
+        endif;
     }
 
     public function get_user_details() {

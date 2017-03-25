@@ -14,9 +14,9 @@
 
     </head>
     <body class="flat-blue">
+
         <!-- top  menu  -->
         <?php echo $this->load->view('layout/top-menu'); ?>
-
         <!-- Main Content -->		
 
         <?php echo $site_body; ?>

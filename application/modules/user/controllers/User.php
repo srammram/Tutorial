@@ -40,8 +40,6 @@ class USER extends CI_Controller {
         $this->load->helper('smstemplate');
         $this->load->helper('emailtemplate');
         $this->menus_table = 'menus';
-		$this->note_table = 'note';
-		$this->remainder_table = 'remainder';
         $config = Array(
             'mailtype' => 'html',
             'charset' => 'utf-8',
@@ -78,12 +76,15 @@ class USER extends CI_Controller {
 
     public function index() {
 
-
         $data = array();
         $data['module_label'] = $this->module_label;
         $data['module_labels'] = $this->module_label;
         $data['module'] = $this->module;
-        $this->layout->display_frontend($this->folder . 'homepage', $data);
+        if (get_session_value('user_id') == '') {
+            $this->layout->display_frontend($this->folder . 'homepage', $data);
+        } else {
+            redirect(frontend_url() . 'dashboard');
+        }
     }
 
     public function login() {
@@ -399,119 +400,10 @@ class USER extends CI_Controller {
         $body = $this->load->view($this->folder . 'editholiday', $data);
         echo $body;
     }
-	
-	
-	########### Remainder ... ###########
 
-    public function remainder($method = null, $args = array()) {
-        $data = $this->load_module_info();
-        if (!empty($method)) {
-            if ($method[0] == 'add') {
-                $data = $this->load_module_info();
-                $this->layout->display_frontend($this->folder . 'remainder-add', $data);
-            } elseif ($method[0] == 'insert') {
-
-                $this->form_validation->set_rules('remain_date', 'Holiday Date', 'required');
-                $this->form_validation->set_rules('title', 'Reason', 'required');
-                $this->form_validation->set_rules('status', 'Status', 'required');
-
-                $remain_date = $this->input->post('remain_date');
-                $title = $this->input->post('title');
-				$description = $this->input->post('description');
-                $status = $this->input->post('status');
-
-                if ($this->form_validation->run($this) == TRUE) {
-                    $check = $this->Mydb->get_record('*', $this->remainder_table, array('title' => $title));
-                    if (!empty($check)) {
-                        $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Title is already exit. please change data');
-                        $this->session->set_userdata($session_datas);
-                        redirect(frontend_url() . 'remainder/add');
-                    } else {
-                        $insert_array = array(
-                            'remain_date' => $remain_date,
-                            'title' => $title,
-                            'status' => $status,
-                            'created_by' => get_session_value('user_id'),
-                            'created_on' => current_date(),
-                        );
-                        $remainder = $this->Mydb->insert($this->remainder_table, $insert_array);
-
-                        $log_msg = 'Remainder Added by ' . get_session_value('user_name');
-                        $log_from = get_session_value('user_id');
-                        $log_to = get_session_value('user_id');
-                        log_history($log_msg, $log_from, $log_to);
-
-                        if (!empty($remainder)) {
-                            $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Remainder has been successfully added.. ');
-                            $this->session->set_userdata($session_datas);
-                            redirect(frontend_url() . 'remainder/add');
-                        } else {
-                            $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Remainder cannot be added. Please try again');
-                            $this->session->set_userdata($session_datas);
-                            redirect(frontend_url() . 'remainder/add');
-                        }
-                    }
-                } else {
-                    $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
-                    $this->session->set_userdata($session_datas);
-                    redirect(frontend_url() . 'remainder/add');
-                }
-            } else if ($method[0] == 'update') {
-
-                $edit_id = $this->input->post('edit_id');
-                $remain_date = $this->input->post('remain_date');
-                $title = $this->input->post('title');
-                $update_array = array('remain_date' => $remain_date,
-                    'title' => $title,
-                    'created_by' => get_session_value('user_id'),
-                    'created_on' => current_date());
-
-
-                $check = $this->Mydb->get_record('*', $this->remainder_table, array('title' => $title, 'id!=' => $edit_id));
-
-                $log_msg = 'Remainder Edited by ' . get_session_value('user_name');
-                $log_from = get_session_value('user_id');
-                $log_to = get_session_value('user_id');
-                log_history($log_msg, $log_from, $log_to);
-
-                if (!empty($check)) {
-                    $response['message'] = "<div class='alert alert-danger'>Your title already exit.</div>";
-                } else {
-                    $updatedetails = $this->Mydb->update($this->remainder_table, array('id' => $edit_id), $update_array);
-
-                    if ($updatedetails) {
-                        $response['message'] = "<div class='alert alert-success'>Your details has been successfully updated.</div>";
-                    } else {
-                        $response['message'] = "<div class='alert alert-danger'>Your details can't be  updated. please try again</div>";
-                    }
-                }
-
-                echo json_encode($response);
-            }
-        } else {
-            $data = $this->load_module_info();
-            $getremainderdetails = $this->Mydb->custom_query("select * from $this->remainder_table WHERE status!='3'");
-            $data['records'] = $getremainderdetails;
-            $this->layout->display_frontend($this->folder . 'remainder', $data);
-        }
-    }
-
-    ########### Holidays Edit ... ###########
-
-    public function editremainder() {
-        $editid = $this->input->post('edit_id');
-        $getremainderdetails = $this->Mydb->custom_query("select remain_date, title, status from $this->remainder_table where id=$editid");
-        $data['remain_date'] = $getremainderdetails[0]['remain_date'];
-        $data['title'] = $getremainderdetails[0]['title'];
-        $data['edit_id'] = $editid;
-        $body = $this->load->view($this->folder . 'editremainder', $data);
-        echo $body;
-    }
-	
     public function dashboard() {
         $data = $this->load_module_info();
         $user_id = $_SESSION['user_id'];
-
         $getnotificationcount = $this->Mydb->custom_query("SELECT id, (select count(id) from $this->projects_table where project_type_status=1 and status<>6 and status<>2 limit 1) as ongoing,(select count(id) from $this->projects_table where project_type_status=2 and status<>6 and status<>2 limit 1) as Upcoming,(select count(id) from $this->projects_table where status=6 and status<>2 limit 1) as completed,(select count(id) from $this->projects_table where project_type_status=3 and status<>6 and status<>2 limit 1) as Pipeline from $this->projects_table limit 1");
         $getassignedcount = $this->Mydb->custom_query("select count(id) as assigned_count from $this->assigned_tasks_table where assigned_from=$user_id and status<>2");
         $getmytaskscount = $this->Mydb->custom_query("select count(id) as my_tasks_count from $this->tasks_table where to_user_id=$user_id and status<>2");
@@ -541,22 +433,6 @@ class USER extends CI_Controller {
         }
 
         $data['chart_total'] = $barchart;
-		
-		$remainder = $this->Mydb->custom_query("SELECT id, title AS name, DATE(remain_date) as startdate FROM $this->remainder_table WHERE created_by = '".$user_id."' AND status = '1'");
-		
-		 for ($i = 0; $i < count($remainder); $i++) {
-			 $random = random_color();
-             $remaindercolor[] = array('color' => '#' . $random);
-			 $remainderurl[] = array('url' => 'javascript:void(0);');
-		 }
-		 
-		 foreach ($remainder as $key => $value) {
-            $total_remainder[] = array_merge($remaindercolor[$key], $remainderurl[$key], $remainder[$key]);
-        }
-		
-		$data['remainder'] = $total_remainder;
-		
-		
         $this->layout->display_frontend($this->folder . 'new_dashboard', $data);
     }
 
@@ -1948,98 +1824,86 @@ class USER extends CI_Controller {
 
     public function menus($method = null, $args = array()) {
         $data = $this->load_module_info();
-				
+
         if (!empty($method)) {
             if ($method[0] == 'add') {
                 $data = $this->load_module_info();
                 $this->layout->display_frontend($this->folder . 'menus-add', $data);
-            }elseif ($method[0] == 'view') { 
-				$data = $this->load_module_info();
-				$parent_id = decode_value($method[1]);
-				$data['menurecord'] = $this->Mydb->custom_query("SELECT * FROM $this->menus_table WHERE id='".$parent_id."'");
-				$data['subrecord'] = $this->Mydb->custom_query("SELECT * FROM $this->menus_table WHERE parent_id='".$parent_id."' AND status!='3'");
+            } elseif ($method[0] == 'view') {
+                $data = $this->load_module_info();
+                $parent_id = decode_value($method[1]);
+                $data['menurecord'] = $this->Mydb->custom_query("SELECT * FROM $this->menus_table WHERE id='" . $parent_id . "'");
+                $data['subrecord'] = $this->Mydb->custom_query("SELECT * FROM $this->menus_table WHERE parent_id='" . $parent_id . "'");
                 $this->layout->display_frontend($this->folder . 'menus-view', $data);
-				
-			}elseif($method[0] == 'submenusadd'){
-				$data = $this->load_module_info();
-				$parent_id = decode_value($method[1]);
-				$data['menurecord'] = $this->Mydb->custom_query("SELECT * FROM $this->menus_table WHERE id='".$parent_id."'");
+            } elseif ($method[0] == 'submenusadd') {
+                $data = $this->load_module_info();
+                $parent_id = decode_value($method[1]);
+                $data['menurecord'] = $this->Mydb->custom_query("SELECT * FROM $this->menus_table WHERE id='" . $parent_id . "'");
                 $this->layout->display_frontend($this->folder . 'submenus-add', $data);
-				
-			}elseif ($method[0] == 'subinsert'){
-				$this->form_validation->set_rules('menus', 'Menus Name', 'required');
+            } elseif ($method[0] == 'subinsert') {
+                $this->form_validation->set_rules('menus', 'Menus Name', 'required');
                 $this->form_validation->set_rules('status', 'Status', 'required');
-				$this->form_validation->set_rules('menusort', 'Order', 'required');
-				$this->form_validation->set_rules('menulink', 'Link', 'required');
 
                 $menus = $this->input->post('menus');
-				$menulink = $this->input->post('menulink');
-				$menusort = $this->input->post('menusort');
                 $status = $this->input->post('status');
-				$parent_id = $this->input->post('parent_id');
+                $parent_id = $this->input->post('parent_id');
 
                 if ($this->form_validation->run($this) == TRUE) {
                     $check = $this->Mydb->get_record('*', $this->menus_table, array('name' => $menus, 'parent_id' => $parent_id));
                     if (!empty($check)) {
                         $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Menus is already exit. please change data');
                         $this->session->set_userdata($session_datas);
-                        redirect(frontend_url() . 'menus/submenusadd/'.encode_value($parent_id));
+                        redirect(frontend_url() . 'menus/submenusadd/' . encode_value($parent_id));
                     } else {
                         $insert_array = array(
                             'name' => $menus,
                             'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
                             'status' => $status,
-							'menulink' => $menulink,
-							'menusort' => $menusort,
-							'parent_id' => $parent_id,
+                            'parent_id' => $parent_id,
                             'created_by' => get_session_value('user_id'),
-							'created_ip' => ip2long(get_ip()),
+                            'created_ip' => ip2long(get_ip()),
                         );
                         $menusdetails = $this->Mydb->insert($this->menus_table, $insert_array);
-						
-						$log_msg = 'Menus Added by '.get_session_value('user_name');
-						$log_from = get_session_value('user_id');
-						$log_to = get_session_value('user_id');
-						log_history($log_msg, $log_from, $log_to);
+
+                        $log_msg = 'Menus Added by ' . get_session_value('user_name');
+                        $log_from = get_session_value('user_id');
+                        $log_to = get_session_value('user_id');
+                        log_history($log_msg, $log_from, $log_to);
 
                         if (!empty($menusdetails)) {
                             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Menus has been successfully added.. ');
                             $this->session->set_userdata($session_datas);
-                            redirect(frontend_url() . 'menus/submenusadd/'.encode_value($parent_id));
+                            redirect(frontend_url() . 'menus/submenusadd/' . encode_value($parent_id));
                         } else {
                             $session_datas = array('pms_err' => '1', 'pms_err_message' => 'menus cannot be added. Please try again');
                             $this->session->set_userdata($session_datas);
-                            redirect(frontend_url() . 'menus/submenusadd/'.encode_value($parent_id));
+                            redirect(frontend_url() . 'menus/submenusadd/' . encode_value($parent_id));
                         }
                     }
                 } else {
                     $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
                     $this->session->set_userdata($session_datas);
-                    redirect(frontend_url() . 'menus/submenusadd/'.encode_value($parent_id));
+                    redirect(frontend_url() . 'menus/submenusadd/' . encode_value($parent_id));
                 }
-			}elseif ($method[0] == 'subupdate'){
-				 $edit_id = $this->input->post('edit_id');
+            } elseif ($method[0] == 'subupdate') {
+                $edit_id = $this->input->post('edit_id');
                 $menus = $this->input->post('menus');
-				$menulink = $this->input->post('menulink');
-				$menusort = $this->input->post('menusort');
-				$parent_id = $this->input->post('parent_id');
+                $parent_id = $this->input->post('parent_id');
                 $edit_status = $this->input->post('edit_status');
                 $update_array = array('name' => $menus,
                     'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
                     'status' => $edit_status,
-					'parent_id' => $parent_id,
-					'menusort' => $menusort,
-					'menulink' => $menulink,
+                    'parent_id' => $parent_id,
                     'created_by' => get_session_value('user_id'),
                     'created_ip' => ip2long(get_ip()));
 
 
                 $check = $this->Mydb->get_record('*', $this->menus_table, array('name' => $menus, 'id!=' => $edit_id, 'parent_id' => $parent_id));
-				
-				$log_msg = 'Menus Edited by '.get_session_value('user_name');
-				$log_from = get_session_value('user_id');
-				$log_to = get_session_value('user_id');
-				log_history($log_msg, $log_from, $log_to);
+
+                $log_msg = 'Menus Edited by ' . get_session_value('user_name');
+                $log_from = get_session_value('user_id');
+                $log_to = get_session_value('user_id');
+                log_history($log_msg, $log_from, $log_to);
 
                 if (!empty($check)) {
                     $response['message'] = "<div class='alert alert-danger'>Your sub menus already exit.</div>";
@@ -2054,20 +1918,13 @@ class USER extends CI_Controller {
                 }
 
                 echo json_encode($response);
-				
-			}elseif ($method[0] == 'insert') {
+            } elseif ($method[0] == 'insert') {
 
                 $this->form_validation->set_rules('menus', 'Menus Name', 'required');
                 $this->form_validation->set_rules('status', 'Status', 'required');
-				$this->form_validation->set_rules('menulink', 'Menu Link', 'required');
-				$this->form_validation->set_rules('menusort', 'Order', 'required');
-				$this->form_validation->set_rules('menuicon', 'Icon', 'required');
 
                 $menus = $this->input->post('menus');
                 $status = $this->input->post('status');
-				$menulink = $this->input->post('menulink');
-				$menusort = $this->input->post('menusort');
-				$menuicon = $this->input->post('menuicon');
 
                 if ($this->form_validation->run($this) == TRUE) {
                     $check = $this->Mydb->get_record('*', $this->menus_table, array('name' => $menus));
@@ -2080,19 +1937,16 @@ class USER extends CI_Controller {
                             'name' => $menus,
                             'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
                             'status' => $status,
-							'menulink' => $menulink,
-							'menusort' => $menusort,
-							'menuicon' => $menuicon,
-							'parent_id' => '0',
+                            'parent_id' => '0',
                             'created_by' => get_session_value('user_id'),
-							'created_ip' => ip2long(get_ip()),
+                            'created_ip' => ip2long(get_ip()),
                         );
                         $menusdetails = $this->Mydb->insert($this->menus_table, $insert_array);
-						
-						$log_msg = 'Menus Added by '.get_session_value('user_name');
-						$log_from = get_session_value('user_id');
-						$log_to = get_session_value('user_id');
-						log_history($log_msg, $log_from, $log_to);
+
+                        $log_msg = 'Menus Added by ' . get_session_value('user_name');
+                        $log_from = get_session_value('user_id');
+                        $log_to = get_session_value('user_id');
+                        log_history($log_msg, $log_from, $log_to);
 
                         if (!empty($menusdetails)) {
                             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Menus has been successfully added.. ');
@@ -2113,25 +1967,20 @@ class USER extends CI_Controller {
 
                 $edit_id = $this->input->post('edit_id');
                 $menus = $this->input->post('menus');
-				$menulink = $this->input->post('menulink');
-				$menusort = $this->input->post('menusort');
-				$menuicon = $this->input->post('menuicon');
                 $edit_status = $this->input->post('edit_status');
                 $update_array = array('name' => $menus,
                     'slug' => strtolower(preg_replace('/[^A-Za-z0-9\-]/', '', str_replace(' ', '-', $menus))),
                     'status' => $edit_status,
-					'menulink' => $menulink,
-					'menusort' => $menusort,
-					'menuicon' => $menuicon,
                     'created_by' => get_session_value('user_id'),
                     'created_ip' => ip2long(get_ip()));
 
+
                 $check = $this->Mydb->get_record('*', $this->menus_table, array('name' => $menus, 'id!=' => $edit_id));
-				
-				$log_msg = 'Menus Edited by '.get_session_value('user_name');
-				$log_from = get_session_value('user_id');
-				$log_to = get_session_value('user_id');
-				log_history($log_msg, $log_from, $log_to);
+
+                $log_msg = 'Menus Edited by ' . get_session_value('user_name');
+                $log_from = get_session_value('user_id');
+                $log_to = get_session_value('user_id');
+                log_history($log_msg, $log_from, $log_to);
 
                 if (!empty($check)) {
                     $response['message'] = "<div class='alert alert-danger'>Your menus already exit.</div>";
@@ -2159,27 +2008,22 @@ class USER extends CI_Controller {
 
     public function editmenus() {
         $editid = $this->input->post('edit_id');
-        $getmenudetails = $this->Mydb->custom_query("select name, menulink, menuicon, menusort, status from $this->menus_table where id=$editid");
+        $getmenudetails = $this->Mydb->custom_query("select name, status from $this->menus_table where id=$editid");
         $data['menus'] = $getmenudetails[0]['name'];
         $data['status'] = $getmenudetails[0]['status'];
-		$data['menulink'] = $getmenudetails[0]['menulink'];
-		$data['menusort'] = $getmenudetails[0]['menusort'];
-		$data['menuicon'] = $getmenudetails[0]['menuicon'];
         $data['edit_id'] = $editid;
         $body = $this->load->view($this->folder . 'editmenus', $data);
         echo $body;
     }
-	
-	 ########### Sub Menus Edit ... ###########
+
+    ########### Sub Menus Edit ... ###########
 
     public function editsubmenus() {
         $editid = $this->input->post('edit_id');
-        $getmenudetails = $this->Mydb->custom_query("select name, menulink, menusort, parent_id, status from $this->menus_table where id=$editid");
+        $getmenudetails = $this->Mydb->custom_query("select name, parent_id, status from $this->menus_table where id=$editid");
         $data['menus'] = $getmenudetails[0]['name'];
-		$data['parent_id'] = $getmenudetails[0]['parent_id'];
+        $data['parent_id'] = $getmenudetails[0]['parent_id'];
         $data['status'] = $getmenudetails[0]['status'];
-		$data['menulink'] = $getmenudetails[0]['menulink'];
-		$data['menusort'] = $getmenudetails[0]['menusort'];
         $data['edit_id'] = $editid;
         $body = $this->load->view($this->folder . 'editsubmenus', $data);
         echo $body;
@@ -2218,96 +2062,6 @@ class USER extends CI_Controller {
         $this->Mydb->insert($this->login_history_table, array('	logout_time' => current_date(), 'login_ip' => ip2long(get_ip()), 'user_id' => $user_id));
         $this->session->sess_destroy();
         redirect(frontend_url());
-    }
-	
-	############## Strick Note ###########################
-	
-	public function note($method = null, $args = array()){
-		if(!empty($method)){
-			if ($method[0] == 'insert') {
-				$user_id = get_session_value('user_id');
-				$this->form_validation->set_rules('message');	
-				$this->form_validation->set_rules('color');	
-				
-				$message = $this->input->post('message');
-				$color = $this->input->post('color');
-				
-				$insert_array = array(
-					'message' => $message,
-					'color' => $color,
-					'created_by' => $user_id,
-					'created_on' => current_date(),
-					'status' => '1' 
-				);
-				
-				$insert = $this->Mydb->insert($this->note_table, $insert_array);
-
-				if ($insert) 
-				{
-					$response['status'] = 'success';
-				} else {
-					$response['status'] = 'error';
-				}
-                echo json_encode($response);
-				exit;
-			}elseif($method[0] == 'update'){
-				$user_id = get_session_value('user_id');
-				$edit_id = $this->input->post('edit_id');
-				
-				$this->form_validation->set_rules('message');	
-				$this->form_validation->set_rules('color');	
-				
-				$message = $this->input->post('message');
-				$color = $this->input->post('color');
-				$note_id = $this->input->post('note_id');
-				
-				$update_array = array(
-					'message' => $message,
-					'color' => $color,
-					'created_on' => current_date(),
-				);
-				$update = $this->Mydb->update($this->note_table, array('id' => $edit_id, 'created_by' => $user_id), $update_array);
-				if ($update) 
-				{
-					$response['status'] = 'success';
-				} else {
-					$response['status'] = 'error';
-				}
-                echo json_encode($response);
-				exit;
-					
-			}elseif($method[0] == 'trash'){
-				$user_id = get_session_value('user_id');
-				$note_id = $this->input->post('note_id');
-				
-				$update_array = array(
-					'created_on' => current_date(),
-					'status' => '2' 
-				);
-				$update = $this->Mydb->update($this->note_table, array('id' => $note_id, 'created_by' => $user_id), $update_array);
-				
-				if ($update) 
-				{
-					$response['status'] = 'success';
-				} else {
-					$response['status'] = 'error';
-				}
-				
-                echo json_encode($response);
-				exit;
-			}
-		}
-	}
-	########### Note Edit ... ###########
-
-    public function editnote() {
-        $editid = $this->input->post('edit_id');
-        $getnotedetails = $this->Mydb->custom_query("select message, color from $this->note_table where id=$editid");
-        $data['message'] = $getnotedetails[0]['message'];
-        $data['color'] = $getnotedetails[0]['color'];
-        $data['edit_id'] = $editid;
-        $body = $this->load->view($this->folder . 'editnote', $data);
-        echo $body;
     }
 
 }
