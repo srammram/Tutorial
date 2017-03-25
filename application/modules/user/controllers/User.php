@@ -1559,8 +1559,10 @@ class USER extends CI_Controller {
                 if ($this->form_validation->run($this) == TRUE) {
                     $typeslug = url_title($this->input->post('email_name'), '-', TRUE);
 
-                    $insertarray = array('name' => $email_name, 'slug' => $typeslug, 'from_email' => $email_from, 'reply_to' => $email_to, 'email_content' => $email_template, 'email_variables' => $email_variable, 'status' => $email_status, 'created_on' => current_date());
-                    $emailinsertid = $this->Mydb->insert($this->sms_table, $insertarray);
+                    $insertarray = array('name' => $email_name, 'slug' => $typeslug, 'from_email' => $email_from, 'reply_to' => $email_to, 'email_content' => $email_template, 'email_variables' => $email_variable, 'status' => $email_status, 'created' => current_date());
+					
+                    $emailinsertid = $this->Mydb->insert($this->email_table, $insertarray);
+					
                     $log_msg = 'Email Setting Added by ' . get_session_value('user_name');
                     $log_from = get_session_value('user_id');
                     $log_to = get_session_value('user_id');
