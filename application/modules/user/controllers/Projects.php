@@ -294,6 +294,7 @@ class Projects extends CI_Controller {
     public function assigned_projects() {
         $project_id = $this->input->post('project_id');
         $getprojectdetails = $this->Mydb->custom_query("select * from $this->projects_table where id=$project_id");
+
         $data['records'] = $getprojectdetails;
         $data['project_id'] = $project_id;
         $project_team = explode(',', $getprojectdetails[0]['project_team']);
@@ -318,7 +319,6 @@ class Projects extends CI_Controller {
         $data = $this->load_module_info();
         $user_id = $_SESSION['user_id'];
         $getprojectdetails = $this->Mydb->custom_query("select t1.*,t3.name as department_name,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->departments_table t3 ON t3.id=t1.team_departments_id where t1.team_tl_id=$user_id and t1.status<>2");
-
         $data['get_assigned_project_details'] = $getprojectdetails;
         $this->layout->display_frontend($this->folder . 'assigned_team_project', $data);
     }

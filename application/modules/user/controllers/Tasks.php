@@ -187,11 +187,11 @@ class Tasks extends CI_Controller {
         $user_reporter_id = $_SESSION['user_reporter_id'];
         $user_type_id = $_SESSION['user_type_id'];
         if ($user_type_id < 5):
-            $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>2");
+            $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table  where status<>2 group by id");
         elseif ($user_type_id == 5):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id group by t1.projects_id");
         elseif ($user_type_id == 6):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_table where t1.status<>2 and t1.team_tl_id=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_table where t1.status<>2 and t1.team_tl_id=$user_id group by t1.projects_id");
         endif;
         $getdepartments = $this->Mydb->custom_query("select id,name from $this->departments_table where status<>2");
         $getusertypes = $this->Mydb->custom_query("select id,type_name from $this->user_type_table where status<>2");
@@ -260,8 +260,15 @@ class Tasks extends CI_Controller {
                 'created_ip' => ip2long(get_ip()),
                 'status' => 3);
             $insert_id = $this->Mydb->insert($this->task_dependendy_table, $insert_array);
+            $notiy_msg = 'New Task Dependency has been added' . ' by ' . $_SESSION['user_name'];
+            $notiy_from = $_SESSION['user_id'];
+            $notiy_to = $gettlid[0]['team_tl_id'];
+            $notiy_type = 3;
+
+            create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
             $i++;
         endforeach;
+
         if ($insert_id):
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'New Task Dependency has been successfully added');
             $this->session->set_userdata($session_datas);
@@ -307,6 +314,7 @@ class Tasks extends CI_Controller {
 
     public function update_reasign_dependency() {
         $dependency_id = $this->input->post('dependency_id');
+        $getdetails = $this->Mydb->custom_query("select to_user_id from $this->task_dependendy_table where id=$dependency_id");
         $set_datetime = date('Y-m-d H:i:s', strtotime($this->input->post('set_datetime')));
         $change_status = $this->input->post('change_status');
         $reassign_message = $this->input->post('reassign_message');
@@ -317,6 +325,12 @@ class Tasks extends CI_Controller {
             'reasign_message' => $reassign_message,
             'reasign_count' => $reasign_count + 1);
         $update_id = $this->Mydb->update($this->task_dependendy_table, array('id' => $dependency_id), $update_array);
+        $notiy_msg = 'Task Dependency has been Reassigned' . ' by ' . $_SESSION['user_name'];
+        $notiy_from = $_SESSION['user_id'];
+        $notiy_to = $getdetails[0]['to_user_id'];
+        $notiy_type = 3;
+
+        create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
         if ($update_id):
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Task Dependency has been successfully updated');
             $this->session->set_userdata($session_datas);
@@ -330,11 +344,17 @@ class Tasks extends CI_Controller {
 
     public function update_dependency() {
         $dependency_id = $this->input->post('dependency_id');
+        $getdetails = $this->Mydb->custom_query("select created_at from $this->task_dependendy_table where id=$dependency_id");
         $unset_datetime = date('Y-m-d H:i:s', strtotime($this->input->post('unset_datetime')));
         $change_status = $this->input->post('change_status');
         $update_array = array('unset_datetime' => $unset_datetime,
             'status' => $change_status);
         $update_id = $this->Mydb->update($this->task_dependendy_table, array('id' => $dependency_id), $update_array);
+        $notiy_msg = 'Task Dependency has been updated' . ' by ' . $_SESSION['user_name'];
+        $notiy_from = $_SESSION['user_id'];
+        $notiy_to = $getdetails[0]['created_at'];
+        $notiy_type = 3;
+        create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
         if ($update_id):
             $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Task Dependency has been successfully updated');
             $this->session->set_userdata($session_datas);
@@ -350,6 +370,10 @@ class Tasks extends CI_Controller {
         $data = $this->load_module_info();
         $user_type_id = $this->input->post('user_type_id');
         $department_id = $this->input->post('department_id');
+        $project_id = $this->input->post('project_id');
+        $user_id = $_SESSION['user_id'];
+        $getdepartmentdetails = $this->Mydb->custom_query("select GROUP_CONCAT(team_departments_id) as department_id from $this->project_teams_table where team_tl_id=$user_id and projects_id=$project_id");
+        $user_departments_id = explode(',', $_SESSION['user_departments_id']);
         if ($user_type_id == '') {
             $user_type_id = 6;
         } else {
@@ -360,11 +384,25 @@ class Tasks extends CI_Controller {
         } else {
             $where = " AND user_type_id=$user_type_id AND user_departments_id=$department_id";
         }
-
         $getemployee_details = $this->Mydb->custom_query("select user_name,id from $this->login_table where status=1 $where");
-
+        if (count($user_departments_id) > 1):
+            $implode_department_details = $getdepartmentdetails[0]['department_id'];
+            $getdepartmentdetails = $this->Mydb->custom_query("select id,name from $this->departments_table where id IN($implode_department_details)");
+            $data['department_details'] = $getdepartmentdetails;
+        else:
+            $data['department_details'] = '';
+        endif;
         $data['records'] = $getemployee_details;
         $body = $this->load->view($this->folder . 'get_user_details', $data);
+        echo $body;
+    }
+
+    public function get_employee_details() {
+        $department_id = $this->input->post('department_id');
+        $user_id = $_SESSION['user_id'];
+        $getdetails = $this->Mydb->custom_query("select user_name,id from $this->login_table where user_departments_id=$department_id and user_reporter_id=$user_id");
+        $data['records'] = $getdetails;
+        $body = $this->load->view($this->folder . 'get_employee_details', $data);
         echo $body;
     }
 
@@ -1133,10 +1171,24 @@ class Tasks extends CI_Controller {
 
     public function getavailablehours() {
         $project_id = $this->input->post('project_id');
+        $departments_id = $this->input->post('departments_id');
         $team_id = $_SESSION['user_departments_id'];
         $getestimatehours = $this->Mydb->custom_query("select time_duration from $this->project_teams_table where projects_id=$project_id and team_departments_id=$team_id");
         $estimated_hours = $getestimatehours[0]['time_duration'];
         $getusedhours = $this->Mydb->custom_query("select SUM(project_duration) as used_hours  from $this->tasks_table where projects_id=$project_id and departments_id=$team_id and status<>2");
+        $teamasigned_hours = $getusedhours[0]['used_hours'];
+        $available_hours = $estimated_hours - $teamasigned_hours;
+        $response['available_hours'] = $available_hours;
+        echo json_encode($response);
+    }
+
+    public function getavailable_hours() {
+        $project_id = $this->input->post('project_id');
+        $departments_id = $this->input->post('department_id');
+        $team_id = $_SESSION['user_departments_id'];
+        $getestimatehours = $this->Mydb->custom_query("select time_duration from $this->project_teams_table where projects_id=$project_id and team_departments_id=$departments_id");
+        $estimated_hours = $getestimatehours[0]['time_duration'];
+        $getusedhours = $this->Mydb->custom_query("select SUM(project_duration) as used_hours  from $this->tasks_table where projects_id=$project_id and departments_id=$departments_id and status<>2");
         $teamasigned_hours = $getusedhours[0]['used_hours'];
         $available_hours = $estimated_hours - $teamasigned_hours;
         $response['available_hours'] = $available_hours;
