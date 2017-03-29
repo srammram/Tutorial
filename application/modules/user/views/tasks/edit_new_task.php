@@ -181,19 +181,19 @@
 </form>
 <script type="text/javascript">
 
-    $(function () {
-        $('#add_start_date').datetimepicker({
-            daysOfWeekDisabled: [0],
-            minDate: moment(),
-            useCurrent: false,
-        });
-        $('#add_end_date').datetimepicker({
-            useCurrent: false,
-        });
-        $("#add_start_date").on("dp.change", function (e) {
-            $('#add_end_date').data("DateTimePicker").minDate(e.date);
-        });
 
-
+    $('#add_start_date').datetimepicker({
+        daysOfWeekDisabled: [0],
+        minDate: moment(),
+        useCurrent: false,
     });
+    $('#add_end_date').datetimepicker({
+        useCurrent: false,
+    });
+    $("#add_start_date").on("dp.change", function (e) {
+        $('#add_end_date').data("DateTimePicker").minDate(e.date);
+    });
+
+
+
 </script>

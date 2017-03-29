@@ -1,10 +1,48 @@
 
 <?php echo $this->load->view('layout/left-menu'); ?>
- <?php $calender_remainder = json_encode($remainder); ?>
+<?php $calender_remainder = json_encode($remainder); ?>
 
 
 <link rel="stylesheet" href="<?php echo load_lib() ?>theme/css/monthly.css">
+<style>
+    #right-panel {
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+    }
 
+    #right-panel select, #right-panel input {
+        font-size: 15px;
+    }
+
+    #right-panel select {
+        width: 100%;
+    }
+
+    #right-panel i {
+        font-size: 12px;
+    }
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+    #map {
+        height: 100%;
+        float: left;
+        width: 63%;
+        height: 100%;
+    }
+    #right-panel {
+        float: right;
+        width: 34%;
+        height: 100%;
+    }
+    .panel {
+        height: 100%;
+        overflow: auto;
+    }
+</style>
 <div class="clear" style="clear: both;height:3em"></div>
 <div class="common col-lg-12 col-md-6 col-md-offset-2 col-sm-12 col-xs-12">
     <div class="col-xs-offset-2  col-xs-8 text-center">
@@ -13,10 +51,9 @@
         <div id="chartdiv" style="height:300px"></div>
         <h5 class="text-center">Project status</h5>
     </div>
-    
-    
+
     <?php if ($_SESSION['user_type_id'] == 1): ?>
-    	<input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '1'; ?>">
+        <input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '1'; ?>">
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 circle_red one accord active" onclick="accord(1)" title="one" >
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -181,7 +218,7 @@
 
         </div>
     <?php elseif ($_SESSION['user_type_id'] == 5): ?>
-    <input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '7'; ?>">
+        <input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '7'; ?>">
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red seven accord active" onclick="accord(7)" title="seven" >
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -252,7 +289,7 @@
 
         </div>
     <?php elseif ($_SESSION['user_type_id'] == 6): ?>
-    <input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '6'; ?>">
+        <input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '6'; ?>">
         <div class="col-xs-offset-3 col-xs-6 circle_red six accord active" onclick="accord(6)" title="six" >
             <div class="panel panel-green">
                 <div class="panel-heading">
@@ -565,19 +602,10 @@
         </div>
     </div>
     <div class="accord_box" id="five">
-
-
-
     </div>
     <div class="accord_box" id="six">
-
-
-
     </div>
     <div class="accord_box" id="seven">
-
-
-
     </div>
 
 </div>
@@ -628,37 +656,41 @@
 </div>
 <div class="clearfix"></div>
 <div class="col-xs-12">
-	<div class="monthly" id="mycalendar" style="display:none;"></div>
+    <div class="monthly" id="mycalendar" style="display:none;"></div>
 </div>
 <div class="clear" style="clear: both;height:3em"></div>
 </div>
 <script>
-$(window).load(function() {
-	var title = $("#project_user_type").val();
-    $.ajax({
-        url: FRONTEND_URL + 'getdashboard_details',
-        data: {id: title},
-        dataType: 'html',
-        type: 'post',
-        success: function (output) {
-            $('#one').html(output);
-        }
-    })
-});
+    $(window).load(function () {
+        var title = $("#project_user_type").val();
+        $.ajax({
+            url: FRONTEND_URL + 'getdashboard_details',
+            data: {id: title},
+            dataType: 'html',
+            type: 'post',
+            success: function (output) {
+                $('#one').html(output);
+            }
+        })
+    });
 </script>
+
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/monthly.js"></script>
 <script type="text/javascript">
-	var remainder = <?php echo $calender_remainder; ?>;
-	var sampleEvents = {
-	"monthly": remainder
-	};
+    var FRONTEND_URL = '<?php echo frontend_url(); ?>';
+</script>
 
-	$(window).load( function() {
-		$('#mycalendar').monthly({
-			mode: 'event',
-			dataType: 'json',
-			events: sampleEvents
-		});
-	});
+<script type="text/javascript">
+    var remainder = <?php echo $calender_remainder; ?>;
+    var sampleEvents = {
+        "monthly": remainder
+    };
+    $(window).load(function () {
+        $('#mycalendar').monthly({
+            mode: 'event',
+            dataType: 'json',
+            events: sampleEvents
+        });
+    });
 </script>
 

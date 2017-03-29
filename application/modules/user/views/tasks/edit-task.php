@@ -89,38 +89,38 @@
 </form>
 
 <script type="text/javascript">
-    $(function () {
-        $('.task_start_date').datetimepicker({
-            daysOfWeekDisabled: [0]
-        });
-        $('.task_end_date').datetimepicker({
-            useCurrent: false,
-            daysOfWeekDisabled: [0]
-        });
-<?php if ($_SESSION['user_type_id'] == 6): ?>
-            $('.task_finished_date').datetimepicker({
-                useCurrent: false,
-                daysOfWeekDisabled: [0],
-                minDate: moment()
-            });
-<?php endif; ?>
-        $("#task_start_date").on("dp.change", function (e) {
-            $('#task_end_date').data("DateTimePicker").minDate(e.date);
-        });
-        $("#task_end_date").on("dp.change", function (e) {
-            $('#task_start_date').data("DateTimePicker").maxDate(e.date);
-            var task_start_date = $('#task_start_date').val();
-            var task_end_date = $('#task_end_date').val();
-            $.ajax({
-                url: FRONTEND_URL + 'tasks/calculate_hours',
-                data: {task_start_date: task_start_date, task_end_date: task_end_date},
-                dataType: 'json',
-                type: 'post',
-                success: function (output) {
-                    $('#task_duration').val(output.message);
-                }
-            })
-        });
 
+    $('.task_start_date').datetimepicker({
+        daysOfWeekDisabled: [0]
     });
+    $('.task_end_date').datetimepicker({
+        useCurrent: false,
+        daysOfWeekDisabled: [0]
+    });
+<?php if ($_SESSION['user_type_id'] == 6): ?>
+        $('.task_finished_date').datetimepicker({
+            useCurrent: false,
+            daysOfWeekDisabled: [0],
+            minDate: moment()
+        });
+<?php endif; ?>
+    $("#task_start_date").on("dp.change", function (e) {
+        $('#task_end_date').data("DateTimePicker").minDate(e.date);
+    });
+    $("#task_end_date").on("dp.change", function (e) {
+        $('#task_start_date').data("DateTimePicker").maxDate(e.date);
+        var task_start_date = $('#task_start_date').val();
+        var task_end_date = $('#task_end_date').val();
+        $.ajax({
+            url: FRONTEND_URL + 'tasks/calculate_hours',
+            data: {task_start_date: task_start_date, task_end_date: task_end_date},
+            dataType: 'json',
+            type: 'post',
+            success: function (output) {
+                $('#task_duration').val(output.message);
+            }
+        })
+    });
+
+
 </script>

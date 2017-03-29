@@ -61,14 +61,14 @@
     </div>
 </form>
 <script type="text/javascript">
-    $(function () {
-        return $('#pro_asign_team,#select_team_tl').select2(
-                {
-                    placeholder: 'Select Team Leader'
-                }
-        );
 
-    });
+    $('#pro_asign_team,#select_team_tl').select2(
+            {
+                placeholder: 'Select Team Leader'
+            }
+    );
+
+
 </script>
 <script type="text/javascript">
     $(document).ready(function () {

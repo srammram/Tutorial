@@ -74,8 +74,5 @@
     </tbody>
 </table>
 <script type="text/javascript" >
-    $(document).ready(function () {
-        $('#reports_table').DataTable();
-    });
-
+    $('#reports_table').DataTable();
 </script>

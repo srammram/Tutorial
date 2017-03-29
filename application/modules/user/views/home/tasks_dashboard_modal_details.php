@@ -176,7 +176,7 @@ $percentagehours = round(($used_hours * 100) / $records[0]['assigned_hours']);
                 <button type="button" class="close" data-dismiss="modal" area-hidden="true">&times;</button>
                 <h4 class="modal-title">Projects</h4>
             </div>
-            <div class="modal-body" id="get_dashboard_details">
+            <div class="modal-body" id="getdashboard_details">
                 <div class="form-group">
                     <h5>You are completed 75% time is assigned your projects. Do You Finished this  Project as per your scheduled.</h5>
 

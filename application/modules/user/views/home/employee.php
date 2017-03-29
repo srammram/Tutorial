@@ -75,7 +75,7 @@
             <div class="col-xs-12">
                 <a href="javascript:void(0)" class="btn btn-success" onclick="activate_users('users', '1')">Activate</a>
                 <a href="javascript:void(0)" class="btn btn-warning" onclick="activate_users('users', '0')">Deactivate</a>
-                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('users', '3')">Delete</a>
+                <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('users', '2')">Delete</a>
             </div>
         </div>
     </div>

@@ -9,6 +9,7 @@
         <div class="panel-body">
             <div class="col-xs-12">
                 <a href="javascript:void(0)" class="btn btn-danger" onclick="activate_users('projects', '2')">Delete</a>
+                <a href="<?php echo frontend_url() . 'projects/add' ?>" class="btn btn-success">Add</a>
             </div>
             <div class="col-xs-12" id="empsucc_message">
 

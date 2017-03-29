@@ -27,17 +27,17 @@
             <select name="pro_type" id="pro_type" class="form-control" required="" onchange="changereadonly(this.value, <?php echo $records[0]['project_type_status']; ?>)">
                 <option value="">-Select Type-</option>
                 <option value="1" <?php
-    if ($records[0]['project_type_status'] == 1):echo "selected";
-    endif;
-    ?>>Ongoing</option>
+                if ($records[0]['project_type_status'] == 1):echo "selected";
+                endif;
+                ?>>Ongoing</option>
                 <option value="2" <?php
                 if ($records[0]['project_type_status'] == 2):echo "selected";
                 endif;
-    ?>>Upcoming</option>
+                ?>>Upcoming</option>
                 <option value="3" <?php
                 if ($records[0]['project_type_status'] == 3):echo "selected";
                 endif;
-    ?>>Pipeline</option>
+                ?>>Pipeline</option>
             </select>
         </div>
         <!--        <div class="form-group">
@@ -47,7 +47,7 @@
         <div id="project_select">
             <div class="form-group">
                 <label>Project Estimation Start Date</label>
-                <input type="text" name="pro_start" id="pro_start" readonly="" class="form-control" value="<?php echo $records[0]['project_start_date']; ?>"/>
+                <input type="text" name="pro_start" id="pro_start" readonly="" class="form-control prostart" value="<?php echo $records[0]['project_start_date']; ?>"/>
             </div>
             <div class="form-group">
                 <label>Project Estimation Finished Date</label>
@@ -137,12 +137,12 @@ endif;
             </script>
             <div class="form-group">
                 <label>Select Team This Project <span style="color:red">*</span></label><br>
-                <select name="pro_team[]" id="pro_team" class="form-control" multiple="multiple" style="width:100%">
+                <select name="pro_team[]" id="proteam" multiple="multiple" class="form-control"  style="width:100%" >
                     <option value="">-Select Team-</option>
                     <?php foreach ($team_details as $team): ?>
                         <option value="<?php echo $team['id']; ?>" <?php
-                    if (in_array($team['id'], $project_team)):echo "selected";
-                    endif;
+                        if (in_array($team['id'], $project_team)):echo "selected";
+                        endif;
                         ?>><?php echo $team['name']; ?></option>
                             <?php endforeach; ?>
                 </select>
@@ -160,16 +160,9 @@ endif;
         </div>
     </div>
 </form>
+<link rel="stylesheet" type="text/css" href="<?php echo load_lib(); ?>theme/css/select2.min.css">
+<script type="text/javascript" src="<?php echo load_lib() ?>theme/js/select2.full.min.js"></script>
 <script type="text/javascript">
-    $(function () {
-        return $('#pro_team').select2(
-                {
-                    placeholder: 'Select Teams'
-                }
-        );
-
-    });
-
-
+                $('#proteam').select2();
 </script>
 

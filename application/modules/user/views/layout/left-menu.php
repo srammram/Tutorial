@@ -19,51 +19,60 @@ $current_url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-sidebar-navbar-collapse-1">
                 <ul class="nav navbar-nav left_menu1">
-					<?php
-					$main = left_menus();
-					$menu_active = menus_active();
-					if(!empty($_SESSION['user_access_menus_id'])){
-						$access = explode(',', '35,'.$_SESSION['user_access_menus_id']);	
-					}else{
-						foreach($main['menus'] as $m)
-						{
-							$main_left[] = $m['id'];
-						}
-						$access = $main_left;	
-					}
-					//for($i=0; $i<count($main['menus']); $i++){
-					foreach($main['menus'] as $leftmenus){
-						if(in_array($leftmenus['id'], $access)){
-					?>
-                    <li class="<?php if($menu_active[0]['menusids'] == $leftmenus['id']){ ?>active <?php } ?>">
-                    	<a href="<?php if($leftmenus['menulink'] == 'none'){ ?>javascript:void(0); <?php }else{ echo frontend_url().$leftmenus['menulink']; } ?>" <?php if(!empty($main['submenus'][$leftmenus['id']])){ ?> class="dropdown-toggle" data-toggle="dropdown" <?php } ?>> 
-                            <span class="menu-icon pull-right hidden-xs showopacity glyphicon material-icons"><i class="fa <?php echo $leftmenus['menuicon'];  ?>"></i></span> 
-                            <?php echo $leftmenus['name']; ?> 
-                            <?php if(!empty($main['submenus'][$leftmenus['id']])){ ?><span class="caret"></span><?php } ?>
-                            
-                        </a> 
-                        <ul class="dropdown-menu forAnimate" role="menu">
-							<?php
-                            for($j=0; $j<count($main['submenus'][$leftmenus['id']]); $j++){
-                                if($filepath == frontend_url().$main['submenus'][$leftmenus['id']][$j]['menulink']){
-												$substatus = $main['submenus'][$leftmenus['id']][$j]['parent_id'];
-											}
-                            ?>
-                            <li class="">
-                                <a href="<?php echo frontend_url().$main['submenus'][$leftmenus['id']][$j]['menulink']; ?>">
-                                    <?php echo $main['submenus'][$leftmenus['id']][$j]['name']; ?>
-                                </a>
-                             </li>
-                            <?php
-                                    
-                            }
-                            ?>
-                        </ul>
-                    </li>
                     <?php
-						}
-					}
-					?>
+                    $main = left_menus();
+                    $menu_active = menus_active();
+                    if (!empty($_SESSION['user_access_menus_id'])) {
+                        $access = explode(',', '35,' . $_SESSION['user_access_menus_id']);
+                    } else {
+                        foreach ($main['menus'] as $m) {
+                            $main_left[] = $m['id'];
+                        }
+                        $access = $main_left;
+                    }
+                    //for($i=0; $i<count($main['menus']); $i++){
+                    foreach ($main['menus'] as $leftmenus) {
+                        if (in_array($leftmenus['id'], $access)) {
+                            ?>
+                            <li class="<?php if ($menu_active[0]['menusids'] == $leftmenus['id']) { ?>active <?php } ?>">
+                                <a href="<?php if ($leftmenus['menulink'] == 'none') { ?>javascript:void(0); <?php
+                                } else {
+                                    echo frontend_url() . $leftmenus['menulink'];
+                                }
+                                ?>" <?php if (!empty($main['submenus'][$leftmenus['id']])) { ?> class="dropdown-toggle" data-toggle="dropdown" <?php } ?>> 
+                                    <span class="menu-icon pull-right hidden-xs showopacity glyphicon material-icons"><i class="fa <?php echo $leftmenus['menuicon']; ?>"></i></span> 
+                                    <?php echo $leftmenus['name']; ?> 
+                                        <?php if (!empty($main['submenus'][$leftmenus['id']])) { ?><span class="caret"></span><?php } ?>
+
+                                </a> 
+                                <ul class="dropdown-menu forAnimate" role="menu">
+                                    <?php
+                                    for ($j = 0; $j < count($main['submenus'][$leftmenus['id']]); $j++) {
+                                        if ($filepath == frontend_url() . $main['submenus'][$leftmenus['id']][$j]['menulink']) {
+                                            $substatus = $main['submenus'][$leftmenus['id']][$j]['parent_id'];
+                                        }
+                                        ?>
+                                        <li class="">
+                                            <a href="<?php echo frontend_url() . $main['submenus'][$leftmenus['id']][$j]['menulink']; ?>">
+                                                <?php echo $main['submenus'][$leftmenus['id']][$j]['name']; ?>
+                                            </a>
+                                        </li>
+                                        <?php
+                                    }
+                                    ?>
+                                </ul>
+                            </li>
+                            <?php
+                        }
+                    }
+                    ?>
+                    <?php if ($_SESSION['user_type_id'] == 5): ?>
+                        <li class="">
+                            <a href="<?php echo frontend_url() . 'projects/assigned_teamprojects' ?>">
+                                <span class="pull-right hidden-xs showopacity glyphicon material-icons">av_timer</span> Assigned Projects
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>

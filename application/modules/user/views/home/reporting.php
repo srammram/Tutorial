@@ -110,15 +110,15 @@
     $(document).ready(function () {
         $('#reports_table').DataTable();
     });
-    $(function () {
-        $('#start_date').datetimepicker({
-            useCurrent: false,
-        });
-        $('#end_date').datetimepicker({
-            useCurrent: false,
-        });
-        $("#start_date").on("dp.change", function (e) {
-            $('#end_date').data("DateTimePicker").minDate(e.date);
-        });
+
+    $('#start_date').datetimepicker({
+        useCurrent: false,
     });
+    $('#end_date').datetimepicker({
+        useCurrent: false,
+    });
+    $("#start_date").on("dp.change", function (e) {
+        $('#end_date').data("DateTimePicker").minDate(e.date);
+    });
+
 </script>

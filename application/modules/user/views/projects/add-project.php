@@ -107,43 +107,43 @@
             document.getElementById("projectFileHidden").value = '';
         };
     })(projectsFilesDropzone));
-    $(function () {
-        var date = new Date();
-        var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-        $("#pro_start").datepicker({
-            todayBtn: 1,
-            autoclose: true,
-            todayHighlight: true,
-            startDate: today,
-            format: "yyyy-mm-dd",
-        }).on('changeDate', function (selected) {
-            var minDate = new Date(selected.date.valueOf());
-            $('#pro_finished').datepicker('setStartDate', minDate);
-            var cc = $('#pro_start').val();
+    var date = new Date();
+    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+    $("#pro_start").datepicker({
+        todayBtn: 1,
+        autoclose: true,
+        todayHighlight: true,
+        startDate: today,
+        format: "yyyy-mm-dd",
+    }).on('changeDate', function (selected) {
+        var minDate = new Date(selected.date.valueOf());
+        $('#pro_finished').datepicker('setStartDate', minDate);
+        var cc = $('#pro_start').val();
 
 
-        });
-
-        $("#pro_finished").datepicker({
-            autoclose: true,
-            format: "yyyy-mm-dd",
-        }).on('changeDate', function (selected) {
-            var maxDate = new Date(selected.date.valueOf());
-            $('#pro_start').datepicker('setEndDate', maxDate);
-            var start_date = $('#pro_start').val();
-            var end_date = $('#pro_finished').val();
-            $.ajax({
-                url: FRONTEND_URL + 'calculatehours',
-                data: {start_date: start_date, end_date: end_date},
-                dataType: 'json',
-                type: 'post',
-                success: function (output) {
-                    $('#pro_duration').val(output.total_hours);
-                }
-            })
-        });
     });
+
+    $("#pro_finished").datepicker({
+        autoclose: true,
+        format: "yyyy-mm-dd",
+    }).on('changeDate', function (selected) {
+        var maxDate = new Date(selected.date.valueOf());
+        $('#pro_start').datepicker('setEndDate', maxDate);
+        var start_date = $('#pro_start').val();
+        var end_date = $('#pro_finished').val();
+        $.ajax({
+            url: FRONTEND_URL + 'calculatehours',
+            data: {start_date: start_date, end_date: end_date},
+            dataType: 'json',
+            type: 'post',
+            success: function (output) {
+                $('#pro_duration').val(output.total_hours);
+            }
+        })
+    });
+
     $('#filename').change(function () {
         var val = $(this).val().toLowerCase();
         var regex = new RegExp("(.*?)\.(jpg|jpeg|png|gif|docx|doc|pdf|txt)$");

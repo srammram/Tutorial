@@ -179,18 +179,18 @@ foreach ($mediafiles as $media) {
 </div>
 <script type="text/javascript">
 
-    $(function () {
-        $('#asign_start_date').datetimepicker({
-            daysOfWeekDisabled: [0],
-            useCurrent: false,
-        });
-        $('#asign_end_date').datetimepicker({
-            useCurrent: false,
-        });
-        $("#asign_start_date").on("dp.change", function (e) {
-            $('#asign_end_date').data("DateTimePicker").minDate(e.date);
-        });
 
-
+    $('#asign_start_date').datetimepicker({
+        daysOfWeekDisabled: [0],
+        useCurrent: false,
     });
+    $('#asign_end_date').datetimepicker({
+        useCurrent: false,
+    });
+    $("#asign_start_date").on("dp.change", function (e) {
+        $('#asign_end_date').data("DateTimePicker").minDate(e.date);
+    });
+
+
+
 </script>

@@ -68,17 +68,17 @@
 <?php
 $currentdate = date('Y/m/d');
 ?>
-    $(function () {
-        $('.task_start_date').datetimepicker({
-            daysOfWeekDisabled: [0],
-            minDate: moment(),
-            useCurrent: false,
-        });
-        $('.task_end_date').datetimepicker({
-            useCurrent: false,
-            daysOfWeekDisabled: [0]
-        });
 
-
+    $('.task_start_date').datetimepicker({
+        daysOfWeekDisabled: [0],
+        minDate: moment(),
+        useCurrent: false,
     });
+    $('.task_end_date').datetimepicker({
+        useCurrent: false,
+        daysOfWeekDisabled: [0]
+    });
+
+
+
 </script>

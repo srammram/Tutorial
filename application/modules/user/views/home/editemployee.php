@@ -127,21 +127,22 @@
                     </select>
                 </div>
                 <?php
-				$empmain = left_menus();
-				?>
+                $empmain = left_menus();
+                ?>
                 <div class="form-group">
                     <label>Select Option <span style="color:red">*</span></label>
                     <select name="emp_accessmenu[]" multiple="multiple" id="emp_accessmenu" class="form-control" required>
 
-                        <?php 
-						$menudetails = explode(',', $records[0]['user_access_menus_id']);
-						foreach ($empmain['menus'] as $accessmenus): ?>
-                        
+                        <?php
+                        $menudetails = explode(',', $records[0]['user_access_menus_id']);
+                        foreach ($empmain['menus'] as $accessmenus):
+                            ?>
+
                             <option value="<?php echo $accessmenus['id']; ?>" <?php
                             if (in_array($accessmenus['id'], $menudetails)): echo "selected";
                             endif;
                             ?>><?php echo $accessmenus['name']; ?></option>
-                            
+
                             <?php
                         endforeach;
                         ?>
@@ -168,12 +169,12 @@
         dateFormat: 'yy-mm-dd',
         autoclose: true,
     });
-    $(function () {
-        return $('#emp_state,#emp_city').select2(
-                /*{
-                 minimumResultsForSearch: Infinity
-                 }*/
-                );
 
-    });
+    $('#emp_state,#emp_city').select2(
+            /*{
+             minimumResultsForSearch: Infinity
+             }*/
+            );
+
+
 </script>

@@ -42,5 +42,5 @@
 <link rel="stylesheet" href="<?php echo load_lib() ?>theme/css/jQuery.nice.css">
 <script src="<?php echo load_lib() ?>theme/js/sticky.js"></script>
 <script src="<?php echo load_lib() ?>theme/js/jQuery.nice.js"></script>
-<link rel="stylesheet" href="<?php echo load_lib() ?>theme/css/jquery-ui-1.10.3.custom.css" />
-<script src="<?php echo load_lib() ?>theme/js/jquery-ui-1.10.3.custom.js"></script>
+<!--<link rel="stylesheet" href="<?php echo load_lib() ?>theme/css/jquery-ui-1.10.3.custom.css" />-->
+<!--<script src="<?php echo load_lib() ?>theme/js/jquery-ui-1.10.3.custom.js"></script>-->

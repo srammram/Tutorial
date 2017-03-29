@@ -26,24 +26,26 @@
         <label>Assigned By</label>
         <p style="color:#333;font-size:18px;word-wrap: break-word"><?php echo $records[0]['user_name']; ?></p>
     </div>
-    <div class="form-group">
-        <label>Project File</label>
-        <?php
-        $mediafiles = explode('|*|', $records[0]['project_file']);
-        ?>
-        <?php
-        $i = 1;
-        foreach ($mediafiles as $media):
-            ?>
-
-
-            <a href="<?php echo frontend_url() . 'projects/download_files/' . $media; ?>" style="font-size:20px" class="btn btn-success" >Download File <?php echo $i; ?></a>
-            <br>          
+    <?php if ($mediafiles != ''): ?>
+        <div class="form-group">
+            <label>Project File</label>
             <?php
-            $i++;
-        endforeach;
-        ?>
-    </div>
+            $mediafiles = explode('|*|', $records[0]['project_file']);
+            ?>
+            <?php
+            $i = 1;
+            foreach ($mediafiles as $media):
+                ?>
+
+
+                <a href="<?php echo frontend_url() . 'projects/download_files/' . $media; ?>" style="font-size:20px" class="btn btn-success" >Download File <?php echo $i; ?></a>
+                <br>          
+                <?php
+                $i++;
+            endforeach;
+            ?>
+        </div>
+    <?php endif; ?>
 </div>
 <div class="modal-footer">
 
