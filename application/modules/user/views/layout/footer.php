@@ -59,37 +59,37 @@
                 <h4 class="modal-title">Add Notes</h4>
             </div>
             <div class="modal-body">
-            	<div class="col-xs-12" id="err_message"></div>
+                <div class="col-xs-12" id="err_message"></div>
                 <form name="note_form" id="note_form" method="post"  data-parsley-validate="">
-                   
+
                     <div class="form-group">
                         <label >Notes <span style="color:red">*</span></label>
                         <textarea name="message" id="message" rows="5" class="form-control" placeholder="Note (Maximum 250 charater only)" data-parsley-minlength="15" maxlength="250" required=""></textarea>
-                        
+
                     </div>
                     <div class="form-group">
-                    	<label >Color <span style="color:red">*</span></label>
+                        <label >Color <span style="color:red">*</span></label>
                         <div class="clearfix"></div>
-                    	<div class="col-xs-4">
-                        	<input type="radio" name="color" checked value="#FDFB8C">
+                        <div class="col-xs-4">
+                            <input type="radio" name="color" checked value="#FDFB8C">
                             <div style="width:100%; min-height:100px; background:#FDFB8C; margin-bottom:15px;"></div>
                         </div>
                         <div class="col-xs-4">
-                        	<input type="radio" name="color" value="#A6E3FC">
+                            <input type="radio" name="color" value="#A6E3FC">
                             <div style="width:100%; min-height:100px; background:#A6E3FC; margin-bottom:15px;"></div>
                         </div>
                         <div class="col-xs-4">
-                        	<input type="radio" name="color" value="#A5F88B">
+                            <input type="radio" name="color" value="#A5F88B">
                             <div style="width:100%; min-height:100px; background:#A5F88B; margin-bottom:15px;"></div>
                         </div>
-                        
+
                     </div>
-                    
+
                     <div class="form-group">
-                    	
+
                         <div class="row">
                             <div class="col-sm-3 col-sm-offset-3">
-                                <input type="submit" name="note_submit" id="note_submit" tabindex="4" class="form-control btn btn-primary" value="Add">
+                                <input type="button" name="note_submit" id="note_submit" tabindex="4" class="form-control btn btn-primary" value="Add">
                             </div>
                             <div class="col-sm-3 ">
                                 <input type="reset" name="note_reset" id="note_reset" tabindex="4" class="form-control btn btn-danger" value="Clear">
@@ -163,7 +163,6 @@
     });</script>
 <script>
     $('.update_notification').click(function (e) {
-
         var id = $(this).attr('id');
         var type = $(this).attr('data-title');
         $.ajax({
@@ -179,6 +178,8 @@
                     window.location.href = BASE_URL + 'user/tasks/manage_new_task';
                 } else if (type == 4) {
                     window.location.href = BASE_URL + 'user/tasks/manage_new_task';
+                } else if (type == 5) {
+                    window.location.href = BASE_URL + 'user/tasks/manage_dependency';
                 }
             }
         });
@@ -194,7 +195,7 @@
 </script>
 
 <script>
-  $(function() {
-    $( ".draggable" ).draggable();
-  });
+    $(function () {
+        $(".draggable").draggable();
+    });
 </script>

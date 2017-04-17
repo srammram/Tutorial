@@ -1,3 +1,12 @@
+<?php
+if ($export_excel == 'export_excel'):
+    header("Content-type: application/octet-stream");
+    header("Content-Disposition: attachment; filename=exceldata.xls");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+endif;
+?>
+
 <table id="reports_table" class="display" cellspacing="0" width="100%">
 
     <thead>
@@ -42,8 +51,12 @@
                     <td><?php echo $details['type_status']; ?></td>
                     <td><?php echo $details['project_during_hours'] . ' Hours'; ?></td>
                     <td><?php echo $details['department_name']; ?></td>
-                    <td><?php echo implode(' , ', $team_leaders[$details['id']]) ?></td>
-                    <!--<td><?php echo implode(',', array_filter($team_members[$details['id']])); ?></td>-->
+                    <?php if ($departments == ''): ?>
+                        <td><?php echo implode(' , ', $team_leaders[$details['id']]) ?></td>
+                        <!--<td><?php echo implode(',', array_filter($team_members[$details['id']])); ?></td>-->
+                    <?php else: ?>
+                        <td><?php echo $details['user_name']; ?></td>
+                    <?php endif; ?>
                     <td><?php echo $details['project_status']; ?></td>
 
                 </tr>

@@ -58,10 +58,15 @@
                             $protype = 'Upcoming';
                         elseif ($prodet['project_type_status'] == 3):
                             $protype = 'Pipeline';
+                        elseif ($prodet['project_type_status'] == 4):
+                            $protype = 'Maintenance';
                         endif;
                         if ($prodet['project_type_status'] == 2 || $prodet['project_type_status'] == 3):
                             $lableclass = "label label-warning";
                             $status = "Yet to start";
+                        elseif ($prodet['project_type_status'] == 4):
+                            $lableclass = "label label-primary";
+                            $status = "maintenance";
                         elseif ($prodet['status'] == 6):
                             $protype = 'Completed';
                         endif;

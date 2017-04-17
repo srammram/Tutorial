@@ -107,16 +107,14 @@
                     <label>Select City <span style="color:red">*</span></label>
                     <select name="emp_city" id="emp_city" class="form-control" required>
                         <option value="">-Select City-</option>
-
                     </select>
                 </div>
                 <?php
-				$empmain = left_menus();
-				?>
+                $empmain = left_menus();
+                ?>
                 <div class="form-group">
                     <label>Select Option <span style="color:red">*</span></label>
-                    <select name="emp_accessmenu[]" multiple="multiple" id="emp_accessmenu" class="form-control" required>
-
+                    <select readonly name="emp_accessmenu[]" multiple="multiple" id="emp_accessmenu" class="form-control" required>
                         <?php foreach ($empmain['menus'] as $accessmenus): ?>
                             <option value="<?php echo $accessmenus['id']; ?>"><?php echo $accessmenus['name']; ?></option>
                             <?php

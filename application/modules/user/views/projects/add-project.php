@@ -25,6 +25,7 @@
                         <option value="1">Ongoing</option>
                         <option value="2">Upcoming</option>
                         <option value="3">Pipeline</option>
+                        <option value="4">Maintenance</option>
                     </select>
                 </div>
 
@@ -112,17 +113,16 @@
     var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
     $("#pro_start").datepicker({
-        todayBtn: 1,
+        todayBtn: false,
         autoclose: true,
         todayHighlight: true,
         startDate: today,
         format: "yyyy-mm-dd",
+        weekStart: 0,
     }).on('changeDate', function (selected) {
         var minDate = new Date(selected.date.valueOf());
         $('#pro_finished').datepicker('setStartDate', minDate);
         var cc = $('#pro_start').val();
-
-
     });
 
     $("#pro_finished").datepicker({

@@ -13,7 +13,6 @@
                 </div>
             <?php endif; ?>
             <div class="col-xs-12" id="empsucc_message">
-
             </div>
             <table id="manage_new_tasks" class="display" cellspacing="0" width="100%">
                 <thead>

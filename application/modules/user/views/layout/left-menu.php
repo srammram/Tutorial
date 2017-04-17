@@ -52,11 +52,24 @@ $current_url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                                             $substatus = $main['submenus'][$leftmenus['id']][$j]['parent_id'];
                                         }
                                         ?>
-                                        <li class="">
-                                            <a href="<?php echo frontend_url() . $main['submenus'][$leftmenus['id']][$j]['menulink']; ?>">
-                                                <?php echo $main['submenus'][$leftmenus['id']][$j]['name']; ?>
-                                            </a>
-                                        </li>
+                                        <?php if ($_SESSION['user_type_id'] != 6): ?>
+                                            <li class="">
+                                                <a href="<?php echo frontend_url() . $main['submenus'][$leftmenus['id']][$j]['menulink']; ?>">
+                                                    <?php echo $main['submenus'][$leftmenus['id']][$j]['name']; ?>
+                                                </a>
+                                            </li>
+                                        <?php else:
+                                            ?>
+                                            <?php if ($main['submenus'][$leftmenus['id']][$j]['name'] != 'Assign Task' && $main['submenus'][$leftmenus['id']][$j]['name'] != 'Manage Assign Tasks' && $main['submenus'][$leftmenus['id']][$j]['name'] != 'Add Dependancy' && $main['submenus'][$leftmenus['id']][$j]['name'] != 'Manage Dependency'): ?>
+                                                <li class="">
+                                                    <a href="<?php echo frontend_url() . $main['submenus'][$leftmenus['id']][$j]['menulink']; ?>">
+                                                        <?php echo $main['submenus'][$leftmenus['id']][$j]['name']; ?>
+                                                    </a>
+                                                </li>
+                                            <?php endif; ?>
+                                        <?php
+                                        endif;
+                                        ?>
                                         <?php
                                     }
                                     ?>

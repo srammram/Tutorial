@@ -48,7 +48,8 @@
                     </div>
                     <div class="col-xs-5">
                         <input type="button" name="filter_report" id="filter_report" class="btn btn-primary" value="Get Reports" onclick="get_filter_reports()"/>
-                        <a href="<?php echo frontend_url() . 'export_excel' ?>" class="btn btn-primary">Export Excel</a>
+                        <a name="export_report" id="export_report" class="btn btn-success" >Export Excel</a>
+                        <!--<a href="<?php echo frontend_url() . 'export_excel' ?>" class="btn btn-primary" >Export Excel</a>-->
                     </div>
                 </form>
             </div>
@@ -67,10 +68,9 @@
                         <th>Team Leaders</th>
                         <!--<th>Team Members</th>-->
                         <th>Status</th>
-
                     </tr>
                 </thead>
-                <tbody >
+                <tbody>
                     <?php foreach ($records as $details): ?>
                         <tr>
                             <td><?php echo $details['id']; ?></td>
@@ -83,6 +83,39 @@
                             <!--<td><?php echo implode(',', array_filter($team_members[$details['id']])); ?></td>-->
                             <td><?php echo $details['project_status']; ?></td>
 
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <div id="showdetailsxls" style="display:none;">
+            <table cellpadding="0" cellspacing="0" border="0" class="" id="reports_table">
+                <thead>
+                    <tr>
+                        <th>S.No</th>
+                        <th>Project Title</th>
+                        <th>Project Description</th>
+                        <th>Project Type</th>
+                        <th>Estimated Hours</th>
+                        <th>Assigning Team</th>
+                        <th>Team Leaders</th>
+                        <!--<th>Team Members</th>-->
+                        <th>Status</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($records as $details): ?>
+                        <tr>
+                            <td><?php echo $details['id']; ?></td>
+                            <td><?php echo $details['project_name']; ?></td>
+                            <td><?php echo $details['project_description']; ?></td>
+                            <td><?php echo $details['type_status']; ?></td>
+                            <td><?php echo $details['project_during_hours'] . ' Hours'; ?></td>
+                            <td><?php echo $details['department_name']; ?></td>
+                            <td><?php echo implode(' , ', $team_leaders[$details['id']]) ?></td>
+                            <!--<td><?php echo implode(',', array_filter($team_members[$details['id']])); ?></td>-->
+                            <td><?php echo $details['project_status']; ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
@@ -121,4 +154,16 @@
         $('#end_date').data("DateTimePicker").minDate(e.date);
     });
 
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#export_report").on('click', function () {
+            var uri = $("#reports_table").btechco_excelexport({
+                containerid: "reports_table"
+                , datatype: $datatype.Table
+                , returnUri: true
+            });
+            $(this).attr('download', 'export_report.xls').attr('href', uri).attr('target', '_blank');
+        });
+    });
 </script>

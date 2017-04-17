@@ -36,7 +36,7 @@
 
                         if ($manage_tasks['status'] == 1):
                             $labelclass = "label label-primary";
-                            $status = "Active";
+                            $status = "Yet to start";
                         elseif ($manage_tasks['status'] == 3):
                             $labelclass = "label label-warning";
                             $status = "In Progress";

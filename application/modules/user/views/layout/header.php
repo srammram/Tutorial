@@ -19,9 +19,6 @@
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib() ?>theme/css/icon.css">
 <link rel="stylesheet" type="text/css" href="<?php echo load_lib() ?>theme/css/export.css">
 
-
-
-
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/jquery-2.2.0.min.js"></script>
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/bootstrap_min.js"></script>
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/datatables.min.js"></script>
@@ -38,9 +35,10 @@
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/export.min.js"></script>
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/light.js"></script>
 <script type="text/javascript" src="<?php echo load_lib() ?>theme/js/pie.js"></script>
+<script type="text/javascript" src="<?php echo load_lib() ?>theme/js/export.js"></script>
 
 <link rel="stylesheet" href="<?php echo load_lib() ?>theme/css/jQuery.nice.css">
 <script src="<?php echo load_lib() ?>theme/js/sticky.js"></script>
 <script src="<?php echo load_lib() ?>theme/js/jQuery.nice.js"></script>
-<!--<link rel="stylesheet" href="<?php echo load_lib() ?>theme/css/jquery-ui-1.10.3.custom.css" />-->
-<!--<script src="<?php echo load_lib() ?>theme/js/jquery-ui-1.10.3.custom.js"></script>-->
+<!--<link rel="stylesheet" href="<?php echo load_lib() ?>theme/css/jquery-ui-1.10.3.custom.css" />
+<script src="<?php echo load_lib() ?>theme/js/jquery-ui-1.10.3.custom.js"></script>-->

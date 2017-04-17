@@ -46,7 +46,7 @@
 <div class="clear" style="clear: both;height:3em"></div>
 <div class="common col-lg-12 col-md-6 col-md-offset-2 col-sm-12 col-xs-12">
     <div class="col-xs-offset-2  col-xs-8 text-center">
-        <h4>Current Weelkly Report</h4>
+        <h4>Current Weekly Report</h4>
         <?php $workchart = json_encode($chart_total); ?>
         <div id="chartdiv" style="height:300px"></div>
         <h5 class="text-center">Project status</h5>
@@ -171,52 +171,55 @@
             </div>
 
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red five accord" onclick="accord(5)" title="five" >
-            <div class="panel panel-yellow">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="fa fa-cubes fa-4x"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge"><?php echo count($assigned_count) != '0' ? $assigned_count[0]['assigned_count'] : '0'; ?></div>
-                            <div>Assigned Tasks</div>
+        <a href="<?php echo frontend_url() . 'tasks/manage_asign_task'; ?>">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red five accord"  title="five" >
+                <div class="panel panel-yellow">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-cubes fa-4x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge"><?php echo count($assigned_count) != '0' ? $assigned_count[0]['assigned_count'] : '0'; ?></div>
+                                <div>Assigned Tasks</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <a href="javascript:void(0)">
+
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
                         <div class="clearfix"></div>
                     </div>
-                </a>
-            </div>
 
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red six accord" onclick="accord(6)" title="six" >
-            <div class="panel panel-green">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="fa fa-cubes fa-4x"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge"><?php echo count($my_tasks_count) != '0' ? $my_tasks_count[0]['my_tasks_count'] : '0'; ?></div>
-                            <div>My Tasks</div>
+                </div>
+
+            </div>
+        </a>
+        <a href="<?php echo frontend_url() . 'tasks/manage_new_task'; ?>">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red six accord"  title="six" >
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-cubes fa-4x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge"><?php echo count($my_tasks_count) != '0' ? $my_tasks_count[0]['my_tasks_count'] : '0'; ?></div>
+                                <div>My Tasks</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <a href="javascript:void(0)">
+
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
                         <div class="clearfix"></div>
                     </div>
-                </a>
-            </div>
 
-        </div>
+                </div>
+            </div>
+        </a>
     <?php elseif ($_SESSION['user_type_id'] == 5): ?>
         <input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '7'; ?>">
         <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red seven accord active" onclick="accord(7)" title="seven" >
@@ -242,77 +245,74 @@
             </div>
 
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red five accord" onclick="accord(5)" title="five" >
-            <div class="panel panel-yellow">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="fa fa-cubes fa-4x"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge"><?php echo count($assigned_count) != '0' ? $assigned_count[0]['assigned_count'] : '0'; ?></div>
-                            <div>Assigned Tasks</div>
+        <a href="<?php echo frontend_url() . 'tasks/manage_asign_task'; ?>">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red five accord"  title="five" >
+                <div class="panel panel-yellow">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-cubes fa-4x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge"><?php echo count($assigned_count) != '0' ? $assigned_count[0]['assigned_count'] : '0'; ?></div>
+                                <div>Assigned Tasks</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
                         <div class="clearfix"></div>
                     </div>
-                </a>
+                </div>
             </div>
-
-        </div>
-        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red six accord" onclick="accord(6)" title="six" >
-            <div class="panel panel-green">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="fa fa-cubes fa-4x"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge"><?php echo count($my_tasks_count) != '0' ? $my_tasks_count[0]['my_tasks_count'] : '0'; ?></div>
-                            <div>My Tasks</div>
+        </a>
+        <a href="<?php echo frontend_url() . 'tasks/manage_new_task'; ?>">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 circle_red six accord"  title="six" >
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-cubes fa-4x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge"><?php echo count($my_tasks_count) != '0' ? $my_tasks_count[0]['my_tasks_count'] : '0'; ?></div>
+                                <div>My Tasks</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
                         <div class="clearfix"></div>
                     </div>
-                </a>
+                </div>
             </div>
-
-        </div>
+        </a>
     <?php elseif ($_SESSION['user_type_id'] == 6): ?>
         <input type="hidden" name="project_user_type" id="project_user_type" value="<?php echo '6'; ?>">
-        <div class="col-xs-offset-3 col-xs-6 circle_red six accord active" onclick="accord(6)" title="six" >
-            <div class="panel panel-green">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-3">
-                            <i class="fa fa-cubes fa-4x"></i>
-                        </div>
-                        <div class="col-xs-9 text-right">
-                            <div class="huge"><?php echo count($my_tasks_count) != '0' ? $my_tasks_count[0]['my_tasks_count'] : '0'; ?></div>
-                            <div>My Tasks</div>
+        <a href="<?php echo frontend_url() . 'tasks/manage_new_task'; ?>">
+            <div class="col-xs-offset-3 col-xs-6 circle_red six accord active"  title="six" >
+                <div class="panel panel-green">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-3">
+                                <i class="fa fa-cubes fa-4x"></i>
+                            </div>
+                            <div class="col-xs-9 text-right">
+                                <div class="huge"><?php echo count($my_tasks_count) != '0' ? $my_tasks_count[0]['my_tasks_count'] : '0'; ?></div>
+                                <div>My Tasks</div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <a href="javascript:void(0)">
                     <div class="panel-footer">
                         <span class="pull-left"></span>
                         <span class="pull-right"><i class="fa fa fa-arrow-circle-down"></i></span>
                         <div class="clearfix"></div>
                     </div>
-                </a>
+                </div>
             </div>
-
-        </div>
+        </a>
     <?php endif; ?>
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 section_accord">
@@ -645,7 +645,7 @@
             "labelRotation": 0
         },
         "export": {
-            "enabled": true
+            "enabled": false
         }
 
     });
@@ -663,15 +663,17 @@
 <script>
     $(window).load(function () {
         var title = $("#project_user_type").val();
-        $.ajax({
-            url: FRONTEND_URL + 'getdashboard_details',
-            data: {id: title},
-            dataType: 'html',
-            type: 'post',
-            success: function (output) {
-                $('#one').html(output);
-            }
-        })
+        if (title == 1 || title == 2 || title == 3 || title == 4 || title == 7) {
+            $.ajax({
+                url: FRONTEND_URL + 'getdashboard_details',
+                data: {id: title},
+                dataType: 'html',
+                type: 'post',
+                success: function (output) {
+                    $('#one').html(output);
+                }
+            })
+        }
     });
 </script>
 

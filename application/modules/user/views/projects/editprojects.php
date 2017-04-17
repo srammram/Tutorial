@@ -38,6 +38,10 @@
                 if ($records[0]['project_type_status'] == 3):echo "selected";
                 endif;
                 ?>>Pipeline</option>
+                <option value="4" <?php
+                if ($records[0]['project_type_status'] == 4):echo "selected";
+                endif;
+                ?>>Maintenance</option>
             </select>
         </div>
         <!--        <div class="form-group">
@@ -47,11 +51,11 @@
         <div id="project_select">
             <div class="form-group">
                 <label>Project Estimation Start Date</label>
-                <input type="text" name="pro_start" id="pro_start" readonly="" class="form-control prostart" value="<?php echo $records[0]['project_start_date']; ?>"/>
+                <input type="text" name="pro_start" id="pro_start" readonly="" class="form-control prostart" value="<?php echo $records[0]['project_start_date'] != 0 ? $records[0]['project_start_date'] : ''; ?>"/>
             </div>
             <div class="form-group">
                 <label>Project Estimation Finished Date</label>
-                <input type="text" name="pro_finished" id="pro_finished" readonly="" class="form-control" value="<?php echo $records[0]['project_finished_date']; ?>"/>
+                <input type="text" name="pro_finished" id="pro_finished" readonly="" class="form-control" value="<?php echo $records[0]['project_finished_date'] != 0 ? $records[0]['project_finished_date'] : ''; ?>"/>
             </div>
             <div class="form-group">
                 <label>Duration Hours</label>
@@ -135,9 +139,9 @@ endif;
                 var projectsFilesDropzone = new Dropzone("div#projectsFiles", projectsFilesDropzoneOptions);
 
             </script>
-            <div class="form-group">
-                <label>Select Team This Project <span style="color:red">*</span></label><br>
-                <select name="pro_team[]" id="proteam" multiple="multiple" class="form-control"  style="width:100%" >
+            <div class="form-group" >
+                <label>Select Team This Project </label><br>
+                <select name="pro_team[]" id="proteam" multiple="multiple" class="form-control"  style="width:100%" readonly="">
                     <option value="">-Select Team-</option>
                     <?php foreach ($team_details as $team): ?>
                         <option value="<?php echo $team['id']; ?>" <?php
@@ -160,9 +164,46 @@ endif;
         </div>
     </div>
 </form>
-<link rel="stylesheet" type="text/css" href="<?php echo load_lib(); ?>theme/css/select2.min.css">
-<script type="text/javascript" src="<?php echo load_lib() ?>theme/js/select2.full.min.js"></script>
 <script type="text/javascript">
-                $('#proteam').select2();
+    $('#proteam').select2();
 </script>
+<script type="text/javascript">
+    var $form = $('#project_form');
+    $('#project_form').click(function () {
+        if ($form.parsley().validate()) {
+        }
 
+    });
+    var date = new Date();
+    var today = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    $(".prostart").datepicker({
+        todayBtn: 1,
+        autoclose: true,
+        todayHighlight: true,
+        startDate: today,
+        format: "yyyy-mm-dd",
+    }).on('changeDate', function (selected) {
+        var minDate = new Date(selected.date.valueOf());
+        $('#pro_finished').datepicker('setStartDate', minDate);
+        var cc = $('.prostart').val();
+    });
+    $("#pro_finished").datepicker({
+        autoclose: true,
+        format: "yyyy-mm-dd",
+    }).on('changeDate', function (selected) {
+        var maxDate = new Date(selected.date.valueOf());
+        $('#pro_start').datepicker('setEndDate', maxDate);
+        var start_date = $('#pro_start').val();
+        var end_date = $('#pro_finished').val();
+        $.ajax({
+            url: FRONTEND_URL + 'calculatehours',
+            data: {start_date: start_date, end_date: end_date},
+            dataType: 'json',
+            type: 'post',
+            success: function (output) {
+                $('#pro_duration').val(output.total_hours);
+            }
+        })
+    });
+
+</script>

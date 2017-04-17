@@ -26,7 +26,7 @@
         <label>Assigned By</label>
         <p style="color:#333;font-size:18px;word-wrap: break-word"><?php echo $records[0]['user_name']; ?></p>
     </div>
-    <?php if ($mediafiles != ''): ?>
+    <?php if ($records[0]['project_file'] != ''): ?>
         <div class="form-group">
             <label>Project File</label>
             <?php
