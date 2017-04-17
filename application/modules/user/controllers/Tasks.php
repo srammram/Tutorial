@@ -78,7 +78,7 @@ class Tasks extends CI_Controller {
         if ($user_type_id < 5):
             $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>2");
         elseif ($user_type_id == 5):
-            $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t1.projects_id),t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t2.id) as projects_id,t2.project_name from project_teams t1 LEFT JOIN projects t2 ON t2.id=t1.projects_id OR t2.project_type_status=4 where  (t1.team_tl_id=$user_id OR t2.project_type_status=4)");
         elseif ($user_type_id == 6):
             $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t1.projects_id),t2.project_name from $this->tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and t1.to_user_id=$user_id");
         endif;
@@ -115,7 +115,7 @@ class Tasks extends CI_Controller {
         if ($add_project != 'others'):
             $gettaskdetails = $this->Mydb->custom_query("select task_title from $this->tasks_table where id=$add_selected_task");
         else:
-            $gettaskdetails = $this->Mydb->custom_query("select reason as task_name from $this->static_reasons_table where id=$add_selected_task");
+            $gettaskdetails = $this->Mydb->custom_query("select reason as task_title from $this->static_reasons_table where id=$add_selected_task");
         endif;
         $insert_array = array('projects_id' => $add_project,
             'task_title' => $gettaskdetails[0]['task_title'],
@@ -132,6 +132,8 @@ class Tasks extends CI_Controller {
             'status' => $this->input->post('task_status'));
 
         $insert_id = $this->Mydb->insert($this->task_history_table, $insert_array);
+//        echo $this->Mydb->print_query();
+//        die;
         $log_msg = 'Task Added by ' . get_session_value('user_name');
         $log_from = get_session_value('user_id');
         $log_to = $user_reporter_id;
@@ -189,7 +191,7 @@ class Tasks extends CI_Controller {
         if ($user_type_id < 5):
             $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table  where status<>2 group by id");
         elseif ($user_type_id == 5):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id group by t1.projects_id");
+            $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t2.id) as projects_id,t2.project_name from project_teams t1 LEFT JOIN projects t2 ON t2.id=t1.projects_id OR t2.project_type_status=4 where  (t1.team_tl_id=$user_id OR t2.project_type_status=4) group by t1.projects_id");
         elseif ($user_type_id == 6):
             $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_table where t1.status<>2 and t1.team_tl_id=$user_id group by t1.projects_id");
         endif;
@@ -204,7 +206,7 @@ class Tasks extends CI_Controller {
     public function add_dependency() {
         $data = $this->load_module_info();
         $user_id = $_SESSION['user_id'];
-        $getproject_details = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where team_tl_id=$user_id and t1.status<>2 and t1.status<>5");
+        $getproject_details = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where team_tl_id=$user_id and t1.status<>2 and t1.status<>5 group by t1.projects_id");
         $data['project_details'] = $getproject_details;
         $this->layout->display_frontend($this->folder . 'add-dependency', $data);
     }
@@ -213,8 +215,8 @@ class Tasks extends CI_Controller {
         $user_id = $_SESSION['user_id'];
         $project_id = $this->input->post('project_id');
         $user_departments_id = $_SESSION['user_departments_id'];
-        $get_task_details = $this->Mydb->custom_query("select id,task_title,project_duration,message from $this->tasks_table where projects_id=$project_id and from_user_id=$user_id and status<>2 and status<>6");
-        $get_department_details = $this->Mydb->custom_query("select t1.team_departments_id as id,t2.name as name from $this->project_teams_table t1 LEFT JOIN $this->departments_table t2 ON t2.id=t1.team_departments_id where t1.status<>2 and t1.projects_id=$project_id and t1.team_departments_id NOT IN ($user_departments_id)");
+        $get_task_details = $this->Mydb->custom_query("select id,task_title,project_duration,message from $this->tasks_table where projects_id=$project_id and from_user_id=$user_id and status<>2 and status<>5");
+        $get_department_details = $this->Mydb->custom_query("select t1.team_departments_id as id,t2.name as name from $this->project_teams_table t1 LEFT JOIN $this->departments_table t2 ON t2.id=t1.team_departments_id where t1.status<>2 and t1.projects_id=$project_id ");
         $data['task_details'] = $get_task_details;
         $data['department_details'] = $get_department_details;
         $body = $this->load->view($this->folder . 'get-ajax-task-list', $data);
@@ -263,8 +265,7 @@ class Tasks extends CI_Controller {
             $notiy_msg = 'New Task Dependency has been added' . ' by ' . $_SESSION['user_name'];
             $notiy_from = $_SESSION['user_id'];
             $notiy_to = $gettlid[0]['team_tl_id'];
-            $notiy_type = 3;
-
+            $notiy_type = 5;
             create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
             $i++;
         endforeach;
@@ -328,7 +329,7 @@ class Tasks extends CI_Controller {
         $notiy_msg = 'Task Dependency has been Reassigned' . ' by ' . $_SESSION['user_name'];
         $notiy_from = $_SESSION['user_id'];
         $notiy_to = $getdetails[0]['to_user_id'];
-        $notiy_type = 3;
+        $notiy_type = 5;
 
         create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
         if ($update_id):
@@ -565,22 +566,22 @@ class Tasks extends CI_Controller {
         if ($user_type_id < 5):
             $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name from $this->projects_table where status<>2");
         elseif ($user_type_id == 5):
-            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id");
+            $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id where t1.status<>2 and team_tl_id=$user_id ");
         elseif ($user_type_id == 6):
             $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_table where t1.status<>2 and t1.team_tl_id=$user_id");
         endif;
         $data['records'] = $getdetails;
         $getdepartments = $this->Mydb->custom_query("select id,name from $this->departments_table where status<>2");
         $getusertypes = $this->Mydb->custom_query("select id,type_name from $this->user_type_table where status<>2");
-        if ($user_type_id == 5) {
-            $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where user_departments_id=$user_departments_id and user_type_id=6 and user_reporter_id=$user_id and status=1");
-        } else if ($user_type_id >= 4) {
-            $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where status=1");
-        } else {
-            $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where  status=1");
-        }
+//        if ($user_type_id == 5) {
+//            $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where user_departments_id IN($user_departments_id) and user_type_id=6 and user_reporter_id=$user_id and status=1");
+//        } else if ($user_type_id >= 4) {
+//            $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where status=1");
+//        } else {
+//            $getemployeedetails = $this->Mydb->custom_query("select id,user_name from $this->login_table where  status=1");
+//        }
         $data['project_details'] = $getprojectdetails;
-        $data['employee_details'] = $getemployeedetails;
+//        $data['employee_details'] = $getemployeedetails;
         $data['department_details'] = $getdepartments;
         $data['usertype_details'] = $getusertypes;
         $body = $this->load->view($this->folder . 'view_asign_task', $data);
@@ -693,12 +694,13 @@ class Tasks extends CI_Controller {
 
     public function manage_new_task_history($method = null) {
         $data = $this->load_module_info();
+        $task_id = (decode_value($method[0]));
         $user_id = $_SESSION['user_id'];
         $user_type_id = $_SESSION['user_type_id'];
         if ($user_type_id < 4):
-            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id,t3.assigned_hours,t3.finished_hours from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where t1.to_user_id=$user_id AND t1.status<>2 ");
+            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id,t3.assigned_hours,t3.finished_hours from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where t1.to_user_id=$user_id AND t1.status<>2 AND t1.tasks_id=$task_id");
         else:
-            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id,t3.assigned_hours,t3.finished_hours from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where  t1.status<>2");
+            $getdetails = $this->Mydb->custom_query("select t1.task_title,t1.project_duration,t1.status,t1.id,t1.message,t2.project_name,t2.project_description,t1.projects_id,t3.assigned_hours,t3.finished_hours from $this->task_history_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id and t1.projects_id<>'others' LEFT JOIN $this->assigned_tasks_table t3 ON t3.id=t1.asigned_task_id where  t1.status<>2 AND t1.tasks_id=$task_id");
         endif;
 
         $data['records'] = $getdetails;
@@ -1142,15 +1144,15 @@ class Tasks extends CI_Controller {
     }
 
     public function download_files($fileName = NULL) {
-        if ($fileName) {
-            $file = FCPATH . 'media/task/' . $fileName;
+        if ($fileName[0]) {
+            $file = FCPATH . 'media/task/' . $fileName[0];
 
             // check file exists    
             if (file_exists($file)) {
                 // get file content
                 $data = file_get_contents($file);
                 //force download
-                force_download($fileName, $data);
+                force_download($fileName[0], $data);
             } else {
                 // Redirect to base url
                 redirect(frontend_url());

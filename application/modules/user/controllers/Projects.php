@@ -130,7 +130,7 @@ class Projects extends CI_Controller {
                     $notiy_type = '1';
                     $notification = create_notification($notiy_msg, $notiy_from, $notiy_to, $notiy_type);
                 endif;
-                redirect(frontend_url() . 'projects/add');
+                redirect(frontend_url() . 'projects');
             else:
                 $session_datas = array('pms_err' => '1', 'pms_err_message' => 'New Project cant be added. Please try again');
                 $this->session->set_userdata($session_datas);
@@ -318,9 +318,17 @@ class Projects extends CI_Controller {
     public function assigned_teamprojects() {
         $data = $this->load_module_info();
         $user_id = $_SESSION['user_id'];
-        $getprojectdetails = $this->Mydb->custom_query("select t1.*,t3.name as department_name,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->departments_table t3 ON t3.id=t1.team_departments_id where t1.team_tl_id=$user_id and t1.status<>2");
+        $getprojectdetails = $this->Mydb->custom_query("select t1.*,t3.name as department_name,t2.project_name,t2.project_slug,t2.project_description from $this->project_teams_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_id LEFT JOIN $this->departments_table t3 ON t3.id=t1.team_departments_id where (t1.team_tl_id=$user_id OR t2.project_type_status=4) and t1.status<>2");
         $data['get_assigned_project_details'] = $getprojectdetails;
         $this->layout->display_frontend($this->folder . 'assigned_team_project', $data);
+    }
+
+    public function maintenance_projects() {
+        $data = $this->load_module_info();
+        $user_id = $_SESSION['user_id'];
+        $getprojectdetails = $this->Mydb->custom_query("select * from $this->projects_table where status<>2 AND project_type_status=4");
+        $data['get_maintenance_project_details'] = $getprojectdetails;
+        $this->layout->display_frontend($this->folder . 'maintenance_project', $data);
     }
 
     public function asingnteam_byproject() {
