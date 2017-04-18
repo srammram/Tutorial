@@ -66,7 +66,7 @@
                 </div>
                 <div class="form-group">
                     <label>Enter Duration Hours <span style="color:red">*</span></label>
-                    <input type="text" required="" name="asign_duration_hours" id="add_duration_hours" class="form-control" placeholder="Choose Duration Hours" onblur="check_available_hours(this.value)"/>
+                    <input type="text" required="" name="asign_duration_hours" id="add_duration_hours" class="form-control" placeholder="Choose Duration Hours" onblur="check_available_hours(this.value,<?php echo $project_details[0]['project_type_status'] ?>)"/>
                 </div>
 
                 <div class="form-group">
