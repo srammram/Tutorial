@@ -86,11 +86,13 @@ $current_url = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
                             </a>
                         </li>
                     <?php endif; ?>
-                    <li class="">
-                        <a href="<?php echo frontend_url() . 'projects/maintenance_projects' ?>">
-                            <span class="pull-right hidden-xs showopacity glyphicon material-icons">av_timer</span> Maintenance Projects
-                        </a>
-                    </li>
+                    <?php if ($_SESSION['user_type_id'] != 6): ?>
+                        <li class="">
+                            <a href="<?php echo frontend_url() . 'projects/maintenance_projects' ?>">
+                                <span class="pull-right hidden-xs showopacity glyphicon material-icons">av_timer</span> Maintenance Projects
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
             </div>
         </div>
