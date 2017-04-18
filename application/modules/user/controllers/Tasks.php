@@ -191,7 +191,7 @@ class Tasks extends CI_Controller {
         if ($user_type_id < 5):
             $getprojectdetails = $this->Mydb->custom_query("select id as projects_id,project_name,project_type_status from $this->projects_table  where status<>2 group by id");
         elseif ($user_type_id == 5):
-            $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t2.id) as projects_id,t2.project_name,t2.project_type_status from project_teams t1 LEFT JOIN projects t2 ON t2.id=t1.projects_id OR t2.project_type_status=4 where  (t1.team_tl_id=$user_id OR t2.project_type_status=4) group by t1.projects_id");
+            $getprojectdetails = $this->Mydb->custom_query("select DISTINCT(t2.id) as projects_id,t2.project_name,t2.project_type_status from project_teams t1 LEFT JOIN projects t2 ON t2.id=t1.projects_id OR t2.project_type_status=4 where  (t1.team_tl_id=$user_id OR t2.project_type_status=4) group by t2.id");
         elseif ($user_type_id == 6):
             $getprojectdetails = $this->Mydb->custom_query("select t1.projects_id,t2.project_name,t2.project_type_status from $this->assigned_tasks_table t1 LEFT JOIN $this->projects_table t2 ON t2.id=t1.projects_table where t1.status<>2 and t1.team_tl_id=$user_id group by t1.projects_id");
         endif;
@@ -373,6 +373,7 @@ class Tasks extends CI_Controller {
         $department_id = $this->input->post('department_id');
         $project_id = $this->input->post('project_id');
         $user_id = $_SESSION['user_id'];
+        $getproject_type_status = $this->Mydb->custom_query("select project_type_status from $this->projects_table where id=$project_id");
         $getdepartmentdetails = $this->Mydb->custom_query("select GROUP_CONCAT(team_departments_id) as department_id from $this->project_teams_table where team_tl_id=$user_id and projects_id=$project_id");
         $user_departments_id = explode(',', $_SESSION['user_departments_id']);
         if ($user_type_id == '') {
@@ -394,6 +395,7 @@ class Tasks extends CI_Controller {
             $data['department_details'] = '';
         endif;
         $data['records'] = $getemployee_details;
+        $data['project_type_status'] = $getproject_type_status[0]['project_type_status'];
         $body = $this->load->view($this->folder . 'get_user_details', $data);
         echo $body;
     }

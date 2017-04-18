@@ -157,7 +157,7 @@ class USER extends CI_Controller {
         echo json_encode($getdetails);
     }
 
-    ########### Forgot Password ... ###########
+########### Forgot Password ... ###########
 
     function forgot() {
         $this->form_validation->set_rules('user_email', 'Email Address', 'required|trim');
@@ -194,7 +194,7 @@ class USER extends CI_Controller {
         }
     }
 
-    ########### Reset Password ... ###########
+########### Reset Password ... ###########
 
     public function resetpassword($method = null, $args = array()) {
         $data = $this->load_module_info();
@@ -240,7 +240,7 @@ class USER extends CI_Controller {
         }
     }
 
-    ########### Profile Edit ... ###########
+########### Profile Edit ... ###########
 
     public function profile($method = null, $args = array()) {
         $data = $this->load_module_info();
@@ -298,7 +298,7 @@ class USER extends CI_Controller {
         }
     }
 
-    ########### Holidays ... ###########
+########### Holidays ... ###########
 
     public function holidays($method = null, $args = array()) {
         $data = $this->load_module_info();
@@ -394,7 +394,7 @@ class USER extends CI_Controller {
         }
     }
 
-    ########### Holidays Edit ... ###########
+########### Holidays Edit ... ###########
 
     public function editholiday() {
         $editid = $this->input->post('edit_id');
@@ -552,7 +552,7 @@ class USER extends CI_Controller {
                     if (!empty($usertypeinsertid)) {
                         $session_datas = array('pms_err' => '0', 'pms_err_message' => 'User type has been successfully added..');
                         $this->session->set_userdata($session_datas);
-                        redirect(frontend_url() . 'usertype/add');
+                        redirect(frontend_url() . 'usertype');
                     } else {
                         $session_datas = array('pms_err' => '1', 'pms_err_message' => 'User type cannot be added. Please try again');
                         $this->session->set_userdata($session_datas);
@@ -627,7 +627,7 @@ class USER extends CI_Controller {
                     else:
                         $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Department cannot be added. Please try again');
                         $this->session->set_userdata($session_datas);
-                        redirect(frontend_url() . 'departments/add');
+                        redirect(frontend_url() . 'departments');
                     endif;
                 else:
                     $session_datas = array('pms_err' => '1', 'pms_err_message' => validation_errors());
@@ -790,7 +790,7 @@ class USER extends CI_Controller {
 
                                 $session_datas = array('pms_err' => '0', 'pms_err_message' => 'Employee details has been successfully inserted');
                                 $this->session->set_userdata($session_datas);
-                                redirect(frontend_url() . 'employee/add');
+                                redirect(frontend_url() . 'employee');
                             } else {
                                 $session_datas = array('pms_err' => '1', 'pms_err_message' => 'Employee not inserted. Please try again');
                                 $this->session->set_userdata($session_datas);
@@ -928,13 +928,13 @@ class USER extends CI_Controller {
             endif;
             $data = $this->load_module_info();
 
-            $getemployeedetails = $this->Mydb->custom_query("select t1.*,GROUP_CONCAT(t2.name ORDER BY t2.id) as department_name,t3.type_name as usertype_name  from $this->login_table as t1 LEFT JOIN $this->departments_table t2 ON  FIND_IN_SET(t2.id, t1.user_departments_id) > 0 LEFT JOIN $this->user_type_table t3 ON t3.id=t1.user_type_id where t1.status<>2 and user_departments_id<>9999 $where group by t1.id");
+            $getemployeedetails = $this->Mydb->custom_query("select t1.*,GROUP_CONCAT(t2.name ORDER BY t2.id) as department_name,t3.type_name as usertype_name  from $this->login_table as t1 LEFT JOIN $this->departments_table t2 ON  FIND_IN_SET(t2.id, t1.user_departments_id) > 0 LEFT JOIN $this->user_type_table t3 ON t3.id=t1.user_type_id where t1.status<>2 and user_departments_id<>9999 $where group by t1.id order by t1.id DESC");
             $data['records'] = $getemployeedetails;
             $this->layout->display_frontend($this->folder . 'employee', $data);
         }
     }
 
-    ########### Phone Check ... ###########
+########### Phone Check ... ###########
 
     public function phone_exists() {
         $user_mobile = $this->input->post('emp_mobile');
@@ -1018,7 +1018,7 @@ class USER extends CI_Controller {
         echo json_encode($total_hours);
     }
 
-    ########### Change Password ... ###########
+########### Change Password ... ###########
 
     public function changepassword($method = null, $args = array()) {
         $id = get_session_value('user_id');
@@ -1065,7 +1065,7 @@ class USER extends CI_Controller {
         }
     }
 
-    ########### Old password Check ... ###########
+########### Old password Check ... ###########
 
     public function oldpasswordcheck() {
         $old_password = md5($this->input->post('old_password'));
@@ -1082,7 +1082,7 @@ class USER extends CI_Controller {
         }
     }
 
-    ########### Email Change ... ###########
+########### Email Change ... ###########
 
     public function emailchange($method = null, $args = array()) {
         $data = $this->load_module_info();
@@ -1174,7 +1174,7 @@ class USER extends CI_Controller {
         $this->layout->display_frontend($this->folder . 'emailchange', $data);
     }
 
-    ########### Old Email Check ... ###########
+########### Old Email Check ... ###########
 
     public function oldemailcheck() {
         $old_email = $this->input->post('old_email');
@@ -1191,7 +1191,7 @@ class USER extends CI_Controller {
         }
     }
 
-    ########### Email Activation ... ###########
+########### Email Activation ... ###########
 
     public function emailactivation($method = null, $args = array()) {
         $data = $this->load_module_info();
@@ -1222,7 +1222,7 @@ class USER extends CI_Controller {
         $this->layout->display_frontend($this->folder . 'emailactivation', $data);
     }
 
-    ########### Mobile Change ... ###########
+########### Mobile Change ... ###########
 
     public function mobilechange($method = null, $args = array()) {
         $data = $this->load_module_info();
@@ -1385,7 +1385,7 @@ class USER extends CI_Controller {
         $this->layout->display_frontend($this->folder . 'mobilechange', $data);
     }
 
-    ########### Old Mobile Check ... ###########
+########### Old Mobile Check ... ###########
 
     public function oldmobilecheck() {
         $old_mobile = $this->input->post('old_mobile');
@@ -1402,7 +1402,7 @@ class USER extends CI_Controller {
         }
     }
 
-    ########### SMS Mobile OTP ... ###########
+########### SMS Mobile OTP ... ###########
 
     public function sms_mobil_change($sms_phone_otp, $sms_phone, $sms_country_code) {
 
@@ -1412,7 +1412,7 @@ class USER extends CI_Controller {
         return $response_sms;
     }
 
-    ########### SMS Employee Add ... ###########
+########### SMS Employee Add ... ###########
 
     public function sms_add_employee($sms_name, $sms_username, $sms_password, $sms_sitelink, $sms_phone, $sms_country_code) {
 
@@ -1422,7 +1422,7 @@ class USER extends CI_Controller {
         return $response_sms;
     }
 
-    ########### Email Active ... ###########
+########### Email Active ... ###########
 
     public function send_activation_email($name, $to_email, $activation_link) {
 
@@ -1432,7 +1432,7 @@ class USER extends CI_Controller {
         return $response_email;
     }
 
-    ###########  Welcome Email  ... ###########
+###########  Welcome Email  ... ###########
 
     public function send_welcome_email($name, $to_email, $username, $password) {
 
@@ -1442,7 +1442,7 @@ class USER extends CI_Controller {
         return $response;
     }
 
-    ########### Email Forgot ... ###########
+########### Email Forgot ... ###########
 
     public function send_forgot_email($name, $to_email, $link) {
 
@@ -1452,7 +1452,7 @@ class USER extends CI_Controller {
         return $response_email;
     }
 
-    ########### SMS Setting ... ###########
+########### SMS Setting ... ###########
 
     public function smssetting($method = null, $args = array()) {
         if (!empty($method)) {
@@ -1537,7 +1537,7 @@ class USER extends CI_Controller {
         }
     }
 
-    ########### Email Setting ... ###########
+########### Email Setting ... ###########
 
     public function emailsetting($method = null, $args = array()) {
         if (!empty($method)) {
@@ -1642,6 +1642,7 @@ class USER extends CI_Controller {
         $select_employee = $this->input->post('select_employee');
         $start_date = $this->input->post('start_date');
         $end_date = $this->input->post('end_date');
+        $export_excel = $this->input->post('export_excel');
         $where = " pro.status<>2";
         if ($select_project != ''):
             $where.=" AND pro.id=$select_project";
@@ -1650,11 +1651,7 @@ class USER extends CI_Controller {
             $where.=" AND pro.project_type_status=1";
             $userpro = "";
         endif;
-        if ($select_departments != ''):
-            $where.=" AND FIND_IN_SET($select_departments,pro.project_team)";
-        else:
-            $where.="";
-        endif;
+
         if ($start_date != '' && $end_date != '') {
             $start_date = date('Y-m-d', strtotime($start_date));
             $to_date = date('Y-m-d', strtotime($end_date));
@@ -1669,7 +1666,7 @@ class USER extends CI_Controller {
 
         $getproject_details = $this->Mydb->custom_query("select id,project_name from $this->projects_table where project_type_status=1 and status<>2");
         $getdepartment_details = $this->Mydb->custom_query("select name,id from $this->departments_table where status=1");
-        if ($select_employee != ''):
+        if ($select_employee != '') {
             $start_date = date('Y-m-d', strtotime($start_date));
             $to_date = date('Y-m-d', strtotime($end_date));
             if ($start_date != '' && $end_date != '') {
@@ -1684,7 +1681,9 @@ class USER extends CI_Controller {
                 $where.=" AND pro.project_finished_date='$to_date'";
             }
             $getdetails = $this->Mydb->custom_query("select tas.task_title,tas.id as task_id,tas.project_duration,tas.message,tas.project_duration,user.user_name as asgined_from,user1.user_name as asigned_to,pro.project_name,tas.finished_duration_hours,(if(tas.status=1,'Active',if(tas.status=3,'In Progress',if(tas.status=4,'In Completed',if(tas.status=5,'Completed','Ignored'))))) as task_status from $this->tasks_table tas  LEFT JOIN $this->login_table user ON user.id=tas.from_user_id LEFT JOIN $this->login_table user1 ON user1.id=tas.to_user_id LEFT JOIN $this->projects_table pro ON pro.id=tas.projects_id  where tas.status<>2  and tas.to_user_id=$select_employee $userpro");
-        else:
+        } elseif ($select_departments != '') {
+            $getdetails = $this->Mydb->custom_query("select pro.project_name,pro.project_description,pro.id,(if(pro.project_type_status=1,'Ongoing',if(pro.project_type_status=2,'Upcoming','Pipeline'))) as type_status,(if(pro.status=1,'Active',if(teams.status=5,'Assigned',if(teams.status=3,'In Progress',if(teams.status=7,'Completed',if(pro.status=6,'In Completed','Ignored')))))) as project_status,teams.time_duration as project_during_hours,dept.name as department_name,user.user_name from $this->project_teams_table teams LEFT JOIN $this->departments_table dept ON dept.id=teams.team_departments_id LEFT JOIN $this->login_table user ON user.id=teams.team_tl_id LEFT JOIN $this->projects_table pro ON pro.id=teams.projects_id where $where AND teams.team_departments_id=$select_departments AND teams.status<>2");
+        } else {
             $getdetails = $this->Mydb->custom_query("SELECT pro.id,pro.project_during_hours,(if(pro.status=1,'Active',if(pro.status=5,'Assigned',if(pro.status=6,'In Progress',if(pro.status=7,'Completed','Ignored'))))) as project_status,(if(pro.project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as type_status,pro.project_name,pro.project_description, GROUP_CONCAT(dept.name ORDER BY dept.id) department_name FROM projects pro LEFT JOIN departments dept  ON FIND_IN_SET(dept.id, pro.project_team) > 0 where $where GROUP  BY pro.id");
             foreach ($getdetails as $details):
                 $project_id = $details['id'];
@@ -1701,13 +1700,15 @@ class USER extends CI_Controller {
                     endif;
                 endforeach;
             endforeach;
-        endif;
+        }
 
         $data['records'] = $getdetails;
         $data['project_details'] = $getproject_details;
         $data['department_details'] = $getdepartment_details;
         $data['team_leaders'] = $teamleaders;
         $data['team_members'] = $teammembers;
+        $data['departments'] = $select_departments;
+        $data['export_excel'] = $export_excel;
         if ($select_employee != ''):
             $data['action'] = "is_employee";
         else:
@@ -1728,6 +1729,7 @@ class USER extends CI_Controller {
         $select_employee = $this->input->post('select_employee');
         $start_date = $this->input->post('start_date');
         $end_date = $this->input->post('end_date');
+        $export_excel = $this->input->post('export_excel');
         $where = " pro.status<>2";
         if ($select_project != ''):
             $where.=" AND pro.id=$select_project";
@@ -1736,11 +1738,7 @@ class USER extends CI_Controller {
             $where.=" AND pro.project_type_status=1";
             $userpro = "";
         endif;
-        if ($select_departments != ''):
-            $where.=" AND FIND_IN_SET($select_departments,pro.project_team)";
-        else:
-            $where.="";
-        endif;
+
         if ($start_date != '' && $end_date != '') {
             $start_date = date('Y-m-d', strtotime($start_date));
             $to_date = date('Y-m-d', strtotime($end_date));
@@ -1755,7 +1753,7 @@ class USER extends CI_Controller {
 
         $getproject_details = $this->Mydb->custom_query("select id,project_name from $this->projects_table where project_type_status=1 and status<>2");
         $getdepartment_details = $this->Mydb->custom_query("select name,id from $this->departments_table where status=1");
-        if ($select_employee != ''):
+        if ($select_employee != '') {
             $start_date = date('Y-m-d', strtotime($start_date));
             $to_date = date('Y-m-d', strtotime($end_date));
             if ($start_date != '' && $end_date != '') {
@@ -1770,7 +1768,9 @@ class USER extends CI_Controller {
                 $where.=" AND pro.project_finished_date='$to_date'";
             }
             $getdetails = $this->Mydb->custom_query("select tas.task_title,tas.id as task_id,tas.project_duration,tas.message,tas.project_duration,user.user_name as asgined_from,user1.user_name as asigned_to,pro.project_name,tas.finished_duration_hours,(if(tas.status=1,'Active',if(tas.status=3,'In Progress',if(tas.status=4,'In Completed',if(tas.status=5,'Completed','Ignored'))))) as task_status from $this->tasks_table tas  LEFT JOIN $this->login_table user ON user.id=tas.from_user_id LEFT JOIN $this->login_table user1 ON user1.id=tas.to_user_id LEFT JOIN $this->projects_table pro ON pro.id=tas.projects_id  where tas.status<>2  and tas.to_user_id=$select_employee $userpro");
-        else:
+        } elseif ($select_departments != '') {
+            $getdetails = $this->Mydb->custom_query("select pro.project_name,pro.project_description,pro.id,(if(pro.project_type_status=1,'Ongoing',if(pro.project_type_status=2,'Upcoming','Pipeline'))) as type_status,(if(teams.status=1,'Active',if(teams.status=5,'Assigned',if(teams.status=6,'In Progress',if(teams.status=7,'Completed','Ignored'))))) as project_status,teams.time_duration as project_during_hours,dept.name as department_name,user.user_name from $this->project_teams_table teams LEFT JOIN $this->departments_table dept ON dept.id=teams.team_departments_id LEFT JOIN $this->login_table user ON user.id=teams.team_tl_id LEFT JOIN $this->projects_table pro ON pro.id=teams.projects_id where $where AND teams.team_departments_id=$select_departments AND teams.status<>2");
+        } else {
             $getdetails = $this->Mydb->custom_query("SELECT pro.id,pro.project_during_hours,(if(pro.status=1,'Active',if(pro.status=5,'Assigned',if(pro.status=6,'In Progress',if(pro.status=7,'Completed','Ignored'))))) as project_status,(if(pro.project_type_status=1,'Ongoing',if(project_type_status=2,'Upcoming','Pipeline'))) as type_status,pro.project_name,pro.project_description, GROUP_CONCAT(dept.name ORDER BY dept.id) department_name FROM projects pro LEFT JOIN departments dept  ON FIND_IN_SET(dept.id, pro.project_team) > 0 where $where GROUP  BY pro.id");
             foreach ($getdetails as $details):
                 $project_id = $details['id'];
@@ -1787,19 +1787,25 @@ class USER extends CI_Controller {
                     endif;
                 endforeach;
             endforeach;
-        endif;
+        }
 
         $data['records'] = $getdetails;
         $data['project_details'] = $getproject_details;
         $data['department_details'] = $getdepartment_details;
         $data['team_leaders'] = $teamleaders;
         $data['team_members'] = $teammembers;
+        $data['departments'] = $select_departments;
+        $data['export_excel'] = $export_excel;
         if ($select_employee != ''):
             $data['action'] = "is_employee";
         else:
             $data['action'] = "not_employee";
         endif;
-        $this->load->view($this->folder . 'export_excel', $data);
+        if ($report_action == '') {
+            $this->load->view($this->folder . 'export_excel', $data);
+        } else {
+            $this->load->view($this->folder . 'filter-reporting', $data);
+        }
     }
 
     public function getemployees_by_department_id() {
@@ -2081,6 +2087,14 @@ class USER extends CI_Controller {
         $project_id = $this->input->post('project_id');
         $department_id = $this->input->post('department_id');
         $user_id = $_SESSION['user_id'];
+        $user_reporter_id = $_SESSION['user_reporter_id'];
+        $getemail = $this->Mydb->custom_query("select user_email,user_name from $this->login_table where id=$user_reporter_id");
+
+        $name = $getemail[0]['user_name'];
+        $to_email = $getemail[0]['user_email'];
+        $delay_reason = $delay_reason;
+        $response_email = $this->send_delay_reason_email($name, $to_email, $delay_reason);
+
         $insert_array = array('projects_id' => $project_id, 'departments_id' => $department_id, 'reason' => $delay_reason, 'user_id' => $user_id, 'created_at' => current_date(), 'created_ip' => ip2long(get_ip()), 'status' => 1);
         $insert_id = $this->Mydb->insert($this->alert_mail_time_finished_table, $insert_array);
         if ($insert_id) {
@@ -2089,6 +2103,13 @@ class USER extends CI_Controller {
             $response['success'] = 0;
         }
         echo json_encode($response);
+    }
+
+    public function send_delay_reason_email($name, $to_email, $delay_reason) {
+        $chk_arr = array('[NAME]', '[DELAYREASON]');
+        $rep_arr = array($name, $delay_reason);
+        $response = send_email($to_email, $template_slug = "project-status-confirmation-mail", $chk_arr, $rep_arr, $attach_file = array(), $path = '', $subject = '', $cc = '', $html_template = 'electtv_email_template');
+        return $response;
     }
 
     public function get_state_by_country_id() {
