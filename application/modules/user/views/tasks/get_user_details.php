@@ -17,6 +17,7 @@ if ($department_details != ''):
 
     </div>
 <?php endif; ?>
+<input type="hidden" name="project_type_status" id="project_type_status" value="<?php echo $project_type_status; ?>"/>
 <?php
 if ($department_details == ''):
     ?>
